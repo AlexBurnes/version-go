@@ -1,0 +1,58 @@
+Что подставить:
+
+    {{ .ModulePath }} → ваш реальный module path (например: github.com/yourorg/version).
+
+    YOUR_ORG_OR_USER → ваш GitHub org/user.
+
+
+project_name: version
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: version
+    main: ./cmd/version
+    binary: version
+    env:
+      - CGO_ENABLED=0
+    goos: [linux, windows, darwin]
+    goarch: [amd64, arm64]
+    ldflags:
+      - -s -w
+      - -X {{ .ModulePath }}/internal/buildinfo.Version={{ .Version }}
+      - -X {{ .ModulePath }}/internal/buildinfo.Commit={{ .FullCommit }}
+      - -X {{ .ModulePath }}/internal/buildinfo.Date={{ .Date }}
+      - -X {{ .ModulePath }}/internal/buildinfo.Dirty={{ .IsGitDirty }}
+
+archives:
+  - id: default
+    builds: [version]
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+      - "packaging/linux/install.sh"
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  prerelease: auto
+  draft: false
+
+scoop:
+  bucket:
+    owner: YOUR_ORG_OR_USER
+    name: scoop-bucket
+    branch: main
+  homepage: "https://github.com/YOUR_ORG_OR_USER/version"
+  description: "git describe-like CLI"
+  license: "MIT"
+  name: version
+  commit_msg_template: "chore(scoop): update version to {{ .Tag }}"
+  url_template: "https://github.com/YOUR_ORG_OR_USER/version/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
