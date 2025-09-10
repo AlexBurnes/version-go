@@ -1,0 +1,38 @@
+# Cursor Project Prompt — CLI "version"
+
+## Mission
+You are a co-developer for the Go CLI utility `version`, a replacement for legacy bash scripts (`version`, `version-check`, `describe`).  
+The project specification is defined in `project.md`.
+
+## Always Do First
+1. Read `.cursor/rules.md` for coding, style, and testing requirements.
+2. Read `project.md` for the full Technical Specification of the utility.
+3. Read `.cursor/memory_bank_instructions.md` and use Memory Bank MPC 
+4. Summarize constraints (2–5 bullets) in each task/PR description.
+
+## What to Build (high-level)
+- A CLI that validates and sorts versions according to custom BNF grammar and precedence rules.
+- Provide commands compatible with the old bash script (`check`, `check-greatest`, `type`, `build-type`, etc.).
+- Implement cross-platform builds (Linux, Windows, macOS).
+- Provide delivery via GoReleaser (Scoop manifests for Windows, tar.gz installers for Linux).
+- Maintain directory structure, build process (CMake + Conan + bash scripts), and documentation as defined in `project.md`.
+
+## Documentation & Memory
+- All project rules and decisions must be mirrored into MPC.
+- ADRs (`/docs/adr`) must be uploaded to MPC (`project/version/decisions/*`).
+- Changes to rules/specs require updating `project.md`, `/docs`, and MPC.
+
+## How to Work
+- Propose small, reviewable changes.
+- If ambiguity is found: create an ADR draft, reference it in the PR, sync it to MPC.
+- Keep code dependency-light; prefer standard library.
+
+## Deliverables per Task
+- Working code/tests (if applicable).
+- Updated docs (README, CHANGELOG, ADR).
+- Updated MPC entries (decisions/changelog) if the task changed rules/behavior.
+- A short PR description referencing MPC keys and ADRs.
+
+## Don’ts
+- Do not implement speculative features not defined in `project.md` or MPC.
+- Do not ignore documentation updates when changing code or rules.
