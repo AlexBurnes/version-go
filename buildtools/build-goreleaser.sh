@@ -109,6 +109,24 @@ setup_environment() {
 run_goreleaser() {
     local mode="${1:-snapshot}"
     
+    # Check if origin remote exists and is GitHub
+    local origin_url
+    origin_url=$(git remote get-url origin 2>/dev/null || echo "")
+    
+    if [[ -z "$origin_url" ]]; then
+        log_error "No origin remote found. Please set up your git remotes."
+        log_info "Available remotes:"
+        git remote -v
+        exit 1
+    fi
+    
+    if [[ "$origin_url" == *"github.com"* ]]; then
+        log_success "Origin remote is GitHub: $origin_url"
+    else
+        log_warning "Origin remote is not GitHub: $origin_url"
+        log_info "GoReleaser will use this remote for publishing"
+    fi
+    
     case "$mode" in
         "snapshot")
             log_info "Running GoReleaser snapshot build..."
@@ -120,7 +138,7 @@ run_goreleaser() {
             ;;
         "dry-run")
             log_info "Running GoReleaser dry run..."
-            goreleaser release --snapshot --skip-publish --rm-dist
+            goreleaser release --snapshot --skip-publish --clean
             ;;
         *)
             log_error "Unknown mode: $mode"
