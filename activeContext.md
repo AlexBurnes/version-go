@@ -39,6 +39,12 @@
 - **NEW (v0.5.3)**: Clean installer naming without SNAPSHOT and hex abbreviations
 - **NEW (v0.5.3)**: Professional installation experience with branded headers
 - **NEW (v0.5.3)**: No-sudo installation approach - users run with sudo if needed
+- **ENHANCED (v0.5.4)**: Build script improvements with automatic Go environment setup
+- **ENHANCED (v0.5.4)**: Environment variable loading from .env file for GitHub tokens
+- **ENHANCED (v0.5.4)**: Improved git remote handling for GoReleaser publishing
+- **ENHANCED (v0.5.4)**: Comprehensive installation documentation with platform-specific instructions
+- **ENHANCED (v0.5.4)**: Windows Scoop setup guide with step-by-step PowerShell instructions
+- **ENHANCED (v0.5.4)**: Custom installation directory support for Linux and macOS
 
 ## Next Steps
 - **PROJECT READY FOR USE**: All core functionality implemented and tested with library support
@@ -46,6 +52,8 @@
 - **BUILD SYSTEM READY**: Conan build script fully functional for local development and cross-platform builds
 - **PACKAGING READY**: Makeself and Scoop distribution systems implemented and tested
 - **DISTRIBUTION READY**: Self-extracting installers and package manager integration complete
+- **BUILD SCRIPT ENHANCED**: Automatic Go environment setup and .env file loading working
+- **DOCUMENTATION ENHANCED**: Comprehensive installation guides for all platforms
 - Consider additional features based on user feedback
 - Monitor for any edge cases in version parsing
 - Prepare for distribution via GoReleaser when ready
@@ -59,6 +67,9 @@
 - **macOS Packaging**: Makeself for self-extracting archives with professional installation experience ✅ IMPLEMENTED
 - **Installer Naming**: Clean version numbers without SNAPSHOT and hex abbreviations ✅ IMPLEMENTED
 - **Installation Approach**: No-sudo internal usage - users run with sudo if needed ✅ IMPLEMENTED
+- **Build Script**: Automatic Go environment setup and .env file loading ✅ IMPLEMENTED
+- **Documentation**: Comprehensive platform-specific installation guides ✅ IMPLEMENTED
+- **Custom Installation**: Support for custom installation directories via APP_DIR environment variable ✅ IMPLEMENTED
 - **Grammar**: Custom BNF grammar extending SemVer 2.0 with prerelease, postrelease, and intermediate identifiers
 - **Compatibility**: Must maintain 100% compatibility with existing bash script interfaces
 

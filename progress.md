@@ -26,12 +26,20 @@
 - **✅ Scoop Integration (v0.5.3)**: Windows package manager integration with proper manifest generation
 - **✅ Clean Naming (v0.5.3)**: Installer naming uses clean version numbers without SNAPSHOT/hex suffixes
 - **✅ No-Sudo Approach (v0.5.3)**: Install scripts don't use sudo internally - users run with sudo if needed
+- **✅ Build Script Enhancement (v0.5.4)**: Automatic Go environment setup and PATH configuration
+- **✅ Environment Loading (v0.5.4)**: .env file support for GitHub tokens and other environment variables
+- **✅ Git Remote Handling (v0.5.4)**: Improved git remote detection and GoReleaser integration
+- **✅ Installation Documentation (v0.5.4)**: Comprehensive platform-specific installation guides
+- **✅ Windows Scoop Guide (v0.5.4)**: Step-by-step PowerShell instructions for Scoop setup
+- **✅ Custom Installation (v0.5.4)**: Support for custom installation directories via APP_DIR
 
 ## What's Left to Build
 - **PROJECT COMPLETE**: All core functionality implemented and tested with library support
 - **LIBRARY COMPLETE**: Reusable library package with comprehensive API and documentation
 - **BUILD SYSTEM COMPLETE (v0.5.1)**: Conan build system fully functional for local development
 - **PACKAGING COMPLETE (v0.5.3)**: Makeself and Scoop distribution systems implemented and tested
+- **BUILD SCRIPT COMPLETE (v0.5.4)**: Enhanced build script with Go environment and .env support
+- **DOCUMENTATION COMPLETE (v0.5.4)**: Comprehensive installation guides for all platforms
 - **Future Enhancements**: Additional features based on user feedback
 - **Distribution**: GoReleaser integration for automated releases (when ready)
 

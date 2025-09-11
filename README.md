@@ -40,16 +40,51 @@ The tool supports an extended grammar beyond SemVer 2.0:
 ## Installation
 
 ### Linux (Self-extracting installer)
-```bash
-# Download and run the self-extracting installer
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-linux-amd64-install.sh | sh
 
-# Or for system-wide installation (requires sudo)
+#### Quick Install (User Directory)
+```bash
+# Download and run the self-extracting installer to ~/.local/bin
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-linux-amd64-install.sh | sh
+```
+**Note**: Default installation directory is `/usr/local/bin` (system-wide). For user-only installation, the installer will use `~/.local/bin` if `/usr/local/bin` is not writable.
+
+#### System-wide Install (Requires sudo)
+```bash
+# Install to /usr/local/bin (system-wide)
 wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-linux-amd64-install.sh | sudo sh
 ```
 
-### Windows (Scoop)
+#### Custom Directory Install
 ```bash
+# Install to custom directory (e.g., /opt/version)
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-linux-amd64-install.sh | APP_DIR=/opt/version sh
+
+# Add to PATH if needed
+echo 'export PATH="/opt/version:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Windows (Scoop Package Manager)
+
+#### First-time Scoop Setup
+If you don't have Scoop installed, follow these steps:
+
+1. **Open PowerShell as Administrator**
+2. **Set execution policy** (if needed):
+   ```powershell
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   ```
+3. **Install Scoop**:
+   ```powershell
+   iwr -useb get.scoop.sh | iex
+   ```
+4. **Restart PowerShell** and verify installation:
+   ```powershell
+   scoop --version
+   ```
+
+#### Install Version CLI
+```powershell
 # Add the bucket (if not already added)
 scoop bucket add burnes https://github.com/AlexBurnes/scoop-bucket
 
@@ -60,13 +95,35 @@ scoop install burnes/version
 scoop update burnes/version
 ```
 
-### macOS (Self-extracting installer)
-```bash
-# Download and run the self-extracting installer
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-darwin-amd64-install.sh | sh
+#### Alternative: Manual Installation
+If you prefer not to use Scoop:
+1. Download the latest Windows binary from [Releases](https://github.com/AlexBurnes/version-go/releases)
+2. Extract to a directory in your PATH (e.g., `C:\Program Files\version\`)
+3. Add the directory to your system PATH
 
-# Or for system-wide installation (requires sudo)
+### macOS (Self-extracting installer)
+
+#### Quick Install (User Directory)
+```bash
+# Download and run the self-extracting installer to ~/.local/bin
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-darwin-amd64-install.sh | sh
+```
+**Note**: Default installation directory is `/usr/local/bin` (system-wide). For user-only installation, the installer will use `~/.local/bin` if `/usr/local/bin` is not writable.
+
+#### System-wide Install (Requires sudo)
+```bash
+# Install to /usr/local/bin (system-wide)
 wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-darwin-amd64-install.sh | sudo sh
+```
+
+#### Custom Directory Install
+```bash
+# Install to custom directory (e.g., /opt/version)
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-darwin-amd64-install.sh | APP_DIR=/opt/version sh
+
+# Add to PATH if needed
+echo 'export PATH="/opt/version:$PATH"' >> ~/.zshrc
+source ~/.zshrc
 ```
 
 ### From Source

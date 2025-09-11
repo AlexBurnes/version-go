@@ -30,7 +30,9 @@ Utility Layer ✅
 Build System Layer ✅
 ├── Local Development: Conan + CMake + bash scripts ✅
 ├── Packaging: GoReleaser + Conan hooks ✅
-└── Cross-Platform: Automated builds for Linux/Windows/macOS ✅
+├── Cross-Platform: Automated builds for Linux/Windows/macOS ✅
+├── Environment Setup: Automatic Go PATH configuration ✅
+└── Environment Loading: .env file support for tokens and variables ✅
 
 Packaging Layer ✅
 ├── Linux: Makeself Self-Extracting Archives ✅
@@ -52,6 +54,10 @@ Packaging Layer ✅
 - **✅ macOS Packaging**: Makeself for self-extracting archives with professional installation experience
 - **✅ Installer Naming**: Clean version numbers without SNAPSHOT and hex abbreviations
 - **✅ Installation Approach**: No-sudo internal usage - users run with sudo if needed
+- **✅ Build Script**: Automatic Go environment setup and .env file loading for seamless development
+- **✅ Environment Management**: .env file support for GitHub tokens and other environment variables
+- **✅ Git Remote Handling**: Automatic detection and configuration of git remotes for GoReleaser
+- **✅ Custom Installation**: Support for custom installation directories via APP_DIR environment variable
 - **✅ Testing**: Standard Go testing framework with comprehensive library tests and race detection
 - **✅ Error Handling**: Structured error types with proper exit code mapping
 - **✅ API Design**: Clean, well-documented public API with comprehensive examples
@@ -99,3 +105,30 @@ Packaging Layer ✅
 - **Output**: `0.5.2` or `1.0.0`
 - **Pattern**: Removes `-SNAPSHOT-*` and `-{7-8 hex chars}` suffixes
 - **Purpose**: Clean, user-friendly installer names without development artifacts
+
+## Build Script Enhancements (v0.5.4)
+
+### Automatic Go Environment Setup
+- **Function**: `setup_go_environment()` in `buildtools/build-goreleaser.sh`
+- **Purpose**: Automatically detect and add Go's bin directory to PATH
+- **Implementation**: Uses `go env GOPATH` to find Go workspace and adds `$GOPATH/bin` to PATH
+- **Benefit**: No manual PATH configuration required for GoReleaser and other Go tools
+
+### Environment Variable Loading
+- **Function**: `load_environment()` in `buildtools/build-goreleaser.sh`
+- **Purpose**: Load environment variables from `.env` file for GitHub tokens and other secrets
+- **Implementation**: Uses `set -a` to automatically export variables from `.env` file
+- **Benefit**: Secure token management without hardcoding secrets in scripts
+
+### Git Remote Detection
+- **Function**: Enhanced `run_goreleaser()` in `buildtools/build-goreleaser.sh`
+- **Purpose**: Automatically detect and validate git remotes for GoReleaser publishing
+- **Implementation**: Checks if origin remote exists and validates it's GitHub for publishing
+- **Benefit**: Prevents publishing to wrong repositories and provides clear error messages
+
+### Installation Documentation
+- **Platforms**: Linux, Windows, macOS with comprehensive installation guides
+- **Windows**: Complete Scoop setup instructions with PowerShell commands
+- **Linux/macOS**: Multiple installation options (user, system-wide, custom directory)
+- **Custom Installation**: Support for `APP_DIR` environment variable for custom paths
+- **Benefit**: Clear, step-by-step instructions for all user types and preferences
