@@ -3,11 +3,11 @@ project_name: version
 before:
   hooks:
     # 1) Ensure Conan profiles exist (idempotent).
-    - bash -lc 'conan profile detect --force'
+    - bash -lc 'conan profile show -pr default >/dev/null 2>&1 || conan profile detect --force'
     # 2) Install tool_requires from conanfile.py and DEPLOY their binaries into ./.toolchain
     #    - We use the deploy generator to copy tool binaries into a local folder.
     #    - --build=missing lets CI bootstrap tools if cache is empty.
-    - bash -lc 'mkdir -p .toolchain && conan install . -g deploy --deployer-folder=.toolchain --build=missing -s build_type=Release'
+    - bash -lc 'mkdir -p .toolchain && conan install . -d full_deploy --deployer-folder=.toolchain --build=missing -s build_type=Release'
     # 3) Normalize PATH: collect all */bin under .toolchain into .toolchain/bin for a stable PATH entry.
     - bash -lc './buildtools/collect_bins.sh .toolchain'
     - go mod tidy
@@ -18,7 +18,7 @@ builds:
     binary: version
     env:
       # Expose Conan-deployed tools (go, cmake, ninja, etc.) to the GoReleaser build.
-      - PATH={{ .Env.PATH }}:{{ .ProjectDir }}/.toolchain/bin
+      - PATH={{ .Env.PATH }}:{{ .Env.PWD }}/.toolchain/bin
       - CGO_ENABLED=0
     goos: [linux, windows, darwin]
     goarch: [amd64, arm64]

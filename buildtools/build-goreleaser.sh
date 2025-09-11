@@ -60,11 +60,11 @@ setup_environment() {
     # Create toolchain directory
     mkdir -p .toolchain
     
-    # Detect Conan profile
-    conan profile detect --force
+    # Detect Conan profile (only if it doesn't exist)
+    conan profile show -pr default >/dev/null 2>&1 || conan profile detect --force
     
     # Install tools via Conan
-    conan install . -g deploy --deployer-folder=.toolchain --build=missing -s build_type=Release
+    conan install . -d full_deploy --deployer-folder=.toolchain --build=missing -s build_type=Release
     
     # Normalize PATH
     ./buildtools/collect_bins.sh .toolchain

@@ -6,6 +6,7 @@ bin/
 .toolchain
 build
 CMakeUserPresets.json
+dist
 
 # environment and tockens
 .env

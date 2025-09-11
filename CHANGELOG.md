@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2024-12-19
+
+### Verified
+- **GoReleaser Integration**: Cross-platform build and distribution system fully functional
+- **Conan Hooks**: GoReleaser hooks properly install and deploy build tools via Conan
+- **Distribution Artifacts**: All platform archives and binaries generated correctly
+- **Conan Profile Detection**: Respects existing profiles without overwriting
+- **Apache 2.0 License**: Properly integrated for distribution
+
 ## [0.5.1] - 2024-12-19
 
 ### Fixed
