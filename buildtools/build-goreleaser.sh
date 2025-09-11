@@ -28,6 +28,36 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# Load environment variables from .env file
+load_environment() {
+    if [[ -f ".env" ]]; then
+        log_info "Loading environment variables from .env file..."
+        # Source the .env file, ignoring comments and empty lines
+        set -a  # automatically export all variables
+        source .env
+        set +a  # disable automatic export
+        log_success "Environment variables loaded from .env"
+    else
+        log_warning "No .env file found, using system environment variables only"
+    fi
+}
+
+# Setup Go environment
+setup_go_environment() {
+    log_info "Setting up Go environment..."
+    
+    # Get Go's GOPATH and add bin directory to PATH
+    local go_bin_dir
+    go_bin_dir=$(go env GOPATH)/bin
+    
+    if [[ -d "$go_bin_dir" ]]; then
+        export PATH="$go_bin_dir:$PATH"
+        log_info "Added Go bin directory to PATH: $go_bin_dir"
+    else
+        log_warning "Go bin directory not found: $go_bin_dir"
+    fi
+}
+
 # Check prerequisites
 check_prerequisites() {
     log_info "Checking prerequisites..."
@@ -139,6 +169,12 @@ show_help() {
 # Main script logic
 main() {
     local command="${1:-help}"
+    
+    # Load environment variables first
+    load_environment
+    
+    # Setup Go environment
+    setup_go_environment
     
     case "$command" in
         "setup")
