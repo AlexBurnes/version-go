@@ -1,1 +1,9 @@
+# build artifacts
 bin/
+
+# build directory
+.build
+.toolchain
+
+# environment and tockens
+.env

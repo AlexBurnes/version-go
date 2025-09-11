@@ -5,3 +5,7 @@
     ./install.sh
     # без sudo:
     # APP_DIR=$HOME/.local/bin ./install.sh
+
+# makeself
+
+https://github.com/megastep/makeself.git

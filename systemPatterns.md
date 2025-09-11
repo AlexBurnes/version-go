@@ -19,6 +19,16 @@ Utility Layer
 ├── String Processing
 ├── File I/O
 └── Platform Abstractions
+
+Build System Layer
+├── Local Development: Conan + CMake + bash scripts
+├── Packaging: GoReleaser + Conan hooks
+└── Cross-Platform: Automated builds for Linux/Windows/macOS
+
+Packaging Layer
+├── Linux: Makeself Self-Extracting Archives
+├── Windows: Scoop Package Manager
+└── Cross-Platform: GoReleaser Integration
 ```
 
 ## Key Technical Decisions
@@ -26,6 +36,10 @@ Utility Layer
 - **Grammar Engine**: Custom BNF parser for extended version format support
 - **Git Integration**: Use `go-git` library for git tag operations
 - **Build System**: CMake as orchestrator, Conan for dependency management, GoReleaser for distribution
+- **Local Development**: Conan + CMake + bash scripts for development and testing
+- **Packaging Build**: GoReleaser with Conan hooks for automated cross-platform builds
+- **Linux Packaging**: Makeself for self-extracting archives with professional installation experience
+- **Windows Packaging**: Scoop package manager for easy installation and updates
 - **Testing**: Standard Go testing framework with comprehensive test coverage
 - **Error Handling**: Structured error types with proper exit code mapping
 
@@ -46,5 +60,8 @@ Utility Layer
 1. **Version Parsing Pipeline**: Input validation → Grammar parsing → Object creation → Validation
 2. **Sorting Algorithm**: Parse all versions → Categorize by type → Apply precedence rules → Sort within categories
 3. **Git Integration**: Read git tags → Parse versions → Validate → Return appropriate version
-4. **Build Pipeline**: Source code → Go compilation → Static binary → Platform-specific packaging
-5. **Distribution Pipeline**: Binary artifacts → GoReleaser → Platform packages → Release distribution
+4. **Local Build Pipeline**: Source code → Conan deps → CMake config → Go compilation → Static binary
+5. **Packaging Build Pipeline**: GoReleaser → Conan hooks → Tool installation → Cross-compilation → Distribution packages
+6. **Linux Distribution**: Binary + install.sh → Makeself → Self-extracting .run archive → User installation
+7. **Windows Distribution**: Binary → ZIP archive → Scoop manifest → Scoop bucket → User installation
+8. **Cross-Platform Distribution**: GoReleaser → Multiple packages → GitHub releases → Automated distribution

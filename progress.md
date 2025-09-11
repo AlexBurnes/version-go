@@ -6,6 +6,12 @@
 - **Build System Design**: CMake + Conan + GoReleaser architecture defined
 - **Requirements Definition**: Clear functional and non-functional requirements
 - **Distribution Strategy**: Scoop (Windows) and tar.gz (Linux) distribution planned
+- **Packaging Documentation**: Comprehensive guides for Linux (makeself) and Windows (Scoop) packaging
+- **Build Documentation**: Complete build guide covering both local and packaging builds
+- **Build Scripts**: build-conan.sh for local builds, build-goreleaser.sh for packaging builds
+- **GoReleaser Integration**: Conan hooks for automated cross-platform builds
+- **Installation Scripts**: Linux install.sh script with flexible installation options
+- **Scoop Manifest**: Windows package configuration with multi-architecture support
 
 ## What's Left to Build
 - **Go Module Setup**: Initialize proper Go module in `src/` directory
@@ -15,10 +21,9 @@
 - **Version Sorter**: Sorting algorithm with precedence rules
 - **Git Integration**: Git tag reading and version extraction
 - **Command Implementation**: All CLI commands (`check`, `check-greatest`, `type`, etc.)
-- **Build Scripts**: `build.sh` and CMake configuration
 - **Testing Suite**: Unit tests, integration tests, and test data
-- **Documentation**: README, RULES, RELEASE procedures
-- **Distribution**: GoReleaser configuration and platform packages
+- **Makeself Integration**: Automated Linux package creation
+- **Scoop Integration**: Automated Windows package updates
 
 ## Known Issues and Limitations
 - **Legacy Code**: Existing bash scripts in `src/old/` need analysis for compatibility requirements
@@ -33,3 +38,8 @@
 - **Architecture Planning**: Designed modular CLI architecture with clear separation of concerns
 - **Technology Stack**: Confirmed Go + CMake + Conan + GoReleaser stack based on requirements
 - **Distribution Strategy**: Planned multi-platform distribution via Scoop and tar.gz packages
+- **Packaging Documentation**: Created comprehensive guides for both Linux (makeself) and Windows (Scoop) packaging approaches
+- **Build Documentation**: Created comprehensive build guide covering both local development and packaging builds
+- **Build Scripts**: Implemented build-conan.sh for local builds and build-goreleaser.sh for packaging builds
+- **GoReleaser Integration**: Documented and implemented Conan hooks for automated cross-platform builds
+- **Installation Experience**: Designed flexible installation options for both system-wide and user-local installation

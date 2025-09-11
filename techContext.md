@@ -7,8 +7,10 @@
 - **GoReleaser**: Cross-platform build and distribution
 - **Git**: Version control and tag integration
 - **Bash**: Build scripts and installation scripts
+- **Makeself**: Linux self-extracting archive creation
 - **Scoop**: Windows package management
 - **tar.gz**: Linux distribution format
+- **ZIP**: Windows distribution format
 
 ## Development Setup
 - **Go Environment**: Managed via Conan (`conan install golang/<version>`)
@@ -37,11 +39,18 @@
   - CMake (via Conan)
   - Go compiler (via Conan)
   - GoReleaser (via Conan or direct install)
+- **Packaging Dependencies**:
+  - Makeself (for Linux self-extracting archives)
+  - Scoop (for Windows package management)
+  - Git (for bucket repository management)
 
 ## Tool Usage Patterns
 - **Development**: `go build`, `go test`, `go mod` for standard Go development
-- **Build**: `build.sh` script orchestrates CMake → Conan → Go compilation
+- **Local Build**: `build-conan.sh` script orchestrates Conan → CMake → Go compilation
+- **Packaging Build**: `build-goreleaser.sh` script orchestrates GoReleaser → Conan hooks → Cross-compilation
 - **Testing**: `go test ./... -race` for comprehensive testing
+- **Linux Packaging**: Makeself creates self-extracting .run archives
+- **Windows Packaging**: Scoop manages package installation and updates
 - **Distribution**: GoReleaser handles cross-platform builds and packaging
 - **Documentation**: Markdown files with Memory Bank integration
 - **Version Control**: Git with semantic versioning tags for releases
