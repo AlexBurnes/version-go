@@ -6,7 +6,7 @@ import (
     "os"
     "strings"
     
-    "github.com/burnes/go-version/pkg/version"
+    "github.com/AlexBurnes/version-go/pkg/version"
 )
 
 // checkVersion validates a version string using the library

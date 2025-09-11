@@ -2,7 +2,7 @@
 
 A cross-platform command-line utility written in Go that provides semantic version parsing, validation, and ordering. This tool replaces legacy bash scripts (`version`, `version-check`, `describe`) currently used in build pipelines and supports Linux, Windows, and macOS with a reproducible build/distribution process.
 
-**Version 0.4.0** - Now includes a reusable library package for other Go utilities!
+**Version 0.5.0** - Clean project structure with `cmd/` directory following Go conventions!
 
 ## Features
 
@@ -198,6 +198,23 @@ Within each category, versions are sorted by:
 - `0` - Success, valid version
 - `1` - Error, invalid input or failure
 - `2` - System error
+
+## Project Structure
+
+This project follows standard Go conventions:
+
+```
+version-go/
+├── cmd/version/          # CLI executable source code
+│   ├── main.go          # CLI entry point
+│   ├── git.go           # Git integration
+│   └── version.go       # Version functions
+├── pkg/version/         # Reusable library package
+│   ├── version.go       # Library implementation
+│   └── version_test.go  # Library tests
+├── examples/basic/      # Example usage
+└── docs/               # Documentation
+```
 
 ## Library Usage
 

@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2024-12-19
+
+### Added
+- **Clean Project Structure**: Reorganized project to follow Go conventions with `cmd/` directory
+- **Improved Organization**: CLI source code now in `cmd/version/` directory
+- **Better Separation**: Clear separation between CLI code and library code
+- **Standard Go Layout**: Follows standard Go project structure for better maintainability
+
+### Changed
+- **Project Structure**: Moved CLI files from root to `cmd/version/` directory
+  - `main.go` → `cmd/version/main.go`
+  - `git.go` → `cmd/version/git.go`
+  - `version.go` → `cmd/version/version.go`
+  - `version_test.go` → `cmd/version/version_test.go`
+  - `integration_test.go` → `cmd/version/integration_test.go`
+- **Build Commands**: Updated build commands to use `./cmd/version` path
+- **Repository Organization**: Cleaner root directory with only configuration and documentation files
+
+### Technical Details
+- CLI executable: `go build -o bin/version ./cmd/version`
+- Library package: `pkg/version/` (unchanged)
+- Example code: `examples/basic/` (unchanged)
+- All functionality remains identical, only project structure improved
+- Maintains 100% backward compatibility with existing CLI interface
+
 ## [0.4.0] - 2024-12-19
 
 ### Added
