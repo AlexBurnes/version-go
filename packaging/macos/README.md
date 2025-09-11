@@ -45,11 +45,11 @@ If you prefer not to use Homebrew, you can download the binary directly:
 
 ```bash
 # For Intel Macs
-curl -L https://github.com/AlexBurnes/version-go/releases/download/v0.5.7/version-0.5.7-darwin-amd64.tar.gz | tar -xz
+curl -L https://github.com/AlexBurnes/version-go/releases/download/v0.5.9/version-0.5.9-darwin-amd64.tar.gz | tar -xz
 sudo mv version /usr/local/bin/
 
 # For Apple Silicon Macs
-curl -L https://github.com/AlexBurnes/version-go/releases/download/v0.5.7/version-0.5.7-darwin-arm64.tar.gz | tar -xz
+curl -L https://github.com/AlexBurnes/version-go/releases/download/v0.5.9/version-0.5.9-darwin-arm64.tar.gz | tar -xz
 sudo mv version /usr/local/bin/
 ```
 

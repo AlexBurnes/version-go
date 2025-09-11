@@ -14,19 +14,19 @@ NC='\033[0m' # No Color
 
 # Functions
 log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+    echo -e "${BLUE}[INFO]${NC} $1" >&2
 }
 
 log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
+    echo -e "${GREEN}[SUCCESS]${NC} $1" >&2
 }
 
 log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
+    echo -e "${YELLOW}[WARNING]${NC} $1" >&2
 }
 
 log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
+    echo -e "${RED}[ERROR]${NC} $1" >&2
 }
 
 # Check prerequisites
@@ -66,16 +66,26 @@ create_package_dir() {
     # Create package directory
     mkdir -p "$package_dir"
     
-    # Copy binary
-    local binary_path="dist/version_${version}_${platform}_${arch}"
+    # Copy binary - find the actual archive file
+    local binary_path=""
     if [[ "$platform" == "windows" ]]; then
-        binary_path="${binary_path}.zip"
-        # Extract binary from zip
-        unzip -q "$binary_path" -d "$package_dir"
+        binary_path=$(find dist -name "version_*_${platform}_${arch}.zip" | head -1)
+        if [[ -n "$binary_path" && -f "$binary_path" ]]; then
+            # Extract binary from zip
+            unzip -q "$binary_path" -d "$package_dir"
+        else
+            log_error "Windows archive not found for $platform-$arch"
+            exit 1
+        fi
     else
-        binary_path="${binary_path}.tar.gz"
-        # Extract binary from tar.gz
-        tar -xzf "$binary_path" -C "$package_dir"
+        binary_path=$(find dist -name "version_*_${platform}_${arch}.tar.gz" | head -1)
+        if [[ -n "$binary_path" && -f "$binary_path" ]]; then
+            # Extract binary from tar.gz
+            tar -xzf "$binary_path" -C "$package_dir"
+        else
+            log_error "Archive not found for $platform-$arch"
+            exit 1
+        fi
     fi
     
     # Copy install script
@@ -164,7 +174,9 @@ create_installer() {
     local arch="$3"
     local package_dir="$4"
     
-    local installer_name="version-${version}-${platform}-${arch}-install.sh"
+    # Clean version for installer name (remove v prefix and dirty/snapshot suffixes)
+    local clean_version=$(echo "$version" | sed 's/^v//' | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//' | sed 's/-dirty$//')
+    local installer_name="version-${clean_version}-${platform}-${arch}-install.sh"
     local installer_path="dist/${installer_name}"
     
     log_info "Creating self-extracting installer: $installer_name"

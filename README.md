@@ -2,7 +2,7 @@
 
 A cross-platform command-line utility written in Go that provides semantic version parsing, validation, and ordering. This tool replaces legacy bash scripts (`version`, `version-check`, `describe`) currently used in build pipelines and supports Linux, Windows, and macOS with a reproducible build/distribution process.
 
-**Version 0.5.7** - Complete release with developer workflow and automated version management!
+**Version 0.5.9** - Complete release with developer workflow and automated version management!
 
 ## Features
 
@@ -69,19 +69,23 @@ source ~/.bashrc
 #### First-time Scoop Setup
 If you don't have Scoop installed, follow these steps:
 
-1. **Open PowerShell as Administrator**
+1. **Open PowerShell as Administrator** (version 5.1 or later) and from the PS C:\> prompt, run:
 2. **Set execution policy** (if needed):
-   ```powershell
+```powershell
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-   ```
+```
 3. **Install Scoop**:
-   ```powershell
+```powershell
+   Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+```
+   or shorten version
+```powershell
    iwr -useb get.scoop.sh | iex
-   ```
+```
 4. **Restart PowerShell** and verify installation:
-   ```powershell
+```powershell
    scoop --version
-   ```
+```
 
 #### Install Version CLI
 ```powershell

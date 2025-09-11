@@ -48,6 +48,10 @@ checksum:
 release:
   prerelease: auto
   draft: false
+  extra_files:
+    - glob: "dist/version-*-linux-*-install.sh"
+    - glob: "dist/version-*-darwin-*-install.sh"
+
 
 scoop:
   bucket:

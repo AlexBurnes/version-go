@@ -60,22 +60,24 @@ create_all_installers() {
             log_info "Creating installer for $platform-$arch"
             
             # Check if the source archive exists
-            local archive_pattern="version_${version}_${platform}_${arch}"
+            # Look for archives with the actual naming pattern from GoReleaser
             local archive_file=""
             
             if [[ "$platform" == "windows" ]]; then
-                archive_file="${archive_pattern}.zip"
+                # Look for windows archives with .zip extension
+                archive_file=$(find dist -name "version_*_${platform}_${arch}.zip" | head -1)
             else
-                archive_file="${archive_pattern}.tar.gz"
+                # Look for linux/darwin archives with .tar.gz extension
+                archive_file=$(find dist -name "version_*_${platform}_${arch}.tar.gz" | head -1)
             fi
             
-            if [[ -f "dist/${archive_file}" ]]; then
+            if [[ -n "$archive_file" && -f "$archive_file" ]]; then
                 ./buildtools/create-makeself-installer.sh "$version" "$platform" "$arch"
                 # Clean version for installer name
                 local clean_version=$(echo "$version" | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//')
                 created_installers+=("version-${clean_version}-${platform}-${arch}-install.sh")
             else
-                log_warning "Source archive not found: dist/${archive_file}"
+                log_warning "Source archive not found for $platform-$arch"
             fi
         done
     done

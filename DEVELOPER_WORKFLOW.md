@@ -22,9 +22,9 @@ This document outlines the complete workflow for planning, developing, and relea
 echo "v0.5.8" > VERSION
 
 # Option 2: Use version-bump script
-./scripts/version-bump patch    # v0.5.7 -> v0.5.8
-./scripts/version-bump minor    # v0.5.7 -> v0.6.0
-./scripts/version-bump major    # v0.5.7 -> v1.0.0
+./scripts/version-bump patch    # v0.5.9 -> v0.5.10
+./scripts/version-bump minor    # v0.5.9 -> v0.6.0
+./scripts/version-bump major    # v0.5.9 -> v1.0.0
 ```
 
 **Update CHANGELOG.md:**
