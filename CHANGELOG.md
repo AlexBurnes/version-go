@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2024-12-19
+
+### Fixed
+- **Conan Build Script**: Fixed critical issues in `buildtools/build-conan.sh` for local builds
+  - Fixed version detection to use `git describe` instead of non-existent `./scripts/describe`
+  - Corrected source directory references from `src/` to `cmd/version/` in CMakeLists.txt
+  - Fixed Conan file path issues when running from `buildtools/` directory
+  - Resolved CMake preset path issues for proper build configuration
+  - Fixed build directory path from `../../bin` to `bin` for correct binary placement
+  - Updated static build target to use correct working directory (`cmd/version/`)
+
+### Changed
+- **Build System**: Improved Conan integration for reliable local builds
+  - All Conan commands now properly reference project root directory
+  - CMake configuration works correctly from any directory
+  - Cross-platform builds now generate binaries in correct project `bin/` directory
+
+### Technical Details
+- Conan build script now fully functional for local development
+- Cross-platform builds working: Linux/amd64, macOS/amd64, macOS/arm64, Windows/amd64
+- Static Linux binary builds successfully (2.1MB vs 3.1MB regular binary)
+- All build targets accessible via `./build-conan.sh` commands
+- Dependencies managed via Conan: Go 1.21.0, CMake 3.31.8
+
 ## [0.5.0] - 2024-12-19
 
 ### Added

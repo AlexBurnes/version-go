@@ -62,10 +62,10 @@ play_success_sound() {
     fi
 }
 
-# Get version from git using describe script
-VERSION=$(cd ../../ && ./scripts/describe version 2>/dev/null || echo "")
+# Get version from git using git describe
+VERSION=$(cd .. && git describe --match "v[0-9]*" --abbrev=0 --tags 2>/dev/null || echo "")
 if [ -z "$VERSION" ]; then
-    log_error "Failed to get version from git. Make sure you're in a git repository and the describe script is available."
+    log_error "Failed to get version from git. Make sure you're in a git repository with version tags."
     exit 1
 fi
 
@@ -102,7 +102,7 @@ install_deps() {
     #fi
     
     # Install dependencies
-    conan install . --build=missing --profile=$CONAN_PROFILE
+    conan install .. --build=missing --profile=$CONAN_PROFILE
     
     log_success "Dependencies installed"
 }
@@ -117,19 +117,19 @@ configure_cmake() {
     mkdir -p "$CMAKE_BUILD_DIR"
     
     # Try to use Conan preset first (CMake 3.23+)
-    if cmake --version | grep -q "3\.2[3-9]\|3\.[3-9]\|[4-9]\."; then
+    if cmake --version | grep -q "3\.2[3-9]\|3\.[3-9]\|[4-9]\." && [ -f "../CMakeUserPresets.json" ]; then
         log_info "Using Conan CMake preset"
         # Convert build_type to lowercase for preset name
         preset_name="conan-$(echo $build_type | tr '[:upper:]' '[:lower:]')"
-        cmake --preset $preset_name
+        cd .. && cmake --preset $preset_name && cd buildtools
     else
         # Fallback to manual configuration
         log_info "Using manual CMake configuration"
-        cmake -B "$CMAKE_BUILD_DIR" \
+        cd .. && cmake -B "$CMAKE_BUILD_DIR" \
               -DCMAKE_BUILD_TYPE="$build_type" \
               -DCMAKE_INSTALL_PREFIX="/usr/local" \
               -G "Unix Makefiles" \
-              .
+              . && cd buildtools
     fi
     
     log_success "CMake configured with Conan"
@@ -143,24 +143,24 @@ build_cmake() {
     log_info "Building $target using CMake + Conan..."
     
     # Install dependencies if not done
-    if [ ! -f "$CMAKE_BUILD_DIR/conan_toolchain.cmake" ] && [ ! -f "$CMAKE_BUILD_DIR/Release/generators/conan_toolchain.cmake" ]; then
+    if [ ! -f "../$CMAKE_BUILD_DIR/conan_toolchain.cmake" ] && [ ! -f "../$CMAKE_BUILD_DIR/Release/generators/conan_toolchain.cmake" ]; then
         install_deps
     fi
     
     # Configure if build directory doesn't exist or doesn't have CMakeCache.txt
-    if [ ! -d "$CMAKE_BUILD_DIR" ] || [ ! -f "$CMAKE_BUILD_DIR/CMakeCache.txt" ]; then
+    if [ ! -d "../$CMAKE_BUILD_DIR" ] || [ ! -f "../$CMAKE_BUILD_DIR/CMakeCache.txt" ]; then
         configure_cmake "$build_type"
     fi
     
     # Build using preset if available
-    if cmake --version | grep -q "3\.2[3-9]\|3\.[3-9]\|[4-9]\." && [ -f "CMakeUserPresets.json" ]; then
+    if cmake --version | grep -q "3\.2[3-9]\|3\.[3-9]\|[4-9]\." && [ -f "../CMakeUserPresets.json" ]; then
         log_info "Building with CMake preset"
         # Convert build_type to lowercase for preset name
         preset_name="conan-$(echo $build_type | tr '[:upper:]' '[:lower:]')"
-        cmake --build --preset $preset_name --target "$target"
+        cd .. && cmake --build --preset $preset_name --target "$target" && cd buildtools
     else
         # Fallback to manual build
-        cmake --build "$CMAKE_BUILD_DIR" --target "$target"
+        cd .. && cmake --build "$CMAKE_BUILD_DIR" --target "$target" && cd buildtools
     fi
     
     log_success "Built $target"
@@ -179,7 +179,7 @@ build_conan() {
     #fi
     
     # Build with Conan
-    conan create . --build=missing --profile=$CONAN_PROFILE -s build_type=$build_type
+    conan create .. --build=missing --profile=$CONAN_PROFILE -s build_type=$build_type
     
     log_success "Built with Conan"
     play_success_sound
@@ -197,7 +197,7 @@ install_conan() {
     #fi
     
     # Install with Conan
-    conan install . --build=missing --profile=$CONAN_PROFILE
+    conan install .. --build=missing --profile=$CONAN_PROFILE
     
     # Copy binaries to install path
     if [ -f "$CMAKE_BUILD_DIR/$BINARY_NAME" ]; then

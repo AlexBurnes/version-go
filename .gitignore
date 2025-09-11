@@ -5,6 +5,7 @@ bin/
 .build
 .toolchain
 build
+CMakeUserPresets.json
 
 # environment and tockens
 .env

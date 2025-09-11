@@ -24,7 +24,7 @@ class RoamCtrlConan(ConanFile):
     }
     
     # Sources are located in the same place as this recipe, copy them to the recipe
-    exports_sources = "CMakeLists.txt", "src/*", "*.go", "go.mod", "go.sum"
+    exports_sources = "CMakeLists.txt", "cmd/*", "pkg/*", "*.go", "go.mod", "go.sum"
     
     def build_requirements(self):
         # Go as build requirement

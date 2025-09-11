@@ -67,8 +67,8 @@ message(STATUS "Found Go version: ${GO_VERSION_NUMBER}")
 
 # Build configuration
 set(BINARY_NAME "version")
-set(BUILD_DIR "${CMAKE_SOURCE_DIR}/../../bin")
-set(CONFIG_DIR "${CMAKE_SOURCE_DIR}/../../etc")
+set(BUILD_DIR "${CMAKE_SOURCE_DIR}/bin")
+set(CONFIG_DIR "${CMAKE_SOURCE_DIR}/etc")
 
 # Create build directory
 file(MAKE_DIRECTORY ${BUILD_DIR})
@@ -99,14 +99,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_custom_target(${BINARY_NAME}
         COMMAND ${CMAKE_COMMAND} -E env CGO_ENABLED=0 GOOS=linux GOARCH=amd64
         ${GO_EXECUTABLE} build -a -ldflags "-extldflags \"-static\"" ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME}-linux-amd64-static .
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
         COMMENT "Building static ${BINARY_NAME} for current platform (linux/amd64)"
         VERBATIM
     )
 else()
     add_custom_target(${BINARY_NAME}
         COMMAND ${GO_EXECUTABLE} build ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME} .
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
         COMMENT "Building ${BINARY_NAME} for current platform"
         VERBATIM
     )
@@ -128,7 +128,7 @@ foreach(PLATFORM ${PLATFORMS})
     add_custom_target(${BINARY_NAME}-${GOOS}-${GOARCH}
         COMMAND ${CMAKE_COMMAND} -E env GOOS=${GOOS} GOARCH=${GOARCH}
         ${GO_EXECUTABLE} build ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME_PLATFORM} .
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
         COMMENT "Building ${BINARY_NAME} for ${GOOS}/${GOARCH}"
         VERBATIM
     )
@@ -138,7 +138,7 @@ endforeach()
 add_custom_target(${BINARY_NAME}-linux-amd64-static
     COMMAND ${CMAKE_COMMAND} -E env CGO_ENABLED=0 GOOS=linux GOARCH=amd64
     ${GO_EXECUTABLE} build -a -ldflags "-extldflags \"-static\"" ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME}-linux-amd64-static .
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
     COMMENT "Building static ${BINARY_NAME} for linux/amd64 (maximum compatibility)"
     VERBATIM
 )
@@ -156,7 +156,7 @@ add_custom_target(${BINARY_NAME}-all
 # Test target
 add_custom_target(test
     COMMAND ${GO_EXECUTABLE} test ${GO_TEST_FLAGS} .
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
     COMMENT "Running tests"
     VERBATIM
 )
@@ -165,7 +165,7 @@ add_custom_target(test
 add_custom_target(test-coverage
     COMMAND ${GO_EXECUTABLE} test ${GO_TEST_FLAGS} .
     COMMAND ${GO_EXECUTABLE} tool cover -html=coverage.out -o coverage.html
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
     COMMENT "Running tests with coverage"
     VERBATIM
 )
@@ -183,7 +183,7 @@ find_program(GOLANGCI_LINT_EXECUTABLE golangci-lint)
 if(GOLANGCI_LINT_EXECUTABLE)
     add_custom_target(lint
         COMMAND ${GOLANGCI_LINT_EXECUTABLE} run
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
         COMMENT "Linting code"
         VERBATIM
     )
