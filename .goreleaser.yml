@@ -62,3 +62,23 @@ scoop:
   url_template: "https://github.com/AlexBurnes/version-go/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
   skip_upload: false
   folder: "packaging/windows/scoop-bucket"
+
+homebrew:
+  tap:
+    owner: AlexBurnes
+    name: homebrew-tap
+    branch: main
+  homepage: "https://github.com/AlexBurnes/version-go"
+  description: "Cross-platform semantic version parsing, validation, and ordering CLI utility"
+  license: "Apache-2.0"
+  name: version
+  commit_msg_template: "chore(homebrew): update version to {{ .Tag }}"
+  url_template: "https://github.com/AlexBurnes/version-go/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+  skip_upload: false
+  folder: "packaging/macos"
+  test: |
+    system "#{bin}/version --version"
+    system "#{bin}/version type 1.2.3"
+    system "#{bin}/version type 1.2.3~alpha.1"
+    system "#{bin}/version type 1.2.3.fix.1"
+    system "#{bin}/version type 1.2.3_feature_1"

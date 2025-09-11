@@ -1,6 +1,7 @@
 package main
 
 import (
+    "os"
     "os/exec"
     "strings"
     "testing"
@@ -33,7 +34,7 @@ func TestCLICommands(t *testing.T) {
         {
             name:     "version flag",
             args:     []string{"--version"},
-            expected: "0.3.0",
+            expected: "0.5.0",
             hasError: false,
         },
     }
@@ -156,6 +157,171 @@ func TestBuildType(t *testing.T) {
             result := strings.TrimSpace(string(output))
             if result != test.expected {
                 t.Errorf("Expected build type '%s' for version %s, got '%s'", test.expected, test.version, result)
+            }
+        })
+    }
+}
+
+func TestExitCodeCompliance(t *testing.T) {
+    tests := []struct {
+        name        string
+        args        []string
+        expectedCode int
+        description string
+    }{
+        {
+            name:        "valid_version_check",
+            args:        []string{"check", "1.2.3"},
+            expectedCode: 0,
+            description: "Valid version should return exit code 0",
+        },
+        {
+            name:        "invalid_version_check",
+            args:        []string{"check", "invalid"},
+            expectedCode: 1,
+            description: "Invalid version should return exit code 1",
+        },
+        {
+            name:        "valid_version_type",
+            args:        []string{"type", "1.2.3"},
+            expectedCode: 0,
+            description: "Valid version type command should return exit code 0",
+        },
+        {
+            name:        "invalid_version_type",
+            args:        []string{"type", "invalid"},
+            expectedCode: 1,
+            description: "Invalid version type command should return exit code 1",
+        },
+        {
+            name:        "valid_version_build_type",
+            args:        []string{"build-type", "1.2.3"},
+            expectedCode: 0,
+            description: "Valid version build-type command should return exit code 0",
+        },
+        {
+            name:        "invalid_version_build_type",
+            args:        []string{"build-type", "invalid"},
+            expectedCode: 1,
+            description: "Invalid version build-type command should return exit code 1",
+        },
+        {
+            name:        "valid_version_check_greatest",
+            args:        []string{"check-greatest", "1.2.3"},
+            expectedCode: 0,
+            description: "Valid version check-greatest command should return exit code 0",
+        },
+        {
+            name:        "invalid_version_check_greatest",
+            args:        []string{"check-greatest", "invalid"},
+            expectedCode: 1,
+            description: "Invalid version check-greatest command should return exit code 1",
+        },
+        {
+            name:        "help_command",
+            args:        []string{"--help"},
+            expectedCode: 0,
+            description: "Help command should return exit code 0",
+        },
+        {
+            name:        "version_flag",
+            args:        []string{"--version"},
+            expectedCode: 0,
+            description: "Version flag should return exit code 0",
+        },
+        {
+            name:        "unknown_command",
+            args:        []string{"unknown"},
+            expectedCode: 1,
+            description: "Unknown command should return exit code 1",
+        },
+        {
+            name:        "invalid_flag",
+            args:        []string{"--invalid"},
+            expectedCode: 1,
+            description: "Invalid flag should return exit code 1",
+        },
+    }
+
+    for _, test := range tests {
+        t.Run(test.name, func(t *testing.T) {
+            cmd := exec.Command("go", append([]string{"run", "."}, test.args...)...)
+            cmd.Dir = "."
+            
+            err := cmd.Run()
+            var exitCode int
+            if err != nil {
+                if exitError, ok := err.(*exec.ExitError); ok {
+                    exitCode = exitError.ExitCode()
+                } else {
+                    t.Errorf("Unexpected error type for %v: %v", test.args, err)
+                    return
+                }
+            } else {
+                exitCode = 0
+            }
+            
+            if exitCode != test.expectedCode {
+                t.Errorf("Expected exit code %d for %v (%s), got %d", 
+                    test.expectedCode, test.args, test.description, exitCode)
+            }
+        })
+    }
+}
+
+func TestExitCodeComplianceWithBuiltBinary(t *testing.T) {
+    // Skip if binary doesn't exist
+    if _, err := os.Stat("../../bin/version"); os.IsNotExist(err) {
+        t.Skip("Skipping binary exit code tests - binary not built")
+    }
+
+    tests := []struct {
+        name        string
+        args        []string
+        expectedCode int
+        description string
+    }{
+        {
+            name:        "valid_version_check_binary",
+            args:        []string{"check", "1.2.3"},
+            expectedCode: 0,
+            description: "Valid version should return exit code 0 (binary)",
+        },
+        {
+            name:        "invalid_version_check_binary",
+            args:        []string{"check", "invalid"},
+            expectedCode: 1,
+            description: "Invalid version should return exit code 1 (binary)",
+        },
+        {
+            name:        "help_command_binary",
+            args:        []string{"--help"},
+            expectedCode: 0,
+            description: "Help command should return exit code 0 (binary)",
+        },
+    }
+
+    for _, test := range tests {
+        t.Run(test.name, func(t *testing.T) {
+            cmd := exec.Command("../../bin/version", test.args...)
+            cmd.Dir = "."
+            
+            err := cmd.Run()
+            var exitCode int
+            if err != nil {
+                if exitError, ok := err.(*exec.ExitError); ok {
+                    exitCode = exitError.ExitCode()
+                } else {
+                    t.Errorf("Unexpected error type for %v: %v", test.args, err)
+                    return
+                }
+            } else {
+                exitCode = 0
+            }
+            
+            if exitCode != test.expectedCode {
+                t.Errorf("Expected exit code %d for %v (%s), got %d", 
+                    test.expectedCode, test.args, test.description, exitCode)
             }
         })
     }

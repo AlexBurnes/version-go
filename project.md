@@ -80,8 +80,8 @@ Sorting rules:
 
 ## 6. Documentation
 - `README.md`: usage, examples, installation.
-- `RULES.md`: coding rules, style, test requirements (also synced with memory-base MPC).
-- `RELEASE.md`: release/recovery procedure.
+- `.cursor/rules.md`: coding rules, style, test requirements (also synced with memory-base MPC).
+- `CHANGELOG.md`: release history and changelog.
 - ADRs stored in `/docs/adr` and mirrored in MPC.
 
 ## 7. Testing
@@ -95,22 +95,24 @@ Sorting rules:
 
 ## 8. Directory structure
 - bin/ - builded binaries, install binaries only in this directory
-- src/ - source codes for project
+- cmd/version/ - CLI source code (following Go conventions)
+- pkg/version/ - reusable library package
 - docs/ - all documentation for project
 - test/ - test scripts and test binaries
-- build.sh - build script
+- buildtools/ - build scripts (build-goreleaser.sh, etc.)
 - README.md - short readme, purpose, how to build, links to other docs
 - project.md - main documentation for development (this file)
 - CHANGELOG.md - changelog
 - LICENSE - project license
 
 ## 9. Build
-- Project build must be automated via **bash build scripts** (`build.sh`).
+- Project build must be automated via **bash build scripts** in `buildtools/` directory.
 - Use **CMake** as the top-level build orchestrator to compile and install Go binaries.
 - All build tools required must be managed via **Conan** in integration with CMake.  
   - Even Go itself must be installed via Conan (e.g., `conan install golang/<version>`).
 - Build outputs must be placed in `bin/` directory only.
 - Support reproducible builds across Linux, Windows, and macOS.
+- Main build scripts: `build-goreleaser.sh`, `build-conan.sh`, `create-all-installers.sh`
 
 ## 10. References
 - Semantic Versioning 2.0: https://semver.org/
