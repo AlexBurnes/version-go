@@ -1,0 +1,169 @@
+# Packaging Documentation: Version CLI Utility
+
+## Overview
+This document describes the packaging and distribution strategy for the Version CLI utility across Linux and Windows platforms. The packaging system uses different approaches for each platform while maintaining consistency in user experience.
+
+## Directory Structure
+
+```
+packaging/
+├── linux/
+│   ├── README.md              # Linux installation instructions
+│   ├── install.sh             # Basic installation script
+│   ├── makeself-header.sh     # Makeself header for self-extracting archives
+│   └── makeself.sh            # Makeself script for creating installers
+└── windows/
+    └── scoop-bucket/
+        ├── README.md          # Windows installation instructions
+        └── version.json       # Scoop manifest for version management
+```
+
+## Linux Packaging
+
+### Strategy
+Linux packaging uses **makeself** to create self-extracting archives that contain the binary and installation script. This approach provides:
+
+- Single-file distribution
+- Automatic installation with user confirmation
+- Cross-distribution compatibility
+- Professional installer experience
+
+### Components
+
+#### 1. Basic Installation (`install.sh`)
+- Simple bash script for manual installation
+- Supports both system-wide (`/usr/local/bin`) and user-local (`~/.local/bin`) installation
+- Handles permission management with sudo when available
+- Validates binary presence before installation
+
+#### 2. Makeself Integration
+- **Source**: [megastep/makeself](https://github.com/megastep/makeself.git)
+- **Purpose**: Create self-extracting `.run` archives
+- **Features**:
+  - Compressed archive with embedded installation script
+  - Integrity checking with checksums
+  - Progress indication during extraction
+  - Optional command execution after extraction
+
+#### 3. Installation Process
+```bash
+# Download and run the self-extracting installer
+wget https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version_1.0.0_linux_amd64.run
+chmod +x version_1.0.0_linux_amd64.run
+./version_1.0.0_linux_amd64.run
+
+# Or install to user directory
+APP_DIR=$HOME/.local/bin ./version_1.0.0_linux_amd64.run
+```
+
+### Makeself Configuration
+The makeself script creates archives with:
+- **Compression**: gzip (default) or bzip2 for smaller archives
+- **Checksums**: MD5 and SHA256 for integrity verification
+- **Target**: Temporary directory for extraction
+- **Script**: Automatic execution of `install.sh` after extraction
+- **Cleanup**: Automatic removal of temporary files
+
+## Windows Packaging
+
+### Strategy
+Windows packaging uses **Scoop** package manager for easy installation and updates. This approach provides:
+
+- One-command installation
+- Automatic updates
+- Dependency management
+- Integration with Windows package ecosystem
+
+### Components
+
+#### 1. Scoop Manifest (`version.json`)
+- Defines package metadata and download URLs
+- Supports multiple architectures (amd64, arm64)
+- Includes checksums for security verification
+- Specifies binary location and execution
+
+#### 2. Installation Process
+```powershell
+# Add the custom bucket
+scoop bucket add burnes https://github.com/AlexBurnes/scoop-bucket
+
+# Install the package
+scoop install burnes/version
+
+# Update the package
+scoop update version
+```
+
+### Scoop Configuration
+The Scoop manifest includes:
+- **Version**: Semantic version for package management
+- **Architecture Support**: Both 64-bit and ARM64 binaries
+- **Checksums**: SHA256 verification for security
+- **Binary Location**: Automatic PATH configuration
+- **Metadata**: Description, homepage, and license information
+
+## Build Integration
+
+### GoReleaser Configuration
+Both packaging methods integrate with GoReleaser for automated builds:
+
+```yaml
+# .goreleaser.yml (excerpt)
+archives:
+  - format: tar.gz
+    files:
+      - install.sh
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+scoop:
+  bucket:
+    owner: AlexBurnes
+    name: scoop-bucket
+  commit_author:
+    name: GoReleaser Bot
+    email: bot@example.com
+```
+
+### Build Process
+1. **Compilation**: GoReleaser builds static binaries for all platforms
+2. **Linux**: Creates tar.gz archives with makeself integration
+3. **Windows**: Updates Scoop manifest with new version and checksums
+4. **Release**: Publishes all artifacts to GitHub releases
+
+## Security Considerations
+
+### Integrity Verification
+- **Linux**: Makeself provides built-in checksum verification
+- **Windows**: Scoop validates SHA256 checksums before installation
+- **Both**: GoReleaser generates and publishes checksums for all artifacts
+
+### Installation Permissions
+- **Linux**: Supports both system-wide and user-local installation
+- **Windows**: Scoop manages permissions and PATH configuration
+- **Both**: No elevated privileges required for user-local installation
+
+## Maintenance
+
+### Version Updates
+- **Automated**: GoReleaser handles version updates for both platforms
+- **Manual**: Scoop manifest requires manual updates for complex changes
+- **Testing**: Both packaging methods support local testing before release
+
+### Troubleshooting
+- **Linux**: Check makeself script execution and permission issues
+- **Windows**: Verify Scoop bucket configuration and network access
+- **Both**: Validate checksums and binary compatibility
+
+## Future Enhancements
+
+### Planned Improvements
+- **macOS**: Homebrew tap integration for macOS distribution
+- **Docker**: Container images for CI/CD integration
+- **Snap/Flatpak**: Additional Linux distribution methods
+- **MSI**: Windows MSI installer for enterprise environments
+
+### Extension Points
+- **Custom Scripts**: Additional post-installation scripts
+- **Dependencies**: Package dependency management
+- **Configuration**: Default configuration file installation
+- **Documentation**: Automatic documentation installation
