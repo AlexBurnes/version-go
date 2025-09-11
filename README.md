@@ -2,6 +2,8 @@
 
 A cross-platform command-line utility written in Go that provides semantic version parsing, validation, and ordering. This tool replaces legacy bash scripts (`version`, `version-check`, `describe`) currently used in build pipelines and supports Linux, Windows, and macOS with a reproducible build/distribution process.
 
+**Version 0.4.0** - Now includes a reusable library package for other Go utilities!
+
 ## Features
 
 - **Semantic Version Parsing**: Custom BNF grammar engine supporting extended version formats beyond SemVer 2.0
@@ -11,6 +13,7 @@ A cross-platform command-line utility written in Go that provides semantic versi
 - **Cross-Platform**: Static binaries for Linux, Windows, and macOS
 - **Colored Output**: Terminal-friendly colored output with `--no-color` support
 - **CMake Integration**: Build system integration with CMake and Conan
+- **Library Package**: Reusable Go library (`pkg/version`) for other utilities
 
 ## Supported Version Formats
 
@@ -39,7 +42,7 @@ The tool supports an extended grammar beyond SemVer 2.0:
 ### Linux (tar.gz)
 ```bash
 # Download and extract the latest release
-wget https://github.com/burnes/go-version/releases/latest/download/version-linux-amd64.tar.gz
+wget https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64.tar.gz
 tar -xzf version-linux-amd64.tar.gz
 sudo ./install.sh
 ```
@@ -47,7 +50,7 @@ sudo ./install.sh
 ### Windows (Scoop)
 ```bash
 # Add the bucket (if not already added)
-scoop bucket add burnes https://github.com/burnes/scoop-bucket
+scoop bucket add alexburnes https://github.com/AlexBurnes/scoop-bucket
 
 # Install version
 scoop install version
@@ -195,6 +198,41 @@ Within each category, versions are sorted by:
 - `0` - Success, valid version
 - `1` - Error, invalid input or failure
 - `2` - System error
+
+## Library Usage
+
+The version utility also provides a reusable Go library package for other utilities:
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/AlexBurnes/version-go/pkg/version"
+)
+
+func main() {
+    // Parse a version
+    v, err := version.Parse("1.2.3-alpha.1")
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    fmt.Printf("Version: %s\n", v.String())
+    fmt.Printf("Type: %s\n", v.Type.String())
+    
+    // Sort versions
+    versions := []string{"2.0.0", "1.2.3", "1.2.3-alpha"}
+    sorted, err := version.Sort(versions)
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    fmt.Printf("Sorted: %v\n", sorted)
+}
+```
+
+See [Library Documentation](docs/LIBRARY.md) for complete API reference and examples.
 
 ## Examples
 

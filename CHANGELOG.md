@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2024-12-19
+
+### Added
+- **Library Package**: Refactored core functionality into reusable `pkg/version` package
+- **Library API**: Comprehensive public API with exported types and functions
+- **Library Documentation**: Complete API reference and usage examples in `docs/LIBRARY.md`
+- **Library Example**: Working example in `examples/basic/` demonstrating library usage
+- **Repository Migration**: Moved from `github.com/burnes/go-version` to `github.com/AlexBurnes/version-go`
+
+### Changed
+- **CLI Architecture**: CLI now uses the library package internally while maintaining full compatibility
+- **Import Paths**: Updated all import paths to use new repository URL
+- **Documentation**: Updated README.md with library usage section and new repository URLs
+
+### Technical Details
+- Library package provides: `Parse()`, `Validate()`, `Sort()`, `Compare()`, `GetType()`, `GetBuildType()`
+- Exported types: `Version` struct, `Type` enum
+- Maintains 100% backward compatibility with existing CLI interface
+- All tests passing for both CLI and library functionality
+
+## [0.3.0] - 2024-12-19
+
 ### Added
 - Initial implementation of version CLI utility
 - Custom regex-based version parser supporting extended grammar

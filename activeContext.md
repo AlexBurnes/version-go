@@ -1,7 +1,7 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**PROJECT COMPLETED** - Successfully implemented complete Go CLI utility replacing legacy bash scripts. All core functionality, testing, and build system integration is complete and working.
+**PROJECT COMPLETED WITH LIBRARY REFACTORING** - Successfully implemented complete Go CLI utility replacing legacy bash scripts. All core functionality, testing, and build system integration is complete and working. Additionally, refactored core functionality into a reusable library package for use by other utilities.
 
 ## Recent Changes
 - **COMPLETED**: Full Go implementation with custom regex-based version parser
@@ -18,9 +18,15 @@
 - **FIXED**: Prerelease regex updated to use ~ delimiter for RPM naming rules compliance
 - **FIXED**: Added git tag conversion from x.y.z-(remainder) to x.y.z~(remainder) format
 - **FIXED**: Updated all tests to reflect corrected behavior and regex patterns
+- **NEW**: Refactored core functionality into reusable library package (pkg/version)
+- **NEW**: Created comprehensive library API with exported types and functions
+- **NEW**: Added library documentation (docs/LIBRARY.md) with usage examples
+- **NEW**: Created minimal example demonstrating library usage (examples/basic/)
+- **NEW**: Updated CLI to use library package while maintaining full compatibility
 
 ## Next Steps
-- **PROJECT READY FOR USE**: All core functionality implemented and tested
+- **PROJECT READY FOR USE**: All core functionality implemented and tested with library support
+- **LIBRARY READY**: Core version functionality available as reusable library package
 - Consider additional features based on user feedback
 - Monitor for any edge cases in version parsing
 - Prepare for distribution via GoReleaser when ready
@@ -40,6 +46,8 @@
 - **Minimal Dependencies**: Prefer standard library, avoid external dependencies unless justified
 - **Test Coverage**: Comprehensive unit and integration tests required
 - **Exit Codes**: POSIX-compliant exit codes (0 for success, >=1 for errors)
+- **Library Design**: Core functionality should be reusable as library package
+- **API Design**: Clean, well-documented public API with comprehensive examples
 
 ## Learnings and Project Insights
 - Project has clear, well-defined requirements in project.md

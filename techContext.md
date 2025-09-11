@@ -16,9 +16,11 @@
 - **Go Environment**: Managed via Conan (`conan install golang/<version>`)
 - **Build Directory**: All build outputs go to `bin/` directory only
 - **Source Structure**: 
-  - `src/` - Go source code
+  - Root - Go CLI source code (main.go, version.go, git.go)
+  - `pkg/version/` - Reusable library package
+  - `examples/basic/` - Library usage example
   - `bin/` - Built binaries
-  - `docs/` - Documentation
+  - `docs/` - Documentation including library docs
   - `test/` - Test scripts and binaries
 - **Cross-platform**: Support for Linux (amd64/arm64), Windows (amd64/arm64), macOS (amd64/arm64)
 
@@ -33,6 +35,7 @@
 ## Dependencies
 - **✅ Standard Library Only**: `fmt`, `os`, `strings`, `sort`, `regexp`, `flag`, `os/exec`, `bufio` (implemented)
 - **✅ No External Dependencies**: Avoided `go-git` and `cobra` as planned
+- **Library Package**: Self-contained `pkg/version` package with no external dependencies
 - **Build Dependencies**:
   - ✅ CMake (via Conan) - working
   - ✅ Go compiler (via Conan) - working
@@ -46,9 +49,11 @@
 - **✅ Development**: `go build`, `go test`, `go mod` for standard Go development (working)
 - **✅ Local Build**: CMake orchestrates Conan → Go compilation (working)
 - **Packaging Build**: `build-goreleaser.sh` script orchestrates GoReleaser → Conan hooks → Cross-compilation
-- **✅ Testing**: `go test ./... -race` for comprehensive testing (25.7% coverage, all tests passing)
+- **✅ Testing**: `go test ./... -race` for comprehensive testing including library tests (all tests passing)
+- **✅ Library Testing**: `go test ./pkg/version/... -v` for library-specific tests
+- **✅ Library Usage**: `go run examples/basic/main.go` for library demonstration
 - **Linux Packaging**: Makeself creates self-extracting .run archives (ready)
 - **Windows Packaging**: Scoop manages package installation and updates (ready)
 - **Distribution**: GoReleaser handles cross-platform builds and packaging (ready)
-- **✅ Documentation**: Markdown files with Memory Bank integration (complete)
+- **✅ Documentation**: Markdown files with Memory Bank integration and library documentation (complete)
 - **✅ Version Control**: Git with semantic versioning tags for releases (working)
