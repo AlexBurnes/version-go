@@ -1,5 +1,5 @@
 # Windows install
 
-    scoop bucket add yourorg https://github.com/YOUR_ORG_OR_USER/scoop-bucket
-    scoop install yourorg/version
+    scoop bucket add burnes https://github.com/AlexBurnes/scoop-bucket
+    scoop install burnes/version
     scoop update version

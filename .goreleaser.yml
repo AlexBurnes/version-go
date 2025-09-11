@@ -1,10 +1,3 @@
-Что подставить:
-
-    {{ .ModulePath }} → ваш реальный module path (например: github.com/yourorg/version).
-
-    YOUR_ORG_OR_USER → ваш GitHub org/user.
-
-
 project_name: version
 
 before:
@@ -21,10 +14,10 @@ builds:
     goarch: [amd64, arm64]
     ldflags:
       - -s -w
-      - -X {{ .ModulePath }}/internal/buildinfo.Version={{ .Version }}
-      - -X {{ .ModulePath }}/internal/buildinfo.Commit={{ .FullCommit }}
-      - -X {{ .ModulePath }}/internal/buildinfo.Date={{ .Date }}
-      - -X {{ .ModulePath }}/internal/buildinfo.Dirty={{ .IsGitDirty }}
+      - -X github.com/AlexBurnes/version-go/internal/buildinfo.Version={{ .Version }}
+      - -X github.com/AlexBurnes/version-go/internal/buildinfo.Commit={{ .FullCommit }}
+      - -X github.com/AlexBurnes/version-go/internal/buildinfo.Date={{ .Date }}
+      - -X github.com/AlexBurnes/version-go/internal/buildinfo.Dirty={{ .IsGitDirty }}
 
 archives:
   - id: default
@@ -47,12 +40,12 @@ release:
 
 scoop:
   bucket:
-    owner: YOUR_ORG_OR_USER
+    owner: AlexBurnes
     name: scoop-bucket
     branch: main
-  homepage: "https://github.com/YOUR_ORG_OR_USER/version"
+  homepage: "https://github.com/AlexBurnes/version-go"
   description: "git describe-like CLI"
   license: "MIT"
   name: version
   commit_msg_template: "chore(scoop): update version to {{ .Tag }}"
-  url_template: "https://github.com/YOUR_ORG_OR_USER/version/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+  url_template: "https://github.com/AlexBurnes/version-go/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
