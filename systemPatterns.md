@@ -100,6 +100,13 @@ Packaging Layer ✅
 - **Updates**: `scoop update burnes/version`
 - **Features**: Automatic updates, dependency management, clean uninstallation
 
+### Homebrew Tap Integration
+- **Tool**: GoReleaser Homebrew integration for macOS package management
+- **Repository**: `https://github.com/AlexBurnes/homebrew-tap`
+- **Installation**: `brew tap AlexBurnes/homebrew-tap https://github.com/AlexBurnes/homebrew-tap && brew install version`
+- **Updates**: `brew update && brew upgrade version`
+- **Features**: Automatic updates, dependency management, clean uninstallation
+
 ### Version Cleaning Logic
 - **Input**: `0.5.2-SNAPSHOT-5bb31e3` or `1.0.0-abc1234`
 - **Output**: `0.5.2` or `1.0.0`
@@ -132,3 +139,11 @@ Packaging Layer ✅
 - **Linux/macOS**: Multiple installation options (user, system-wide, custom directory)
 - **Custom Installation**: Support for `APP_DIR` environment variable for custom paths
 - **Benefit**: Clear, step-by-step instructions for all user types and preferences
+
+### Developer Workflow System
+- **VERSION File**: Centralized version management with single source of truth
+- **Pre-Push Hook**: Automated version validation and increment checking
+- **Release Process**: Standardized workflow from planning to publication
+- **Documentation**: Complete developer workflow with troubleshooting guide
+- **Validation**: Prevents accidental releases and ensures version consistency
+- **Automation**: Reduces human error in release process

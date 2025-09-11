@@ -8,7 +8,7 @@ To install the Version CLI via Homebrew:
 
 ```bash
 # Add the tap
-brew tap AlexBurnes/version https://github.com/AlexBurnes/homebrew-version
+brew tap AlexBurnes/homebrew-tap https://github.com/AlexBurnes/homebrew-tap
 
 # Install the formula
 brew install version
@@ -36,7 +36,7 @@ brew uninstall version
 - **Formula Name**: `version`
 - **Description**: Cross-platform semantic version parsing, validation, and ordering CLI utility
 - **License**: Apache-2.0
-- **Homepage**: https://github.com/AlexBurnes/version
+- **Homepage**: https://github.com/AlexBurnes/version-go
 - **Architectures**: amd64, arm64 (Apple Silicon)
 
 ## Manual Installation
@@ -45,11 +45,11 @@ If you prefer not to use Homebrew, you can download the binary directly:
 
 ```bash
 # For Intel Macs
-curl -L https://github.com/AlexBurnes/version/releases/download/v0.5.4/version-0.5.4-darwin-amd64.tar.gz | tar -xz
+curl -L https://github.com/AlexBurnes/version-go/releases/download/v0.5.7/version-0.5.7-darwin-amd64.tar.gz | tar -xz
 sudo mv version /usr/local/bin/
 
 # For Apple Silicon Macs
-curl -L https://github.com/AlexBurnes/version/releases/download/v0.5.4/version-0.5.4-darwin-arm64.tar.gz | tar -xz
+curl -L https://github.com/AlexBurnes/version-go/releases/download/v0.5.7/version-0.5.7-darwin-arm64.tar.gz | tar -xz
 sudo mv version /usr/local/bin/
 ```
 
@@ -64,4 +64,4 @@ version --help
 
 ## Support
 
-For issues and support, please visit the [main project repository](https://github.com/AlexBurnes/version).
+For issues and support, please visit the [main project repository](https://github.com/AlexBurnes/version-go).

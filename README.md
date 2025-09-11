@@ -2,7 +2,7 @@
 
 A cross-platform command-line utility written in Go that provides semantic version parsing, validation, and ordering. This tool replaces legacy bash scripts (`version`, `version-check`, `describe`) currently used in build pipelines and supports Linux, Windows, and macOS with a reproducible build/distribution process.
 
-**Version 0.5.0** - Clean project structure with `cmd/` directory following Go conventions!
+**Version 0.5.7** - Complete release with developer workflow and automated version management!
 
 ## Features
 
@@ -349,6 +349,32 @@ fi
 versions="1.2.3 1.2.4 1.2.3-alpha 2.0.0 1.2.3.fix"
 echo $versions | version sort
 ```
+
+## Developer Workflow
+
+This project includes a complete developer workflow with automated version management:
+
+### Quick Start
+```bash
+# Bump version (patch/minor/major)
+./scripts/version-bump patch
+
+# Make changes, test, and release
+go test ./... -v
+./buildtools/build-goreleaser.sh dry-run
+git add . && git commit -m "feat: changes for $(cat VERSION)"
+git tag $(cat VERSION)
+git push origin master && git push origin $(cat VERSION)
+./buildtools/build-goreleaser.sh release
+```
+
+### Key Features
+- **VERSION file**: Centralized version management
+- **Pre-push hooks**: Automated version validation
+- **Helper scripts**: `version-bump` and `version-check`
+- **Complete workflow**: From planning to publication
+
+See [DEVELOPER_WORKFLOW.md](DEVELOPER_WORKFLOW.md) for detailed instructions.
 
 ## Contributing
 

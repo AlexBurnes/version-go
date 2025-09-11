@@ -100,6 +100,8 @@ Sorting rules:
 - docs/ - all documentation for project
 - test/ - test scripts and test binaries
 - buildtools/ - build scripts (build-goreleaser.sh, etc.)
+- VERSION - current version number for centralized management
+- DEVELOPER_WORKFLOW.md - complete developer workflow documentation
 - README.md - short readme, purpose, how to build, links to other docs
 - project.md - main documentation for development (this file)
 - CHANGELOG.md - changelog

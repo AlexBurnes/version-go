@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Version checking script for pre-push hook
+# Usage: version-check <version_tag>
+
+set -e
+
+VERSION_TAG="$1"
+
+if [[ -z "$VERSION_TAG" ]]; then
+    echo "Usage: $0 <version_tag>"
+    exit 1
+fi
+
+# Check version format
+if [[ ! "$VERSION_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "Error: Invalid version tag format: $VERSION_TAG"
+    echo "Version tags must follow format: vX.Y.Z (e.g., v1.2.3)"
+    exit 1
+fi
+
+# Check VERSION file exists
+if [[ ! -f "VERSION" ]]; then
+    echo "Error: VERSION file not found"
+    echo "Create VERSION file with version number before pushing tag"
+    exit 1
+fi
+
+# Check VERSION file matches tag
+VERSION_FILE=$(cat VERSION)
+if [[ "$VERSION_FILE" != "$VERSION_TAG" ]]; then
+    echo "Error: VERSION file ($VERSION_FILE) does not match tag ($VERSION_TAG)"
+    echo "Update VERSION file to match the tag being pushed"
+    exit 1
+fi
+
+# Check if version is incremented from last tag
+LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+if [[ -n "$LAST_TAG" ]]; then
+    if [[ "$VERSION_TAG" == "$LAST_TAG" ]]; then
+        echo "Error: Version tag $VERSION_TAG already exists"
+        echo "Increment version number before pushing"
+        exit 1
+    fi
+    
+    # Simple version comparison (works for semantic versions)
+    if [[ "$VERSION_TAG" < "$LAST_TAG" ]]; then
+        echo "Error: Version tag $VERSION_TAG is older than last tag $LAST_TAG"
+        echo "Version must be incremented from last release"
+        exit 1
+    fi
+fi
+
+echo "Version check passed: $VERSION_TAG"
+exit 0

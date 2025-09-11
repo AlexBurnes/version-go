@@ -1,0 +1,258 @@
+# Developer Workflow: Version CLI Utility
+
+## Release Workflow
+
+This document outlines the complete workflow for planning, developing, and releasing new versions of the Version CLI utility.
+
+### Prerequisites
+
+- Go 1.22+ installed
+- Git configured with proper remote
+- GitHub token in `.env` file
+- Conan and CMake for builds
+- GoReleaser for releases
+
+### Phase 1: Planning & Development
+
+#### 1. Plan Changes and Update Version
+
+**Update VERSION file:**
+```bash
+# Option 1: Manual edit
+echo "v0.5.8" > VERSION
+
+# Option 2: Use version-bump script
+./scripts/version-bump patch    # v0.5.7 -> v0.5.8
+./scripts/version-bump minor    # v0.5.7 -> v0.6.0
+./scripts/version-bump major    # v0.5.7 -> v1.0.0
+```
+
+**Update CHANGELOG.md:**
+- Add new features, fixes, or changes
+- Follow conventional commit format
+- Update version numbers and dates
+
+**Plan changes:**
+- Review memory bank documents
+- Identify what needs to be implemented
+- Update project documentation if needed
+
+#### 2. Development and Testing
+
+**Make code changes:**
+```bash
+# Make your changes to the codebase
+# Update documentation as needed
+# Update memory bank documents
+```
+
+**Run tests:**
+```bash
+# Run all tests
+go test ./... -v
+
+# Run specific test suites
+go test ./cmd/version/... -v
+go test ./pkg/version/... -v
+
+# Run performance tests
+go test ./cmd/version/... -run TestPerformance -v
+```
+
+**Update documentation:**
+- Update README.md if needed
+- Update memory bank documents (activeContext.md, progress.md, etc.)
+- Update package files if version numbers changed
+
+### Phase 2: Pre-Release Validation
+
+#### 3. Dry Run Validation
+
+**Clean build artifacts:**
+```bash
+./buildtools/build-goreleaser.sh clean
+```
+
+**Run GoReleaser dry run:**
+```bash
+./buildtools/build-goreleaser.sh dry-run
+```
+
+**Verify outputs:**
+- Check that all platforms build successfully
+- Verify package manager files are generated correctly
+- Ensure no configuration errors
+- Check that version numbers match VERSION file
+
+### Phase 3: Release Execution
+
+#### 4. Commit Changes
+
+```bash
+# Stage all changes
+git add .
+
+# Commit with conventional commit message
+git commit -m "feat: add new features for v0.5.8"
+
+# Or for fixes:
+git commit -m "fix: resolve issue with version parsing"
+```
+
+#### 5. Set Git Tag
+
+```bash
+# Create tag from VERSION file
+VERSION=$(cat VERSION)
+git tag $VERSION
+
+# Verify tag
+git tag -l | grep $VERSION
+```
+
+#### 6. Upload to Git Repository
+
+```bash
+# Push commits
+git push origin master
+
+# Push tag
+git push origin $VERSION
+```
+
+#### 7. Run GoReleaser Release
+
+```bash
+# Run full release
+./buildtools/build-goreleaser.sh release
+```
+
+### Phase 4: Post-Release Verification
+
+#### 8. Verify Release
+
+**Check GitHub release:**
+- Visit: https://github.com/AlexBurnes/version-go/releases
+- Verify all assets are uploaded
+- Check that version matches VERSION file
+
+**Test package managers:**
+```bash
+# Test Homebrew (macOS)
+brew tap AlexBurnes/homebrew-tap
+brew install version
+version --version
+
+# Test Scoop (Windows)
+scoop bucket add burnes https://github.com/AlexBurnes/scoop-bucket
+scoop install burnes/version
+version --version
+```
+
+**Test direct downloads:**
+- Download binaries from GitHub releases
+- Verify they work on target platforms
+- Check checksums
+
+### Rollback Procedure
+
+If something goes wrong during release:
+
+```bash
+# Delete local tag
+git tag -d v0.5.8
+
+# Delete remote tag
+git push origin :refs/tags/v0.5.8
+
+# Delete GitHub release manually via web interface
+# Fix issues and retry
+```
+
+### Version Numbering
+
+Follow semantic versioning (SemVer):
+- **MAJOR**: Incompatible API changes
+- **MINOR**: New functionality in backwards compatible manner
+- **PATCH**: Backwards compatible bug fixes
+
+Examples:
+- `v1.0.0` - First stable release
+- `v1.1.0` - New features added
+- `v1.1.1` - Bug fixes only
+- `v2.0.0` - Breaking changes
+
+### Pre-Push Hook Integration
+
+The project includes a pre-push hook that:
+- Checks VERSION file exists and is valid
+- Verifies version number format
+- Ensures version is incremented from last tag
+- Prevents accidental releases
+
+### Memory Bank Maintenance
+
+Always update memory bank documents:
+- `activeContext.md` - Current work focus and recent changes
+- `progress.md` - What works and what's left to build
+- `systemPatterns.md` - Technical decisions and patterns
+- `productContext.md` - Product goals and user experience
+- `techContext.md` - Technologies and constraints
+
+### Troubleshooting
+
+**Common Issues:**
+
+1. **GoReleaser dry run fails:**
+   - Check `.goreleaser.yml` syntax
+   - Verify all required files exist
+   - Check GitHub token permissions
+
+2. **Package manager files incorrect:**
+   - Verify URLs in package files
+   - Check version numbers match VERSION file
+   - Ensure repository names are correct
+
+3. **Tests fail:**
+   - Run tests locally first
+   - Check for race conditions with `-race` flag
+   - Verify all dependencies are available
+
+4. **Release fails:**
+   - Check GitHub token has correct permissions
+   - Verify repository access
+   - Check for existing release with same version
+
+### Best Practices
+
+1. **Always test locally first**
+2. **Never skip the dry run**
+3. **Update documentation with changes**
+4. **Use conventional commit messages**
+5. **Verify package managers after release**
+6. **Keep memory bank documents current**
+7. **Test on multiple platforms when possible**
+
+### Quick Reference
+
+```bash
+# Complete workflow
+./scripts/version-bump patch
+# ... make changes ...
+go test ./... -v
+./buildtools/build-goreleaser.sh clean
+./buildtools/build-goreleaser.sh dry-run
+git add .
+VERSION=$(cat VERSION)
+git commit -m "feat: add new features for $VERSION"
+git tag $VERSION
+git push origin master
+git push origin $VERSION
+./buildtools/build-goreleaser.sh release
+```
+
+### Helper Scripts
+
+- **`scripts/version-bump [major|minor|patch]`**: Automatically increment version number
+- **`scripts/version-check <version_tag>`**: Validate version tag format and increment
+- **`buildtools/build-goreleaser.sh [command]`**: Build and release management
