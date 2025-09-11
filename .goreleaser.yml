@@ -39,7 +39,8 @@ archives:
     files:
       - LICENSE
       - README.md
-      - "packaging/linux/install.sh"
+      - src: "packaging/linux/install.sh"
+        dst: "install.sh"
 
 checksum:
   name_template: "checksums.txt"
@@ -59,3 +60,5 @@ scoop:
   name: version
   commit_msg_template: "chore(scoop): update version to {{ .Tag }}"
   url_template: "https://github.com/AlexBurnes/version-go/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+  skip_upload: false
+  folder: "packaging/windows/scoop-bucket"

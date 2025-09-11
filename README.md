@@ -39,21 +39,34 @@ The tool supports an extended grammar beyond SemVer 2.0:
 
 ## Installation
 
-### Linux (tar.gz)
+### Linux (Self-extracting installer)
 ```bash
-# Download and extract the latest release
-wget https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64.tar.gz
-tar -xzf version-linux-amd64.tar.gz
-sudo ./install.sh
+# Download and run the self-extracting installer
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-linux-amd64-install.sh | sh
+
+# Or for system-wide installation (requires sudo)
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-linux-amd64-install.sh | sudo sh
 ```
 
 ### Windows (Scoop)
 ```bash
 # Add the bucket (if not already added)
-scoop bucket add alexburnes https://github.com/AlexBurnes/scoop-bucket
+scoop bucket add burnes https://github.com/AlexBurnes/scoop-bucket
 
 # Install version
-scoop install version
+scoop install burnes/version
+
+# Update version
+scoop update burnes/version
+```
+
+### macOS (Self-extracting installer)
+```bash
+# Download and run the self-extracting installer
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-darwin-amd64-install.sh | sh
+
+# Or for system-wide installation (requires sudo)
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-darwin-amd64-install.sh | sudo sh
 ```
 
 ### From Source

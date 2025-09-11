@@ -32,10 +32,11 @@ Build System Layer ✅
 ├── Packaging: GoReleaser + Conan hooks ✅
 └── Cross-Platform: Automated builds for Linux/Windows/macOS ✅
 
-Packaging Layer (Ready)
-├── Linux: Makeself Self-Extracting Archives
-├── Windows: Scoop Package Manager
-└── Cross-Platform: GoReleaser Integration
+Packaging Layer ✅
+├── Linux: Makeself Self-Extracting Archives ✅
+├── Windows: Scoop Package Manager ✅
+├── macOS: Makeself Self-Extracting Archives ✅
+└── Cross-Platform: GoReleaser Integration ✅
 ```
 
 ## Key Technical Decisions
@@ -46,8 +47,11 @@ Packaging Layer (Ready)
 - **✅ Build System**: CMake as orchestrator, Conan for dependency management, GoReleaser for distribution
 - **✅ Local Development**: Conan + CMake + bash scripts for development and testing
 - **✅ Packaging Build**: GoReleaser with Conan hooks for automated cross-platform builds
-- **Linux Packaging**: Makeself for self-extracting archives with professional installation experience
-- **Windows Packaging**: Scoop package manager for easy installation and updates
+- **✅ Linux Packaging**: Makeself for self-extracting archives with professional installation experience
+- **✅ Windows Packaging**: Scoop package manager for easy installation and updates
+- **✅ macOS Packaging**: Makeself for self-extracting archives with professional installation experience
+- **✅ Installer Naming**: Clean version numbers without SNAPSHOT and hex abbreviations
+- **✅ Installation Approach**: No-sudo internal usage - users run with sudo if needed
 - **✅ Testing**: Standard Go testing framework with comprehensive library tests and race detection
 - **✅ Error Handling**: Structured error types with proper exit code mapping
 - **✅ API Design**: Clean, well-documented public API with comprehensive examples
@@ -71,7 +75,27 @@ Packaging Layer (Ready)
 2. **✅ Sorting Algorithm**: Parse all versions → Categorize by type → Apply precedence rules → Sort within categories
 3. **✅ Git Integration**: Read git tags → Parse versions → Validate → Return appropriate version
 4. **✅ Local Build Pipeline**: Source code → Conan deps → CMake config → Go compilation → Static binary
-5. **Packaging Build Pipeline**: GoReleaser → Conan hooks → Tool installation → Cross-compilation → Distribution packages
-6. **Linux Distribution**: Binary + install.sh → Makeself → Self-extracting .run archive → User installation
-7. **Windows Distribution**: Binary → ZIP archive → Scoop manifest → Scoop bucket → User installation
-8. **Cross-Platform Distribution**: GoReleaser → Multiple packages → GitHub releases → Automated distribution
+5. **✅ Makeself Installer Pipeline**: Binary + install script + docs → Package directory → Makeself compression → Self-extracting archive
+6. **✅ Scoop Integration Pipeline**: GoReleaser build → Scoop manifest generation → Package manager distribution
+
+## Packaging Implementation Details
+### Makeself Self-Extracting Installers
+- **Tool**: [makeself.sh](https://github.com/megastep/makeself) for creating self-extracting archives
+- **Format**: Single `.sh` file containing compressed binary, install script, and documentation
+- **Naming**: `version-{clean_version}-{platform}-{arch}-install.sh` (e.g., `version-0.5.2-linux-amd64-install.sh`)
+- **Installation**: Users run `wget -O - URL | sh` or `wget -O - URL | sudo sh` for system installation
+- **Features**: Professional header, integrity checking, no-sudo internal approach
+- **Platforms**: Linux and macOS with platform-specific install scripts
+
+### Scoop Package Manager Integration
+- **Tool**: GoReleaser Scoop integration for Windows package management
+- **Repository**: `https://github.com/AlexBurnes/scoop-bucket`
+- **Installation**: `scoop bucket add burnes https://github.com/AlexBurnes/scoop-bucket && scoop install burnes/version`
+- **Updates**: `scoop update burnes/version`
+- **Features**: Automatic updates, dependency management, clean uninstallation
+
+### Version Cleaning Logic
+- **Input**: `0.5.2-SNAPSHOT-5bb31e3` or `1.0.0-abc1234`
+- **Output**: `0.5.2` or `1.0.0`
+- **Pattern**: Removes `-SNAPSHOT-*` and `-{7-8 hex chars}` suffixes
+- **Purpose**: Clean, user-friendly installer names without development artifacts

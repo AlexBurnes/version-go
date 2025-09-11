@@ -7,10 +7,10 @@
 - **✅ GoReleaser**: Cross-platform build and distribution (verified working)
 - **✅ Git**: Version control and tag integration (implemented)
 - **✅ Bash**: Build scripts and installation scripts (working)
-- **Makeself**: Linux self-extracting archive creation (ready)
-- **Scoop**: Windows package management (ready)
-- **tar.gz**: Linux distribution format (ready)
-- **ZIP**: Windows distribution format (ready)
+- **✅ Makeself**: Linux and macOS self-extracting archive creation (implemented)
+- **✅ Scoop**: Windows package management (implemented)
+- **✅ tar.gz**: Linux distribution format (working)
+- **✅ ZIP**: Windows distribution format (working)
 
 ## Development Setup
 - **Go Environment**: Managed via Conan (`conan install golang/<version>`)
@@ -41,9 +41,9 @@
   - ✅ Go compiler (via Conan) - working
   - GoReleaser (via Conan or direct install) - ready
 - **Packaging Dependencies**:
-  - Makeself (for Linux self-extracting archives) - ready
-  - Scoop (for Windows package management) - ready
-  - Git (for bucket repository management) - working
+  - ✅ Makeself (for Linux and macOS self-extracting archives) - implemented
+  - ✅ Scoop (for Windows package management) - implemented
+  - ✅ Git (for bucket repository management) - working
 
 ## Tool Usage Patterns
 - **✅ Development**: `go build`, `go test`, `go mod` for standard Go development (working)
@@ -52,8 +52,18 @@
 - **✅ Testing**: `go test ./... -race` for comprehensive testing including library tests (all tests passing)
 - **✅ Library Testing**: `go test ./pkg/version/... -v` for library-specific tests
 - **✅ Library Usage**: `go run examples/basic/main.go` for library demonstration
-- **Linux Packaging**: Makeself creates self-extracting .run archives (ready)
-- **Windows Packaging**: Scoop manages package installation and updates (ready)
+- **✅ Linux Packaging**: Makeself creates self-extracting .sh archives (implemented)
+- **✅ macOS Packaging**: Makeself creates self-extracting .sh archives (implemented)
+- **✅ Windows Packaging**: Scoop manages package installation and updates (implemented)
 - **✅ Distribution**: GoReleaser handles cross-platform builds and packaging (verified working)
 - **✅ Documentation**: Markdown files with Memory Bank integration and library documentation (complete)
 - **✅ Version Control**: Git with semantic versioning tags for releases (working)
+
+## Packaging Tools and Scripts
+- **✅ create-makeself-installer.sh**: Creates self-extracting installers for Linux and macOS
+- **✅ create-all-installers.sh**: Batch creation of installers for all platforms
+- **✅ makeself.sh**: Downloaded and integrated for creating self-extracting archives
+- **✅ makeself-header.sh**: Professional branding header for installers
+- **✅ GoReleaser Scoop Integration**: Automated Scoop manifest generation for Windows
+- **✅ Clean Naming Logic**: Version cleaning to remove SNAPSHOT and hex suffixes
+- **✅ No-Sudo Approach**: Install scripts don't use sudo internally - users run with sudo if needed
