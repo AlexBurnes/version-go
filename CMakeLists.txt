@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 # Get version from git using describe script
 execute_process(
-    COMMAND "git describe --match "v[0-9]*" --abbrev=0 --always --tags $(git log --pretty=oneline | awk '{print $1}') | sort -rV | head -1 | sed -r 's/-[0-9]+\-g[a-f0-9]+$//'"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/../..
+    COMMAND git describe --match "v[0-9]*" --abbrev=0 --tags
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     OUTPUT_VARIABLE GIT_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
     RESULT_VARIABLE GIT_VERSION_RESULT
@@ -12,13 +12,13 @@ execute_process(
 # Use git version if available, otherwise fail
 if(GIT_VERSION_RESULT EQUAL 0 AND GIT_VERSION)
     # Extract base version (major.minor.patch) for CMake VERSION field
-    string(REGEX MATCH "^([0-9]+\\.[0-9]+\\.[0-9]+)" BASE_VERSION "${GIT_VERSION}")
+    string(REGEX MATCH "^v?([0-9]+\\.[0-9]+\\.[0-9]+)" BASE_VERSION "${GIT_VERSION}")
     if(BASE_VERSION)
-        set(PROJECT_VERSION ${BASE_VERSION})
+        set(PROJECT_VERSION ${CMAKE_MATCH_1})
         set(FULL_GIT_VERSION ${GIT_VERSION})
         message(STATUS "Using git version: ${GIT_VERSION} -> ${PROJECT_VERSION}")
     else()
-        message(FATAL_ERROR "Could not parse git version: ${GIT_VERSION}. Expected format: X.Y.Z~rc.N")
+        message(FATAL_ERROR "Could not parse git version: ${GIT_VERSION}. Expected format: vX.Y.Z or X.Y.Z")
     endif()
 else()
     message(FATAL_ERROR "Failed to get version from git. Make sure you're in a git repository and the describe script is available.")
@@ -39,7 +39,7 @@ elseif(EXISTS "${CMAKE_BINARY_DIR}/Release/generators/conan_toolchain.cmake")
 endif()
 
 # Set Go version requirement
-set(GO_VERSION_REQUIRED "1.21")
+set(GO_VERSION_REQUIRED "1.22")
 
 # Find Go (will use Conan's Go if available)
 find_program(GO_EXECUTABLE go REQUIRED)
@@ -99,14 +99,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_custom_target(${BINARY_NAME}
         COMMAND ${CMAKE_COMMAND} -E env CGO_ENABLED=0 GOOS=linux GOARCH=amd64
         ${GO_EXECUTABLE} build -a -ldflags "-extldflags \"-static\"" ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME}-linux-amd64-static .
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
         COMMENT "Building static ${BINARY_NAME} for current platform (linux/amd64)"
         VERBATIM
     )
 else()
     add_custom_target(${BINARY_NAME}
         COMMAND ${GO_EXECUTABLE} build ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME} .
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
         COMMENT "Building ${BINARY_NAME} for current platform"
         VERBATIM
     )
@@ -128,7 +128,7 @@ foreach(PLATFORM ${PLATFORMS})
     add_custom_target(${BINARY_NAME}-${GOOS}-${GOARCH}
         COMMAND ${CMAKE_COMMAND} -E env GOOS=${GOOS} GOARCH=${GOARCH}
         ${GO_EXECUTABLE} build ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME_PLATFORM} .
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
         COMMENT "Building ${BINARY_NAME} for ${GOOS}/${GOARCH}"
         VERBATIM
     )
@@ -155,17 +155,17 @@ add_custom_target(${BINARY_NAME}-all
 
 # Test target
 add_custom_target(test
-    COMMAND ${GO_EXECUTABLE} test ${GO_TEST_FLAGS} ./...
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMAND ${GO_EXECUTABLE} test ${GO_TEST_FLAGS} .
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
     COMMENT "Running tests"
     VERBATIM
 )
 
 # Test with coverage target
 add_custom_target(test-coverage
-    COMMAND ${GO_EXECUTABLE} test ${GO_TEST_FLAGS} ./...
+    COMMAND ${GO_EXECUTABLE} test ${GO_TEST_FLAGS} .
     COMMAND ${GO_EXECUTABLE} tool cover -html=coverage.out -o coverage.html
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
     COMMENT "Running tests with coverage"
     VERBATIM
 )
@@ -183,7 +183,7 @@ find_program(GOLANGCI_LINT_EXECUTABLE golangci-lint)
 if(GOLANGCI_LINT_EXECUTABLE)
     add_custom_target(lint
         COMMAND ${GOLANGCI_LINT_EXECUTABLE} run
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
         COMMENT "Linting code"
         VERBATIM
     )
