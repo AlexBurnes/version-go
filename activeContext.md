@@ -24,6 +24,8 @@
   - **COMPLETED**: Automated version validation before changes
   - **COMPLETED**: User-friendly version increment suggestions
   - **COMPLETED**: Integration with existing developer workflow
+  - **FIXED**: Pre-push hook now only checks version when pushing current branch
+  - **FIXED**: Version validation only applies to tags being pushed, not all existing tags
 - **NEW**: Refactored core functionality into reusable library package (pkg/version)
 - **NEW**: Created comprehensive library API with exported types and functions
 - **NEW**: Added library documentation (docs/LIBRARY.md) with usage examples

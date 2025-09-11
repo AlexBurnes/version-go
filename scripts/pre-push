@@ -31,18 +31,6 @@ while IFS= read -t 1 -r arg; do
         push_tag_ref=$(echo ${arg} | awk '{print $1}')
         push_tag_sha=$(echo ${arg} | awk '{print $2}')
         #echo -e "pushing tags ref '${push_tag_ref} sha '${push_tag_sha}'"
-        # Check version tag using version-check script
-        version_tag=$(echo $push_tag_ref | sed -r 's/^refs\/tags\///')
-        if [[ -e "scripts/version-check" ]]; then
-            scripts/version-check "$version_tag"
-            rc=$?
-            if [[ $rc -gt 0 ]]; then
-                echo -e "${red}Version check failed for tag: $version_tag${clre}"
-                exit 1
-            fi
-        else
-            echo -e "${yellow}Warning: version-check script not found, skipping version validation${clre}"
-        fi
     fi
 done
 
@@ -64,6 +52,22 @@ fi
 if [[ -z "${push_head_ref}" || ! ( "${head_ref}" == "${push_head_ref}" && "${head_commit}" == "${push_head_commit}" ) ]]; then
     #echo -e "no current head or branch is pushing"
     exit 0
+fi
+
+# Only check version consistency when pushing the current branch
+# Check if we're pushing tags and validate them against VERSION file
+if [[ ! -z "${push_tag_ref}" ]]; then
+    version_tag=$(echo $push_tag_ref | sed -r 's/^refs\/tags\///')
+    if [[ -e "scripts/version-check" ]]; then
+        scripts/version-check "$version_tag"
+        rc=$?
+        if [[ $rc -gt 0 ]]; then
+            echo -e "${red}Version check failed for tag: $version_tag${clre}"
+            exit 1
+        fi
+    else
+        echo -e "${yellow}Warning: version-check script not found, skipping version validation${clre}"
+    fi
 fi
 
 #FIXME prevent pre-push if pushing references is not on the same branch
