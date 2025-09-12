@@ -44,9 +44,8 @@ release:
   prerelease: auto
   draft: false
   extra_files:
-    - glob: "dist/version-*-linux-*-install.sh"
-    - glob: "dist/version-*-darwin-*-install.sh"
-    - glob: ".goreleaser-binaries/version_{{ .Version }}_*"
+    - glob: "installers/version-*-linux-*-install.sh"
+    - glob: "installers/version-*-darwin-*-install.sh"
 
 
 scoop:

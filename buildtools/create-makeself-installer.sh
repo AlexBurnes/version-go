@@ -54,8 +54,9 @@ create_package_dir() {
     local version="$1"
     local platform="$2"
     local arch="$3"
+    local target_dir="${4:-dist}"
     
-    local package_dir="dist/installer-package-${platform}-${arch}"
+    local package_dir="${target_dir}/installer-package-${platform}-${arch}"
     local binary_name="version"
     if [[ "$platform" == "windows" ]]; then
         binary_name="version.exe"
@@ -173,11 +174,12 @@ create_installer() {
     local platform="$2"
     local arch="$3"
     local package_dir="$4"
+    local target_dir="${5:-dist}"
     
     # Clean version for installer name (remove v prefix and dirty/snapshot suffixes)
     local clean_version=$(echo "$version" | sed 's/^v//' | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//' | sed 's/-dirty$//')
     local installer_name="version-${clean_version}-${platform}-${arch}-install.sh"
-    local installer_path="dist/${installer_name}"
+    local installer_path="${target_dir}/${installer_name}"
     
     log_info "Creating self-extracting installer: $installer_name"
     
@@ -194,7 +196,7 @@ create_installer() {
     ../../buildtools/makeself.sh \
         --header "../../packaging/linux/makeself-header.sh" \
         . \
-        "../../$installer_path" \
+        "$(realpath "../../$installer_path")" \
         "version ${version} - git describe CLI" \
         "./install.sh"
     
@@ -212,9 +214,10 @@ main() {
     local version="${1:-}"
     local platform="${2:-}"
     local arch="${3:-}"
+    local target_dir="${4:-dist}"
     
     if [[ -z "$version" || -z "$platform" || -z "$arch" ]]; then
-        echo "Usage: $0 <version> <platform> <arch>"
+        echo "Usage: $0 <version> <platform> <arch> [target_dir]"
         echo "Example: $0 0.5.2 linux amd64"
         exit 1
     fi
@@ -225,11 +228,11 @@ main() {
     
     log_info "Creating package directory..."
     local package_dir
-    package_dir=$(create_package_dir "$version" "$platform" "$arch")
+    package_dir=$(create_package_dir "$version" "$platform" "$arch" "$target_dir")
     
     log_info "Creating self-extracting installer..."
     local installer_path
-    installer_path=$(create_installer "$version" "$platform" "$arch" "$package_dir")
+    installer_path=$(create_installer "$version" "$platform" "$arch" "$package_dir" "$target_dir")
     
     log_success "Installer created successfully: $installer_path"
     log_info "Users can install with: wget -O - https://github.com/AlexBurnes/version-go/releases/download/v${version}/$(basename "$installer_path") | sh"

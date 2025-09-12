@@ -46,8 +46,12 @@ get_version() {
 # Create installers for all platforms
 create_all_installers() {
     local version="$1"
+    local target_dir="${2:-dist}"
     
     log_info "Creating makeself installers for version: $version"
+    
+    # Create target directory if it doesn't exist
+    mkdir -p "$target_dir"
     
     # Platforms and architectures to build
     local platforms=("linux" "darwin")
@@ -72,7 +76,7 @@ create_all_installers() {
             fi
             
             if [[ -n "$archive_file" && -f "$archive_file" ]]; then
-                ./buildtools/create-makeself-installer.sh "$version" "$platform" "$arch"
+                ./buildtools/create-makeself-installer.sh "$version" "$platform" "$arch" "$target_dir"
                 # Clean version for installer name
                 local clean_version=$(echo "$version" | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//')
                 created_installers+=("version-${clean_version}-${platform}-${arch}-install.sh")
@@ -84,13 +88,14 @@ create_all_installers() {
     
     log_success "Created ${#created_installers[@]} installers:"
     for installer in "${created_installers[@]}"; do
-        echo "  - dist/$installer"
+        echo "  - $target_dir/$installer"
     done
 }
 
 # Main function
 main() {
     local version="${1:-}"
+    local target_dir="${2:-dist}"
     version=$(get_version "$version")
     
     log_info "Creating makeself installers for version: $version"
@@ -107,7 +112,7 @@ main() {
         exit 1
     fi
     
-    create_all_installers "$version"
+    create_all_installers "$version" "$target_dir"
     
     log_success "All installers created successfully!"
     log_info "Installers can be distributed via GitHub releases"

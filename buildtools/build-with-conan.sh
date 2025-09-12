@@ -192,8 +192,8 @@ create_install_scripts() {
     local version="${1:-}"
     log_info "Step 2: Creating install scripts..."
     
-    # Create makeself installers
-    ./buildtools/create-all-installers.sh "$version"
+    # Create makeself installers in installers/ directory
+    ./buildtools/create-all-installers.sh "$version" "installers"
     
     log_success "Install scripts created"
 }
@@ -206,13 +206,13 @@ publish_release() {
     
     case "$mode" in
         "snapshot")
-            goreleaser release --snapshot
+            goreleaser release --snapshot --clean
             ;;
         "release")
-            goreleaser release
+            goreleaser release --clean
             ;;
         "dry-run")
-            goreleaser release --snapshot --skip=publish
+            goreleaser release --snapshot --skip=publish --clean
             ;;
         *)
             log_error "Unknown mode: $mode"
