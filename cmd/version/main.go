@@ -6,7 +6,7 @@ import (
     "os"
 )
 
-const VERSION = "0.5.0"
+var appVersion = "0.5.0" // Default version, can be overridden via ldflags
 
 var (
     debugFlag   bool
@@ -139,7 +139,7 @@ Examples:
     version check-greatest
     version type 1.2.3-alpha.1
     echo "1.2.3 1.2.4 1.2.3-alpha" | version sort
-`, VERSION)
+`, appVersion)
 }
 
 func main() {
@@ -152,7 +152,7 @@ func main() {
     }
 
     if versionFlag {
-        fmt.Println(VERSION)
+        fmt.Println(appVersion)
         os.Exit(0)
     }
 

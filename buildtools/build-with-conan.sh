@@ -111,6 +111,9 @@ build_binaries() {
     # Create archives in GoReleaser format for install scripts
     log_info "Creating archives in GoReleaser format..."
     
+    # Ensure dist directory exists
+    mkdir -p dist/
+    
     # Get version for archive naming
     local version=$(get_version)
     local clean_version=$(echo "$version" | sed 's/^v//' | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//' | sed 's/-dirty$//')
@@ -156,7 +159,8 @@ build_binaries() {
     cp bin/version-windows-amd64.exe "$windows_amd64_dir/version.exe"
     cp LICENSE "$windows_amd64_dir/"
     cp README.md "$windows_amd64_dir/"
-    zip -r "dist/version_${clean_version}_windows_amd64.zip" -C "$windows_amd64_dir" .
+    local dist_path=$(realpath dist)
+    (cd "$windows_amd64_dir" && zip -r "$dist_path/version_${clean_version}_windows_amd64.zip" .)
     
     # Clean up temporary directories
     for dir in "${temp_dirs[@]}"; do

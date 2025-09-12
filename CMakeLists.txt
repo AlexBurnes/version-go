@@ -76,7 +76,7 @@ file(MAKE_DIRECTORY ${BUILD_DIR})
 # Set build flags
 set(GO_BUILD_FLAGS
     -trimpath
-    -ldflags "-X main.version=${FULL_GIT_VERSION} -s -w"
+    -ldflags "-X main.appVersion=${FULL_GIT_VERSION} -s -w"
 )
 
 # Set test flags
