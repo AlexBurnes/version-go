@@ -8,6 +8,7 @@ build
 CMakeUserPresets.json
 dist
 .goreleaser-binaries/
+.goreleaser-skip-build.yml
 
 # environment and tockens
 .env
