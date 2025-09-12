@@ -11,23 +11,18 @@ before:
     # 3) Normalize PATH: collect all */bin under .toolchain into .toolchain/bin for a stable PATH entry.
     - bash -lc './buildtools/collect_bins.sh .toolchain'
     - go mod tidy
+    # 4) Copy pre-built binaries to dist/ after cleanup
+    - bash -lc 'if [ -d ".goreleaser-binaries" ]; then cp .goreleaser-binaries/* dist/ 2>/dev/null || true; fi'
 
 builds:
   - id: version
     main: ./cmd/version
     binary: version
-    env:
-      # Expose Conan-deployed tools (go, cmake, ninja, etc.) to the GoReleaser build.
-      - PATH={{ .Env.PATH }}:{{ .Env.PWD }}/.toolchain/bin
-      - CGO_ENABLED=0
-    goos: [linux, windows, darwin]
+    goos: [linux, darwin, windows]
     goarch: [amd64, arm64]
     ldflags:
       - -s -w
-      - -X github.com/AlexBurnes/version-go/internal/buildinfo.Version={{ .Version }}
-      - -X github.com/AlexBurnes/version-go/internal/buildinfo.Commit={{ .FullCommit }}
-      - -X github.com/AlexBurnes/version-go/internal/buildinfo.Date={{ .Date }}
-      - -X github.com/AlexBurnes/version-go/internal/buildinfo.Dirty={{ .IsGitDirty }}
+      - -X main.appVersion={{ .Version }}
 
 archives:
   - id: default
@@ -51,6 +46,7 @@ release:
   extra_files:
     - glob: "dist/version-*-linux-*-install.sh"
     - glob: "dist/version-*-darwin-*-install.sh"
+    - glob: ".goreleaser-binaries/version_{{ .Version }}_*"
 
 
 scoop:

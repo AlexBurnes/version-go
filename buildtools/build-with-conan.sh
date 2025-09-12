@@ -108,6 +108,23 @@ build_binaries() {
     # Build for all platforms using build-conan.sh
     ./buildtools/build-conan.sh build-all
     
+    # Store binaries in a backup location for GoReleaser hooks
+    log_info "Storing binaries for GoReleaser hooks..."
+    local version=$(get_version)
+    local clean_version=$(echo "$version" | sed 's/^v//' | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//' | sed 's/-dirty$//')
+    
+    # Create backup directory for binaries
+    mkdir -p .goreleaser-binaries
+    
+    # Copy binaries with GoReleaser naming convention to backup location
+    cp bin/version-linux-amd64 ".goreleaser-binaries/version_${clean_version}_linux_amd64"
+    cp bin/version-linux-arm64 ".goreleaser-binaries/version_${clean_version}_linux_arm64"
+    cp bin/version-darwin-amd64 ".goreleaser-binaries/version_${clean_version}_darwin_amd64"
+    cp bin/version-darwin-arm64 ".goreleaser-binaries/version_${clean_version}_darwin_arm64"
+    cp bin/version-windows-amd64.exe ".goreleaser-binaries/version_${clean_version}_windows_amd64.exe"
+    
+    log_success "Binaries stored for GoReleaser hooks"
+    
     # Create archives in GoReleaser format for install scripts
     log_info "Creating archives in GoReleaser format..."
     
@@ -181,39 +198,27 @@ create_install_scripts() {
     log_success "Install scripts created"
 }
 
-# Step 3: Publish with GoReleaser (skip build, only package and publish)
+# Step 3: Publish with GoReleaser (builds binaries, then replaces with pre-built ones)
 publish_release() {
     local mode="${1:-snapshot}"
     
-    log_info "Step 3: Publishing release with GoReleaser (skip build)..."
-    
-    # Create a temporary GoReleaser config that skips building
-    local temp_config=".goreleaser-skip-build.yml"
-    
-    # Copy the original config and modify it
-    cp .goreleaser.yml "$temp_config"
-    
-    # Add skip_build: true to the builds section
-    sed -i '/^builds:/a\  skip_build: true' "$temp_config"
+    log_info "Step 3: Publishing release with GoReleaser..."
     
     case "$mode" in
         "snapshot")
-            goreleaser release --snapshot --config="$temp_config"
+            goreleaser release --snapshot
             ;;
         "release")
-            goreleaser release --config="$temp_config"
+            goreleaser release
             ;;
         "dry-run")
-            goreleaser release --snapshot --skip=publish --config="$temp_config"
+            goreleaser release --snapshot --skip=publish
             ;;
         *)
             log_error "Unknown mode: $mode"
             exit 1
             ;;
     esac
-    
-    # Clean up temporary config
-    rm -f "$temp_config"
     
     log_success "Release published successfully"
 }
