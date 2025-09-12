@@ -43,10 +43,44 @@ if [[ -n "$LAST_TAG" ]]; then
         exit 1
     fi
     
-    # Simple version comparison (works for semantic versions)
-    if [[ "$VERSION_TAG" < "$LAST_TAG" ]]; then
+    # Compare versions using sort -V for proper semantic version comparison
+    # compare version function and variables
+    declare -ri EQUAL=0
+    declare -ri GREATEST=2
+    declare -ri LEAST=1
+    declare -ri CMPERR=3
+    function compare_versions() {
+        local v1="${1}"
+        local v2="${2}"
+        if [[ "${v1}" == "${v2}" ]]; then
+            # v1 == v2, v1 and v2 are equal
+            return $EQUAL
+        fi
+
+        local least=$(for v in $(echo "${v1} ${v2}"); do echo "${v}"; done | sort -V | head -1)
+        if [[ "${least}" == "${v1}" ]]; then
+            # v1 < v2, v1 is least
+            return $LEAST
+        fi
+
+        if [[ "${least}" == "${v2}" ]]; then
+            # v1 > v2, v1 is greatest
+            return $GREATEST
+        fi
+
+        return $CMPERR
+    }
+    
+    # Compare the new tag with the last tag
+    compare_versions "$VERSION_TAG" "$LAST_TAG" || true
+    result=$?
+    
+    if [[ $result -eq $LEAST ]]; then
         echo "Error: Version tag $VERSION_TAG is older than last tag $LAST_TAG"
         echo "Version must be incremented from last release"
+        exit 1
+    elif [[ $result -eq $CMPERR ]]; then
+        echo "Error: Failed to compare versions $VERSION_TAG and $LAST_TAG"
         exit 1
     fi
 fi
