@@ -116,7 +116,8 @@ build_binaries() {
             ./buildtools/build-goreleaser.sh snapshot
             ;;
         "release")
-            ./buildtools/build-goreleaser.sh release
+            # Use snapshot mode to avoid publishing twice
+            ./buildtools/build-goreleaser.sh snapshot
             ;;
         "dry-run")
             ./buildtools/build-goreleaser.sh dry-run

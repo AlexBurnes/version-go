@@ -89,6 +89,7 @@ set(GO_TEST_FLAGS
 # Platform-specific build configurations
 set(PLATFORMS
     "linux/amd64"
+    "linux/arm64"
     "darwin/amd64"
     "darwin/arm64"
     "windows/amd64"
@@ -125,19 +126,30 @@ foreach(PLATFORM ${PLATFORMS})
     
     set(BINARY_NAME_PLATFORM "${BINARY_NAME}-${GOOS}-${GOARCH}${BINARY_SUFFIX}")
     
-    add_custom_target(${BINARY_NAME}-${GOOS}-${GOARCH}
-        COMMAND ${CMAKE_COMMAND} -E env GOOS=${GOOS} GOARCH=${GOARCH}
-        ${GO_EXECUTABLE} build ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME_PLATFORM} .
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
-        COMMENT "Building ${BINARY_NAME} for ${GOOS}/${GOARCH}"
-        VERBATIM
-    )
+    # Build static binaries for darwin and linux, regular for windows
+    if(GOOS STREQUAL "darwin" OR GOOS STREQUAL "linux")
+        add_custom_target(${BINARY_NAME}-${GOOS}-${GOARCH}
+            COMMAND ${CMAKE_COMMAND} -E env CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${GOARCH}
+            ${GO_EXECUTABLE} build -a -ldflags "-extldflags \"-static\"" ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME_PLATFORM} .
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
+            COMMENT "Building static ${BINARY_NAME} for ${GOOS}/${GOARCH}"
+            VERBATIM
+        )
+    else()
+        add_custom_target(${BINARY_NAME}-${GOOS}-${GOARCH}
+            COMMAND ${CMAKE_COMMAND} -E env GOOS=${GOOS} GOARCH=${GOARCH}
+            ${GO_EXECUTABLE} build ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME_PLATFORM} .
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
+            COMMENT "Building ${BINARY_NAME} for ${GOOS}/${GOARCH}"
+            VERBATIM
+        )
+    endif()
 endforeach()
 
 # Static Linux build target for maximum compatibility
 add_custom_target(${BINARY_NAME}-linux-amd64-static
     COMMAND ${CMAKE_COMMAND} -E env CGO_ENABLED=0 GOOS=linux GOARCH=amd64
-    ${GO_EXECUTABLE} build -a -ldflags "-extldflags \"-static\"" ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME}-linux-amd64-static .
+    ${GO_EXECUTABLE} build -a -ldflags "-extldflags \"-static\"" ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME}-linux-amd64 .
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
     COMMENT "Building static ${BINARY_NAME} for linux/amd64 (maximum compatibility)"
     VERBATIM
@@ -146,7 +158,7 @@ add_custom_target(${BINARY_NAME}-linux-amd64-static
 # Build all platforms target
 add_custom_target(${BINARY_NAME}-all
     DEPENDS ${BINARY_NAME}-linux-amd64
-    DEPENDS ${BINARY_NAME}-linux-amd64-static
+    DEPENDS ${BINARY_NAME}-linux-arm64
     DEPENDS ${BINARY_NAME}-darwin-amd64
     DEPENDS ${BINARY_NAME}-darwin-arm64
     DEPENDS ${BINARY_NAME}-windows-amd64

@@ -11,6 +11,3 @@ dist
 # environment and tockens
 .env
 
-# goreleaser tmp scripts
-buildtools/post-archive-hook.sh.bak
-buildtools/post-archive-hook.sh
