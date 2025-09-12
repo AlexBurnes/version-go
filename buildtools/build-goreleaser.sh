@@ -147,12 +147,6 @@ run_goreleaser() {
     esac
     
     log_success "GoReleaser build completed"
-    
-    # Create makeself installers after GoReleaser completes
-    if [[ "$mode" != "dry-run" ]]; then
-        log_info "Creating makeself installers..."
-        ./buildtools/post-archive-hook.sh
-    fi
 }
 
 # Clean build artifacts
