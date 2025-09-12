@@ -7,6 +7,7 @@ bin/
 build
 CMakeUserPresets.json
 dist
+.goreleaser-binaries/
 
 # environment and tockens
 .env
