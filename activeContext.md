@@ -4,6 +4,12 @@
 **PROJECT COMPLETED WITH VERSION MANAGEMENT SYSTEM** - Successfully implemented complete Go CLI utility replacing legacy bash scripts. All core functionality, testing, and build system integration is complete and working. Additionally, implemented comprehensive version management system with automated checking, workflow enforcement, and developer tools. Version 0.5.8 includes complete developer workflow automation and version checking system.
 
 ## Recent Changes
+- **NEW (v0.6.0)**: Script Rename and Documentation Updates
+  - **COMPLETED**: Renamed `build-with-conan.sh` to `build-and-package.sh` for better semantic clarity
+  - **COMPLETED**: Updated all documentation references to use new script name
+  - **COMPLETED**: Enhanced BUILD.md with main build script section
+  - **COMPLETED**: Updated developer workflow documentation with new script name
+  - **COMPLETED**: Updated project.md main build scripts list
 - **COMPLETED**: Full Go implementation with custom regex-based version parser
 - **COMPLETED**: Colored output system matching bash script patterns (error=red, success=green, debug=yellow)
 - **COMPLETED**: All CLI commands (project, module, version, release, full, check, check-greatest, type, build-type, sort)

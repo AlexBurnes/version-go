@@ -9,6 +9,20 @@ The project supports two main build approaches:
 1. **Local Development Build**: Using Conan + CMake + bash scripts for development and testing
 2. **Packaging Build**: Using GoReleaser with Conan hooks for automated cross-platform packaging
 
+### Main Build Script
+
+The primary entry point for building and packaging is `buildtools/build-and-package.sh`, which orchestrates the complete build flow:
+- Builds binaries using `build-conan.sh`
+- Creates makeself installers
+- Publishes packages via GoReleaser
+
+```bash
+# Quick build and package
+./buildtools/build-and-package.sh snapshot    # Build snapshot
+./buildtools/build-and-package.sh release     # Build full release
+./buildtools/build-and-package.sh dry-run     # Test build without publishing
+```
+
 ## Prerequisites
 
 ### Required Tools

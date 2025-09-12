@@ -48,6 +48,7 @@
 ## Tool Usage Patterns
 - **✅ Development**: `go build`, `go test`, `go mod` for standard Go development (working)
 - **✅ Local Build**: CMake orchestrates Conan → Go compilation (working)
+- **✅ Main Build**: `build-and-package.sh` orchestrates complete build flow (build-conan → makeself → goreleaser)
 - **✅ Packaging Build**: `build-goreleaser.sh` script orchestrates GoReleaser → Conan hooks → Cross-compilation (verified)
 - **✅ Testing**: `go test ./... -race` for comprehensive testing including library tests (all tests passing)
 - **✅ Library Testing**: `go test ./pkg/version/... -v` for library-specific tests

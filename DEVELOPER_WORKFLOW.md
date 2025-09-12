@@ -70,12 +70,12 @@ go test ./cmd/version/... -run TestPerformance -v
 
 **Clean build artifacts:**
 ```bash
-./buildtools/build-goreleaser.sh clean
+./buildtools/build-and-package.sh clean
 ```
 
-**Run GoReleaser dry run:**
+**Run build and package dry run:**
 ```bash
-./buildtools/build-goreleaser.sh dry-run
+./buildtools/build-and-package.sh dry-run
 ```
 
 **Verify outputs:**
@@ -120,11 +120,11 @@ git push origin master
 git push origin $VERSION
 ```
 
-#### 7. Run GoReleaser Release
+#### 7. Run Build and Package Release
 
 ```bash
 # Run full release
-./buildtools/build-goreleaser.sh release
+./buildtools/build-and-package.sh release
 ```
 
 ### Phase 4: Post-Release Verification
@@ -240,19 +240,20 @@ Always update memory bank documents:
 ./scripts/version-bump patch
 # ... make changes ...
 go test ./... -v
-./buildtools/build-goreleaser.sh clean
-./buildtools/build-goreleaser.sh dry-run
+./buildtools/build-and-package.sh clean
+./buildtools/build-and-package.sh dry-run
 git add .
 VERSION=$(cat VERSION)
 git commit -m "feat: add new features for $VERSION"
 git tag $VERSION
 git push origin master
 git push origin $VERSION
-./buildtools/build-goreleaser.sh release
+./buildtools/build-and-package.sh release
 ```
 
 ### Helper Scripts
 
 - **`scripts/version-bump [major|minor|patch]`**: Automatically increment version number
 - **`scripts/version-check <version_tag>`**: Validate version tag format and increment
-- **`buildtools/build-goreleaser.sh [command]`**: Build and release management
+- **`buildtools/build-and-package.sh [command]`**: Main build and package management
+- **`buildtools/build-goreleaser.sh [command]`**: GoReleaser-specific build management

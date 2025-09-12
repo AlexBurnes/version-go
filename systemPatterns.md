@@ -28,6 +28,7 @@ Utility Layer ✅
 └── Platform Abstractions ✅
 
 Build System Layer ✅
+├── Main Entry: build-and-package.sh (orchestrates complete build flow) ✅
 ├── Local Development: Conan + CMake + bash scripts ✅
 ├── Packaging: GoReleaser + Conan hooks ✅
 ├── Cross-Platform: Automated builds for Linux/Windows/macOS ✅

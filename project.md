@@ -114,7 +114,7 @@ Sorting rules:
   - Even Go itself must be installed via Conan (e.g., `conan install golang/<version>`).
 - Build outputs must be placed in `bin/` directory only.
 - Support reproducible builds across Linux, Windows, and macOS.
-- Main build scripts: `build-goreleaser.sh`, `build-conan.sh`, `create-all-installers.sh`
+- Main build scripts: `build-and-package.sh`, `build-goreleaser.sh`, `build-conan.sh`, `create-all-installers.sh`
 
 ## 10. References
 - Semantic Versioning 2.0: https://semver.org/

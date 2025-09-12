@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2024-12-19
+
+### Changed
+- **Build Script Rename**: Renamed `buildtools/build-with-conan.sh` to `buildtools/build-and-package.sh` for better semantic clarity
+  - The new name better describes the script's purpose (builds binaries AND creates packages)
+  - Updated all documentation references to use the new script name
+  - Enhanced BUILD.md with main build script section explaining the primary entry point
+  - Updated developer workflow documentation with new script name
+  - Updated project.md main build scripts list
+
+### Documentation
+- **BUILD.md**: Added "Main Build Script" section explaining `build-and-package.sh` as the primary entry point
+- **README.md**: Updated developer workflow examples to use new script name
+- **DEVELOPER_WORKFLOW.md**: Updated all references throughout the workflow documentation
+- **project.md**: Updated main build scripts list to include the new script name
+
 ## [0.5.2] - 2024-12-19
 
 ### Verified

@@ -365,11 +365,11 @@ This project includes a complete developer workflow with automated version manag
 
 # Make changes, test, and release
 go test ./... -v
-./buildtools/build-goreleaser.sh dry-run
+./buildtools/build-and-package.sh dry-run
 git add . && git commit -m "feat: changes for $(cat VERSION)"
 git tag $(cat VERSION)
 git push origin master && git push origin $(cat VERSION)
-./buildtools/build-goreleaser.sh release
+./buildtools/build-and-package.sh release
 ```
 
 ### Key Features

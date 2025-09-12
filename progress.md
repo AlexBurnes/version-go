@@ -44,6 +44,8 @@
 - **✅ VERSION File (v0.5.8)**: Centralized version management system
 - **✅ Pre-Push Hook (v0.5.8)**: Enhanced version validation and checking
 - **✅ Release Automation (v0.5.8)**: Automated version increment validation
+- **✅ Script Rename (v0.6.0)**: Renamed build-with-conan.sh to build-and-package.sh for semantic clarity
+- **✅ Documentation Updates (v0.6.0)**: Updated all references to use new script name
 
 ## What's Left to Build
 - **PROJECT COMPLETE**: All core functionality implemented and tested with library support
