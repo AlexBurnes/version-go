@@ -118,7 +118,7 @@ chmod +x makeself.sh
 ./makeself.sh \
   --gzip \
   --sha256 \
-  --license "MIT License" \
+  --license "Apache License 2.0" \
   --help-header "Version CLI Utility Installer" \
   --header "packaging/linux/makeself-header.sh" \
   "packaging/linux" \
@@ -163,7 +163,7 @@ hooks:
     ./packaging/linux/makeself.sh \
       --gzip \
       --sha256 \
-      --license "MIT License" \
+      --license "Apache License 2.0" \
       "{{ .Artifacts }}" \
       "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}.run" \
       "{{ .ProjectName }} {{ .Version }}" \

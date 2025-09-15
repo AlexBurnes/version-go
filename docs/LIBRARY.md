@@ -271,4 +271,4 @@ See the `examples/basic/main.go` file for a comprehensive example demonstrating 
 
 ## License
 
-This library is part of the go-version project and follows the same license terms.
+This library is part of the go-version project and is licensed under the Apache License, Version 2.0.

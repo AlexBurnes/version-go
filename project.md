@@ -31,7 +31,7 @@ The scope includes:
   - Output: sorted list to stdout, according to grammar rules.
 
 ### 3.2 Grammar & Ordering
-The grammar follows a Backus–Naur Form (BNF) specification with the following main categories:
+The grammar follows a Backus–Naur Form (BNF) specification as defined in [BNF_GRAMMAR.md](docs/BNF_GRAMMAR.md) with the following main categories:
 - `<version core>` ::= `<major> "." <minor> "." <patch>`
 - Extended forms:
   - `<version core> "~" <pre-release>`
@@ -98,6 +98,7 @@ Sorting rules:
 - cmd/version/ - CLI source code (following Go conventions)
 - pkg/version/ - reusable library package
 - docs/ - all documentation for project
+  - BNF_GRAMMAR.md - BNF grammar specification for version parsing
 - test/ - test scripts and test binaries
 - buildtools/ - build scripts (build-goreleaser.sh, etc.)
 - VERSION - current version number for centralized management

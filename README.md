@@ -6,7 +6,7 @@ A cross-platform command-line utility written in Go that provides semantic versi
 
 ## Features
 
-- **Semantic Version Parsing**: Custom BNF grammar engine supporting extended version formats beyond SemVer 2.0
+- **Semantic Version Parsing**: Custom BNF grammar engine supporting extended version formats beyond SemVer 2.0 (see [BNF Grammar](docs/BNF_GRAMMAR.md))
 - **Version Validation**: Validate version strings with detailed error reporting
 - **Version Sorting**: Sort version lists according to defined precedence rules
 - **Git Integration**: Extract version information from git tags and remotes
@@ -17,7 +17,7 @@ A cross-platform command-line utility written in Go that provides semantic versi
 
 ## Supported Version Formats
 
-The tool supports an extended grammar beyond SemVer 2.0:
+The tool supports an extended grammar beyond SemVer 2.0 as defined in the [BNF Grammar Specification](docs/BNF_GRAMMAR.md):
 
 ### Release Versions
 - `1.2.3` - Standard semantic version
@@ -391,7 +391,7 @@ See [DEVELOPER_WORKFLOW.md](DEVELOPER_WORKFLOW.md) for detailed instructions.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the Apache License, Version 2.0 - see the LICENSE file for details.
 
 ## Changelog
 

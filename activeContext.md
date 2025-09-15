@@ -10,6 +10,11 @@
   - **COMPLETED**: Enhanced BUILD.md with main build script section
   - **COMPLETED**: Updated developer workflow documentation with new script name
   - **COMPLETED**: Updated project.md main build scripts list
+- **NEW (v0.6.1)**: License and BNF Grammar Documentation Fixes
+  - **COMPLETED**: Fixed license inconsistencies - updated all documentation to reference Apache 2.0 License
+  - **COMPLETED**: Created comprehensive BNF grammar specification document (docs/BNF_GRAMMAR.md)
+  - **COMPLETED**: Updated project documentation to reference BNF grammar specification
+  - **COMPLETED**: Fixed license mentions in README.md, packaging docs, and library docs
 - **COMPLETED**: Full Go implementation with custom regex-based version parser
 - **COMPLETED**: Colored output system matching bash script patterns (error=red, success=green, debug=yellow)
 - **COMPLETED**: All CLI commands (project, module, version, release, full, check, check-greatest, type, build-type, sort)
@@ -59,7 +64,10 @@
 - **NEW (v0.5.5)**: Updated documentation to reflect Go conventions and current implementation
 - **COMPLETED (v0.5.5)**: All documentation updates to reflect current implementation
 - **COMPLETED (v0.5.5)**: Exit code compliance testing implemented and passing
-- **COMPLETED (v0.5.5)**: Performance testing with 10k+ versions working correctly
+- **COMPLETED (v0.5.5)**: Performance testing framework with 10k+ versions working correctly
+- **COMPLETED (v0.5.5)**: Benchmark testing for sorting and validation operations
+- **COMPLETED (v0.5.5)**: Realistic test data generation with diverse version patterns
+- **COMPLETED (v0.5.5)**: Performance assertions with time-based limits (5-second limit for 10k versions)
 - **COMPLETED (v0.5.5)**: Homebrew tap formula and GoReleaser integration ready
 - **RELEASED (v0.5.7)**: Successfully published release v0.5.7 with all distribution channels
 - **RELEASED (v0.5.7)**: GitHub release with cross-platform binaries and checksums
@@ -84,10 +92,9 @@
 - **DISTRIBUTION READY**: Self-extracting installers and package manager integration complete
 - **BUILD SCRIPT ENHANCED**: Automatic Go environment setup and .env file loading working
 - **DOCUMENTATION ENHANCED**: Comprehensive installation guides for all platforms
-- **TESTING ENHANCED**: Exit code compliance tests and performance testing implemented
+- **TESTING ENHANCED**: Exit code compliance tests and comprehensive performance testing framework implemented
 - **REQUIRED**: GitHub Actions CI/CD pipeline for automated releases
 - **REQUIRED**: Comprehensive test data sets for extended test coverage
-- **REQUIRED**: Performance testing with large version lists (10k+ versions)
 - **COMPLETED**: Developer workflow documentation with complete release process
 - **COMPLETED**: VERSION file for centralized version management
 - **COMPLETED**: Enhanced pre-push hook with version validation

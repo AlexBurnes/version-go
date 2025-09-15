@@ -97,7 +97,7 @@ scoop install -g burnes/version
   "version": "1.0.0",
   "description": "git describe-like CLI",
   "homepage": "https://github.com/AlexBurnes/version-go",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "architecture": {
     "64bit": {
       "url": "https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version_1.0.0_windows_amd64.zip",
@@ -118,7 +118,7 @@ scoop install -g burnes/version
 - **version**: Semantic version of the package
 - **description**: Short description of the package
 - **homepage**: Project homepage URL
-- **license**: Software license (MIT, GPL, etc.)
+- **license**: Software license (Apache-2.0, GPL, etc.)
 
 #### Architecture Support
 - **64bit**: AMD64/x86_64 architecture support
@@ -177,7 +177,7 @@ scoop:
   folder: "packaging/windows/scoop-bucket"
   homepage: "https://github.com/AlexBurnes/version-go"
   description: "git describe-like CLI"
-  license: "MIT"
+  license: "Apache-2.0"
 ```
 
 ### Automated Build Process

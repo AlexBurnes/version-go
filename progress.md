@@ -34,7 +34,10 @@
 - **✅ Custom Installation (v0.5.4)**: Support for custom installation directories via APP_DIR
 - **✅ Homebrew Tap (v0.5.5)**: macOS distribution via Homebrew package manager
 - **✅ Exit Code Tests (v0.5.5)**: Comprehensive exit code compliance testing for CLI utility
-- **✅ Performance Tests (v0.5.5)**: Performance testing framework with large version lists
+- **✅ Performance Tests (v0.5.5)**: Comprehensive performance testing framework with large version lists (10k+ versions)
+- **✅ Benchmark Tests (v0.5.5)**: Benchmark testing for sorting and validation operations
+- **✅ Test Data Generation (v0.5.5)**: Realistic test data generation with diverse version patterns
+- **✅ Performance Assertions (v0.5.5)**: Time-based performance assertions (5-second limit for 10k versions)
 - **✅ Documentation Updates (v0.5.5)**: Updated to reflect Go conventions and current implementation
 - **✅ Release v0.5.7 (v0.5.7)**: Successfully published with all distribution channels
 - **✅ GitHub Release (v0.5.7)**: Cross-platform binaries and checksums available
@@ -46,6 +49,9 @@
 - **✅ Release Automation (v0.5.8)**: Automated version increment validation
 - **✅ Script Rename (v0.6.0)**: Renamed build-with-conan.sh to build-and-package.sh for semantic clarity
 - **✅ Documentation Updates (v0.6.0)**: Updated all references to use new script name
+- **✅ License Fixes (v0.6.1)**: Fixed license inconsistencies across all documentation to reference Apache 2.0 License
+- **✅ BNF Grammar Documentation (v0.6.1)**: Created comprehensive BNF grammar specification document matching implementation
+- **✅ Grammar References (v0.6.1)**: Updated project documentation to reference BNF grammar specification
 
 ## What's Left to Build
 - **PROJECT COMPLETE**: All core functionality implemented and tested with library support
@@ -54,10 +60,9 @@
 - **PACKAGING COMPLETE (v0.5.5)**: Makeself, Scoop, and Homebrew distribution systems implemented and tested
 - **BUILD SCRIPT COMPLETE (v0.5.4)**: Enhanced build script with Go environment and .env support
 - **DOCUMENTATION COMPLETE (v0.5.5)**: Comprehensive installation guides for all platforms with updated Go conventions
-- **TESTING ENHANCED (v0.5.5)**: Exit code compliance tests and performance testing framework implemented
+- **TESTING ENHANCED (v0.5.5)**: Exit code compliance tests and comprehensive performance testing framework implemented
 - **REQUIRED**: GitHub Actions CI/CD pipeline for automated releases
 - **REQUIRED**: Comprehensive test data sets for extended test coverage
-- **REQUIRED**: Performance testing with large version lists (10k+ versions)
 - **Future Enhancements**: Additional features based on user feedback
 - **Distribution**: GoReleaser integration for automated releases (when ready)
 
@@ -66,7 +71,7 @@
 - **✅ RESOLVED**: Custom BNF grammar successfully implemented with regex-based parser
 - **✅ RESOLVED**: CMake + Conan + Go integration working correctly
 - **✅ RESOLVED**: Cross-platform behavior verified through comprehensive testing
-- **✅ RESOLVED**: Performance optimized for large version lists (10k+ versions)
+- **✅ RESOLVED**: Performance optimized for large version lists (10k+ versions) with comprehensive testing framework
 - **✅ RESOLVED (v0.5.1)**: Conan build script critical issues fixed for reliable local builds
 
 ## Evolution of Project Decisions
