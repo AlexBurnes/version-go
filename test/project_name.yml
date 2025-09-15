@@ -1,0 +1,4 @@
+project:
+  name: "test-project-name"
+  modules:
+    - "test-module"

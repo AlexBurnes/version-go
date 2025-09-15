@@ -10,7 +10,8 @@ A cross-platform command-line utility `version`, written in Go, that provides se
 - Cross-platform support (Linux, Windows, macOS) with static binaries
 - Distribution via standard OS channels (Scoop for Windows, tar.gz + install.sh for Linux)
 - Git integration for describing current project version from git tags
-- Configuration file support (.project.yml) for project name and module configuration
+- Configuration file support (.project.yml) for project name and module configuration ✅ IMPLEMENTED
+- CLI options for configuration control (--config FILE, --git) ✅ IMPLEMENTED
 - Version bumping functionality with intelligent increment based on current version state
 
 ## Goals
@@ -27,7 +28,8 @@ A cross-platform command-line utility `version`, written in Go, that provides se
 - Cross-platform builds with GoReleaser
 - Integration with existing build scripts and CI/CD pipelines
 - Comprehensive testing and documentation
-- Configuration file support (.project.yml) for project and module naming
+- Configuration file support (.project.yml) for project and module naming ✅ IMPLEMENTED
+- CLI options for testing and configuration control ✅ IMPLEMENTED
 - Version bumping system with intelligent increment rules
 
 **Out of Scope:**

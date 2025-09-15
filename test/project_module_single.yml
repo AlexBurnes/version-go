@@ -1,0 +1,4 @@
+project:
+  name: "single-module-project"
+  modules:
+    - "single-module"

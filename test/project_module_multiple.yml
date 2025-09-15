@@ -1,0 +1,6 @@
+project:
+  name: "multi-module-project"
+  modules:
+    - "primary-module"
+    - "secondary-module"
+    - "tertiary-module"

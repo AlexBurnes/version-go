@@ -11,6 +11,7 @@
 - **✅ Scoop**: Windows package management (implemented)
 - **✅ tar.gz**: Linux distribution format (working)
 - **✅ ZIP**: Windows distribution format (working)
+- **✅ YAML**: Configuration file parsing (gopkg.in/yaml.v3)
 
 ## Development Setup
 - **Go Environment**: Managed via Conan (`conan install golang/<version>`)
@@ -21,7 +22,7 @@
   - `examples/basic/` - Library usage example
   - `bin/` - Built binaries
   - `docs/` - Documentation including library docs
-  - `test/` - Test scripts and binaries
+  - `test/` - Test configuration files and test scripts
 - **Cross-platform**: Support for Linux (amd64/arm64), Windows (amd64/arm64), macOS (amd64/arm64)
 
 ## Technical Constraints
@@ -34,8 +35,8 @@
 
 ## Dependencies
 - **✅ Standard Library Only**: `fmt`, `os`, `strings`, `sort`, `regexp`, `flag`, `os/exec`, `bufio` (implemented)
-- **✅ No External Dependencies**: Avoided `go-git` and `cobra` as planned
-- **Library Package**: Self-contained `pkg/version` package with no external dependencies
+- **✅ Minimal External Dependencies**: Added `gopkg.in/yaml.v3` for configuration file parsing
+- **Library Package**: Self-contained `pkg/version` package with minimal external dependencies
 - **Build Dependencies**:
   - ✅ CMake (via Conan) - working
   - ✅ Go compiler (via Conan) - working

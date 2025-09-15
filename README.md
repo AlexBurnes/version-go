@@ -196,6 +196,39 @@ version full
 version check-greatest
 ```
 
+### Project Configuration (.project.yml)
+
+The utility supports a `.project.yml` configuration file for consistent project naming across build utilities. If present, it takes precedence over git-based detection.
+
+**File Format** (`.project.yml` in project root):
+```yaml
+project:
+  name: "my-project"
+  modules:
+    - "primary-module"    # First is primary
+    - "secondary-module"
+    - "another-module"
+```
+
+**Behavior**:
+- If `.project.yml` exists and is valid, use it for project and module names
+- If `.project.yml` doesn't exist or is invalid, fall back to git-based detection
+- Other build utilities can also use this file for consistent project naming
+
+**Example**:
+```bash
+# With .project.yml present
+version project
+# Output: my-project
+
+version module
+# Output: primary-module
+
+# Without .project.yml (fallback to git)
+version project
+# Output: user-repository-name
+```
+
 ### Options
 
 - `-h, --help` - Print help and exit

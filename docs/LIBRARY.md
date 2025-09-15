@@ -198,6 +198,64 @@ v, _ := version.Parse("1.2.3")
 fmt.Println(v.String()) // "1.2.3"
 ```
 
+## Project Configuration
+
+The library provides support for reading project configuration from `.project.yml` files, allowing consistent project naming across build utilities.
+
+### Configuration Structure
+
+```yaml
+project:
+  name: "my-project"
+  modules:
+    - "primary-module"    # First is primary
+    - "secondary-module"
+    - "another-module"
+```
+
+### Configuration API
+
+```go
+// Create a configuration provider
+cp := version.NewConfigProvider()
+
+// Load configuration from .project.yml (searches up directory tree)
+config, err := cp.LoadProjectConfig()
+if err != nil {
+    // Handle error (file not found, invalid YAML, etc.)
+}
+
+// Check if configuration is loaded
+if cp.HasConfig() {
+    // Get project name
+    projectName := cp.GetProjectName()
+    
+    // Get primary module name (first in modules list)
+    moduleName := cp.GetModuleName()
+    
+    // Get all modules
+    allModules := cp.GetAllModules()
+}
+
+// Load configuration from specific file
+config, err := version.GetProjectConfigFromFile("/path/to/.project.yml")
+```
+
+### Configuration Validation
+
+The configuration is validated to ensure:
+- Project name is not empty
+- At least one module is specified
+- No empty module names
+
+### Error Handling
+
+Configuration loading can fail with:
+- File not found (returns nil config, no error)
+- Invalid YAML syntax
+- Missing required fields
+- Empty module names
+
 ## Version Format Specification
 
 ### Release Versions

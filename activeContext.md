@@ -1,13 +1,17 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**SELF-BUILDING VERSION UTILITY COMPLETED** - Successfully implemented self-building capability where the version utility uses its own built binary for version detection during the build process. This eliminates the circular dependency where the project needs git describe to build itself, but the version utility is designed to replace git describe functionality. Version 0.7.0 includes complete self-building system that is fully functional and tested.
+**PROJECT.YML CONFIGURATION SUPPORT COMPLETED** - Successfully implemented .project.yml configuration file support with CLI options for testing and flexible configuration management. The version utility now supports both .project.yml configuration files and git-based detection with comprehensive CLI options for different use cases. This provides consistent project naming across build utilities and enables better testing capabilities.
 
 ## Recent Changes
-- **NEW FEATURES PLANNED**: .project.yml Configuration File Support
-  - **PLANNED**: Support for .project.yml file in project root for project name and module configuration
-  - **PLANNED**: Fallback to git-based detection when .project.yml doesn't exist
-  - **PLANNED**: Integration with other build utilities for consistent project naming
+- **NEW (v0.8.0)**: .project.yml Configuration File Support
+  - **COMPLETED**: Support for .project.yml file in project root for project name and module configuration
+  - **COMPLETED**: Fallback to git-based detection when .project.yml doesn't exist
+  - **COMPLETED**: Integration with other build utilities for consistent project naming
+  - **COMPLETED**: CLI options for configuration control (--config FILE, --git)
+  - **COMPLETED**: YAML parsing with comprehensive validation and error handling
+  - **COMPLETED**: Test configuration files for different scenarios
+  - **COMPLETED**: Updated documentation with configuration examples
 - **NEW FEATURES PLANNED**: Bump Command Implementation
   - **PLANNED**: New `bump` command with version type parameter support
   - **PLANNED**: Intelligent version increment based on current version state
@@ -100,13 +104,9 @@
 - **ENHANCED (v0.5.4)**: Custom installation directory support for Linux and macOS
 
 ## Next Steps
-- **NEW FEATURES PLANNING**: Plan and implement .project.yml configuration file support
 - **NEW FEATURES PLANNING**: Plan and implement bump command with intelligent version increment
-- **PROJECT.YML FEATURE**: Implement .project.yml file support for project name and module configuration
 - **BUMP COMMAND FEATURE**: Implement new bump command with version type parameter and bump rules
 - **VERSION BUMP RULES**: Implement complex version bumping logic based on current version state
-- **CONFIGURATION FALLBACK**: Implement fallback from .project.yml to git-based detection
-- **BUILD UTILITY INTEGRATION**: Ensure .project.yml works with other build utilities
 - **PROJECT READY FOR USE**: All core functionality implemented and tested with library support
 - **LIBRARY READY**: Core version functionality available as reusable library package
 - **BUILD SYSTEM READY**: Conan build script fully functional for local development and cross-platform builds
@@ -125,6 +125,10 @@
 - Prepare for distribution via GoReleaser when ready
 
 ## Active Decisions and Considerations
+- **Configuration File Support**: .project.yml takes precedence over git-based detection when present
+- **CLI Options**: --config FILE for custom config files, --git for forcing git detection
+- **Fallback Strategy**: Graceful fallback from .project.yml to git-based detection
+- **Test Configuration**: Test files in test/ directory for different configuration scenarios
 - **Self-Building System**: Version utility must use its own built binary for version detection during build process
 - **Bootstrap Process**: Initial build must use git describe, subsequent builds use built version utility
 - **Circular Dependency Resolution**: Eliminate dependency on git describe by using built version utility

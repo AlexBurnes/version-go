@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Project Configuration Support**: Added `.project.yml` configuration file support for project name and module configuration
+  - Configuration file takes precedence over git-based detection when present
+  - Supports multiple modules with first module as primary
+  - Graceful fallback to git-based detection when configuration is missing or invalid
+  - YAML parsing with comprehensive validation and error handling
+  - Updated `project` and `module` commands to use configuration when available
+  - Added debug output to show configuration source (file vs git fallback)
+
 ## [0.6.0] - 2024-12-19
 
 ### Changed

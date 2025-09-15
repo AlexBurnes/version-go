@@ -59,13 +59,17 @@
 - **✅ Build Script Updates (v0.7.0)**: Modified all build scripts to use built version utility for version detection
 - **✅ Pre-Push Hook Updates (v0.7.0)**: Updated pre-push hook to use built version utility for version checking
 - **✅ Self-Building Testing (v0.7.0)**: Tested complete self-building process to ensure it works correctly
+- **✅ Project Configuration Support (v0.8.0)**: Implemented .project.yml configuration file support
+- **✅ YAML Parser (v0.8.0)**: Added YAML parsing with gopkg.in/yaml.v3 library
+- **✅ Configuration Validation (v0.8.0)**: Comprehensive validation for project name and modules
+- **✅ CLI Options (v0.8.0)**: Added --config FILE and --git CLI options for configuration control
+- **✅ Fallback Mechanism (v0.8.0)**: Graceful fallback from .project.yml to git-based detection
+- **✅ Test Configuration Files (v0.8.0)**: Created test configuration files for different scenarios
+- **✅ Enhanced Commands (v0.8.0)**: Updated project and module commands to use configuration
+- **✅ Debug Output (v0.8.0)**: Added debug output showing configuration source
+- **✅ Documentation Updates (v0.8.0)**: Updated README, CHANGELOG, and library documentation
 
 ## What's Left to Build
-- **NEW FEATURES PLANNED**: .project.yml Configuration File Support
-  - **PLANNED**: .project.yml file parser for project name and module configuration
-  - **PLANNED**: Fallback mechanism to git-based detection when .project.yml missing
-  - **PLANNED**: Integration with existing project and module commands
-  - **PLANNED**: Support for multiple modules with first as primary
 - **NEW FEATURES PLANNED**: Bump Command Implementation
   - **PLANNED**: New `bump` command with version type parameter support
   - **PLANNED**: Complex version bumping rules based on current version state

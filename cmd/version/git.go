@@ -117,8 +117,64 @@ func getVersion() (string, error) {
     return versionStr, nil
 }
 
-// getProject returns the project name from git remote
+// getProject returns the project name from .project.yml or git remote
 func getProject() (string, error) {
+    // Check if --git flag is set (force git-based detection)
+    if gitFlag {
+        printDebug("--git flag set, forcing git-based detection")
+        return getProjectFromGit()
+    }
+    
+    // Check if --config flag is set (use custom config file)
+    if configFile != "" {
+        printDebug("--config flag set, using custom config file: %s", configFile)
+        return getProjectFromCustomConfig(configFile)
+    }
+    
+    // Default behavior: try .project.yml first, fallback to git
+    // Try to load .project.yml configuration first
+    config, err := configProvider.LoadProjectConfig()
+    if err != nil {
+        printDebug("Failed to load .project.yml: %v", err)
+    } else if config != nil {
+        projectName := configProvider.GetProjectName()
+        if projectName != "" {
+            printDebug("Using project name from .project.yml: %s", projectName)
+            return projectName, nil
+        }
+    }
+    
+    printDebug("No .project.yml found or invalid, falling back to git remote")
+    
+    // Fallback to git remote
+    return getProjectFromGit()
+}
+
+// getProjectFromCustomConfig returns project name from custom configuration file
+func getProjectFromCustomConfig(configPath string) (string, error) {
+    config, err := version.GetProjectConfigFromFile(configPath)
+    if err != nil {
+        return "", fmt.Errorf("failed to load config file %s: %v", configPath, err)
+    }
+    
+    // Create a temporary config provider to get project name
+    tempProvider := version.NewConfigProvider()
+    tempProvider.LoadProjectConfig() // This won't be used, we'll use the loaded config directly
+    
+    // Extract project name from the loaded config
+    if config.Project.Name == "" {
+        return "", fmt.Errorf("project name not specified in config file %s", configPath)
+    }
+    
+    printDebug("Using project name from config file %s: %s", configPath, config.Project.Name)
+    return config.Project.Name, nil
+}
+
+// getProjectFromGit returns project name from git remote
+func getProjectFromGit() (string, error) {
+    printDebug("Using project name from git remote")
+    
+    // Fallback to git remote
     output, err := runGitCommand("remote", "-v")
     if err != nil {
         return "", err
@@ -161,8 +217,65 @@ func getProject() (string, error) {
     return "", fmt.Errorf("no git remote found - please add a remote to your repository")
 }
 
-// getModule returns the module name from git remote
+// getModule returns the module name from .project.yml or git remote
 func getModule() (string, error) {
+    // Check if --git flag is set (force git-based detection)
+    if gitFlag {
+        printDebug("--git flag set, forcing git-based detection")
+        return getModuleFromGit()
+    }
+    
+    // Check if --config flag is set (use custom config file)
+    if configFile != "" {
+        printDebug("--config flag set, using custom config file: %s", configFile)
+        return getModuleFromCustomConfig(configFile)
+    }
+    
+    // Default behavior: try .project.yml first, fallback to git
+    // Try to load .project.yml configuration first
+    config, err := configProvider.LoadProjectConfig()
+    if err != nil {
+        printDebug("Failed to load .project.yml: %v", err)
+    } else if config != nil {
+        moduleName := configProvider.GetModuleName()
+        if moduleName != "" {
+            printDebug("Using module name from .project.yml: %s", moduleName)
+            return moduleName, nil
+        }
+    }
+    
+    printDebug("No .project.yml found or invalid, falling back to git remote")
+    
+    // Fallback to git remote
+    return getModuleFromGit()
+}
+
+// getModuleFromCustomConfig returns module name from custom configuration file
+func getModuleFromCustomConfig(configPath string) (string, error) {
+    config, err := version.GetProjectConfigFromFile(configPath)
+    if err != nil {
+        return "", fmt.Errorf("failed to load config file %s: %v", configPath, err)
+    }
+    
+    // Extract module name from the loaded config (first module is primary)
+    if len(config.Project.Modules) == 0 {
+        return "", fmt.Errorf("no modules specified in config file %s", configPath)
+    }
+    
+    moduleName := config.Project.Modules[0]
+    if moduleName == "" {
+        return "", fmt.Errorf("module name not specified in config file %s", configPath)
+    }
+    
+    printDebug("Using module name from config file %s: %s", configPath, moduleName)
+    return moduleName, nil
+}
+
+// getModuleFromGit returns module name from git remote
+func getModuleFromGit() (string, error) {
+    printDebug("Using module name from git remote")
+    
+    // Fallback to git remote
     output, err := runGitCommand("remote", "-v")
     if err != nil {
         return "", err

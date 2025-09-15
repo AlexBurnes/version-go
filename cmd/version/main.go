@@ -14,6 +14,8 @@ var (
     noColorFlag bool
     helpFlag    bool
     versionFlag bool
+    configFile  string
+    gitFlag     bool
 )
 
 // Color codes for terminal output
@@ -40,6 +42,8 @@ func init() {
     flag.BoolVar(&helpFlag, "h", false, "print help and exit (shorthand)")
     flag.BoolVar(&versionFlag, "version", false, "print version and exit")
     flag.BoolVar(&versionFlag, "V", false, "print version and exit (shorthand)")
+    flag.StringVar(&configFile, "config", "", "specify custom .project.yml configuration file path")
+    flag.BoolVar(&gitFlag, "git", false, "force use of git-based detection (ignore .project.yml)")
 }
 
 func setupColors() {
@@ -121,6 +125,8 @@ Options:
     -v, --verbose     verbose output
     -d, --debug       debug output
     --no-color        disable colored output
+    --config FILE     specify custom .project.yml configuration file path
+    --git             force use of git-based detection (ignore .project.yml)
 
 Commands:
     project           print project name from git remote
@@ -154,6 +160,12 @@ func main() {
     if versionFlag {
         fmt.Println(appVersion)
         os.Exit(0)
+    }
+
+    // Validate conflicting flags
+    if configFile != "" && gitFlag {
+        printError("cannot use both --config and --git flags simultaneously")
+        os.Exit(1)
     }
 
     args := flag.Args()
