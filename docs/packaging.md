@@ -9,60 +9,96 @@ This document describes the packaging and distribution strategy for the Version 
 packaging/
 ├── linux/
 │   ├── README.md              # Linux installation instructions
-│   ├── install.sh             # Basic installation script
-│   ├── makeself-header.sh     # Makeself header for self-extracting archives
-│   └── makeself.sh            # Makeself script for creating installers
+│   ├── install.sh             # Core installation script (used by both archives and installers)
+│   └── installer-template.sh  # Template for simple installers
 └── windows/
     └── scoop-bucket/
         ├── README.md          # Windows installation instructions
         └── version.json       # Scoop manifest for version management
 ```
 
-## Linux Packaging
+## Cross-Platform Packaging
 
 ### Strategy
-Linux packaging uses **makeself** to create self-extracting archives that contain the binary and installation script. This approach provides:
+The packaging system uses different approaches for different platforms:
 
-- Single-file distribution
-- Automatic installation with user confirmation
-- Cross-distribution compatibility
-- Professional installer experience
+- **Linux/macOS**: Simple installer scripts that download archives directly from GitHub releases
+- **Windows**: Scoop package manager for easy installation and updates
+
+This approach provides:
+- Simple and reliable installation
+- No complex self-extracting archives
+- Platform-appropriate installation methods
+- Easy maintenance and debugging
+- Support for both direct execution and pipe execution (Linux/macOS)
 
 ### Components
 
-#### 1. Basic Installation (`install.sh`)
-- Simple bash script for manual installation
-- Supports both system-wide (`/usr/local/bin`) and user-local (`~/.local/bin`) installation
-- Handles permission management with sudo when available
-- Validates binary presence before installation
-
-#### 2. Makeself Integration
-- **Source**: [megastep/makeself](https://github.com/megastep/makeself.git)
-- **Purpose**: Create self-extracting `.run` archives
+#### 1. Core Installation Script (`install.sh`)
+- **Location**: `packaging/linux/install.sh`
+- **Purpose**: Core installation logic used by both archives and installers
+- **Usage**: `./install.sh [install_directory]`
 - **Features**:
-  - Compressed archive with embedded installation script
-  - Integrity checking with checksums
-  - Progress indication during extraction
-  - Optional command execution after extraction
+  - Supports both system-wide (`/usr/local/bin`) and user-local (`~/.local/bin`) installation
+  - Handles permission management with sudo when available
+  - Automatic binary detection (version or version.exe)
+  - Clear error messages and validation
+  - Works with both direct execution and makeself extraction
 
-#### 3. Installation Process
+#### 2. Simple Installer Scripts
+- **Template**: `packaging/linux/installer-template.sh`
+- **Generator**: `buildtools/create-simple-installers.sh`
+- **Purpose**: Create platform-specific installer scripts that download from GitHub releases
+- **Features**:
+  - Downloads archives directly from GitHub releases
+  - Uses the core `install.sh` script for installation
+  - Support for both direct execution and pipe execution
+  - Cross-platform compatibility (Linux, macOS)
+  - No duplication of installation logic
+
+#### 3. Installation Methods
+
+**Method 1: Using Simple Installer Scripts**
 ```bash
-# Download and run the self-extracting installer
-wget https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version_1.0.0_linux_amd64.run
-chmod +x version_1.0.0_linux_amd64.run
-./version_1.0.0_linux_amd64.run
+# Direct execution with custom directory
+wget https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version-1.0.0-linux-amd64-install.sh
+chmod +x version-1.0.0-linux-amd64-install.sh
+./version-1.0.0-linux-amd64-install.sh /usr/local/bin
 
-# Or install to user directory
-APP_DIR=$HOME/.local/bin ./version_1.0.0_linux_amd64.run
+# Pipe execution (uses default directory)
+wget -O - https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version-1.0.0-linux-amd64-install.sh | sh
+
+# Pipe execution with custom directory
+INSTALL_DIR=/custom/path wget -O - https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version-1.0.0-linux-amd64-install.sh | sh
 ```
 
-### Makeself Configuration
-The makeself script creates archives with:
-- **Compression**: gzip (default) or bzip2 for smaller archives
-- **Checksums**: MD5 and SHA256 for integrity verification
-- **Target**: Temporary directory for extraction
-- **Script**: Automatic execution of `install.sh` after extraction
-- **Cleanup**: Automatic removal of temporary files
+**Method 2: Manual Installation from Archive**
+```bash
+# Download and extract archive
+wget https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version_1.0.0_linux_amd64.tar.gz
+tar -xzf version_1.0.0_linux_amd64.tar.gz
+cd version_1.0.0_linux_amd64
+
+# Install using the included install.sh
+./install.sh /usr/local/bin
+
+# Or install to user directory
+./install.sh ~/.local/bin
+```
+
+### Installer Configuration
+The simple installer scripts (Linux/macOS only):
+- **Download**: Archives directly from GitHub releases
+- **Extraction**: Automatic tar.gz extraction
+- **Installation**: Binary installation to specified directory
+- **Compatibility**: Works with both bash and sh shells
+- **Error Handling**: Clear error messages and validation
+- **Platforms**: Linux (amd64/arm64) and macOS (amd64/arm64)
+
+**Note**: Windows users should use Scoop for installation:
+```bash
+scoop install version
+```
 
 ## Windows Packaging
 

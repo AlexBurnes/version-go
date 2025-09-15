@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Build script using build-conan.sh + makeself + goreleaser (skip build)
-# Strategy: build-conan -> makeself -> goreleaser (skip build, only package/publish)
+# Build script using build-conan.sh + simple installers + goreleaser (skip build)
+# Strategy: build-conan -> simple installers -> goreleaser (skip build, only package/publish)
 
 set -euo pipefail
 
@@ -203,7 +203,7 @@ create_install_scripts() {
     local version="${1:-}"
     log_info "Step 2: Creating install scripts..."
     
-    # Create makeself installers in installers/ directory
+    # Create simple installers in installers/ directory
     ./buildtools/create-all-installers.sh "$version" "installers"
     
     log_success "Install scripts created"
@@ -258,7 +258,7 @@ show_help() {
     echo ""
     echo "Strategy:"
     echo "  1. Build binaries using build-conan.sh (static for darwin/linux)"
-    echo "  2. Create makeself install scripts"
+    echo "  2. Create simple install scripts"
     echo "  3. Publish with GoReleaser (skip build, only package/publish)"
     echo ""
     echo "Examples:"

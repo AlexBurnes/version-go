@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Script to create all makeself installers for all platforms and architectures
+# Script to create all simple installers for all platforms and architectures
 # This should be run after GoReleaser has created the distribution archives
 
 set -euo pipefail
@@ -53,69 +53,27 @@ get_version() {
 # Create installers for all platforms
 create_all_installers() {
     local version="$1"
-    local target_dir="${2:-dist}"
+    local target_dir="${2:-installers}"
     
-    log_info "Creating makeself installers for version: $version"
+    log_info "Creating simple installers for version: $version"
     
-    # Create target directory if it doesn't exist
-    mkdir -p "$target_dir"
+    # Use the simple installer script
+    ./buildtools/create-simple-installers.sh "$version" "$target_dir"
     
-    # Platforms and architectures to build
-    local platforms=("linux" "darwin")
-    local arches=("amd64" "arm64")
-    
-    local created_installers=()
-    
-    for platform in "${platforms[@]}"; do
-        for arch in "${arches[@]}"; do
-            log_info "Creating installer for $platform-$arch"
-            
-            # Check if the source archive exists
-            # Look for archives with the actual naming pattern from GoReleaser
-            local archive_file=""
-            
-            if [[ "$platform" == "windows" ]]; then
-                # Look for windows archives with .zip extension
-                archive_file=$(find dist -name "version_*_${platform}_${arch}.zip" | head -1)
-            else
-                # Look for linux/darwin archives with .tar.gz extension
-                archive_file=$(find dist -name "version_*_${platform}_${arch}.tar.gz" | head -1)
-            fi
-            
-            if [[ -n "$archive_file" && -f "$archive_file" ]]; then
-                ./buildtools/create-makeself-installer.sh "$version" "$platform" "$arch" "$target_dir"
-                # Clean version for installer name
-                local clean_version=$(echo "$version" | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//')
-                created_installers+=("version-${clean_version}-${platform}-${arch}-install.sh")
-            else
-                log_warning "Source archive not found for $platform-$arch"
-            fi
-        done
-    done
-    
-    log_success "Created ${#created_installers[@]} installers:"
-    for installer in "${created_installers[@]}"; do
-        echo "  - $target_dir/$installer"
-    done
+    log_success "All installers created successfully!"
 }
 
 # Main function
 main() {
     local version="${1:-}"
-    local target_dir="${2:-dist}"
+    local target_dir="${2:-installers}"
     version=$(get_version "$version")
     
-    log_info "Creating makeself installers for version: $version"
+    log_info "Creating simple installers for version: $version"
     
-    # Check if dist directory exists
-    if [[ ! -d "dist" ]]; then
-        log_error "dist directory not found. Run GoReleaser first."
-        exit 1
-    fi
-    
-    # Check if create-makeself-installer.sh exists
-    if [[ ! -f "buildtools/create-makeself-installer.sh" ]]; then
-        log_error "create-makeself-installer.sh not found"
+    # Check if create-simple-installers.sh exists
+    if [[ ! -f "buildtools/create-simple-installers.sh" ]]; then
+        log_error "create-simple-installers.sh not found"
         exit 1
     fi
     

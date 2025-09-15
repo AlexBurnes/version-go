@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Post-archive hook script for GoReleaser
-# This script creates makeself installers after archives are created
+# This script creates simple installers after archives are created
 
 set -euo pipefail
 
@@ -55,7 +55,7 @@ main() {
     local version
     version=$(get_version)
     
-    log_info "Creating makeself installers for version: $version"
+    log_info "Creating simple installers for version: $version"
     
     # Check if dist directory exists
     if [[ ! -d "dist" ]]; then
@@ -72,7 +72,7 @@ main() {
     # Create installers
     ./buildtools/create-all-installers.sh "$version"
     
-    log_success "Makeself installers created successfully!"
+    log_success "Simple installers created successfully!"
 }
 
 # Run main function

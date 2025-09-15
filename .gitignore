@@ -15,3 +15,6 @@ scripts/version
 # environment and tockens
 .env
 
+# docs
+docs/bump-transition.ods
+
