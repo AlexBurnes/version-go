@@ -9,6 +9,9 @@ import (
     "github.com/AlexBurnes/version-go/pkg/version"
 )
 
+// Global configuration provider
+var configProvider = version.NewConfigProvider()
+
 // Custom error types for git-related issues
 type GitNotFoundError struct{}
 type NotGitRepoError struct{}
