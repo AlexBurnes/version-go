@@ -134,13 +134,14 @@ Packaging Layer ✅
 - **Benefits**: Eliminates external git dependency, uses own version utility for consistency
 
 ## Packaging Implementation Details
-### Makeself Self-Extracting Installers
-- **Tool**: [makeself.sh](https://github.com/megastep/makeself) for creating self-extracting archives
-- **Format**: Single `.sh` file containing compressed binary, install script, and documentation
-- **Naming**: `version-{clean_version}-{platform}-{arch}-install.sh` (e.g., `version-0.5.2-linux-amd64-install.sh`)
+### Simple Installer Scripts
+- **Tool**: Custom shell scripts that download archives from GitHub releases
+- **Format**: Single `.sh` file that downloads, extracts, and installs version utility
+- **Naming**: `version-{clean_version}-{platform}-{arch}-install.sh` (e.g., `version-0.8.2-linux-amd64-install.sh`)
 - **Installation**: Users run `wget -O - URL | sh` or `wget -O - URL | sudo sh` for system installation
-- **Features**: Professional header, integrity checking, no-sudo internal approach
+- **Features**: Downloads from GitHub releases, uses install.sh from archive, no-sudo internal approach
 - **Platforms**: Linux and macOS with platform-specific install scripts
+- **Cleanup Process**: Old installers are removed before creating new ones to prevent version mixing
 
 ### Scoop Package Manager Integration
 - **Tool**: GoReleaser Scoop integration for Windows package management
@@ -161,6 +162,13 @@ Packaging Layer ✅
 - **Output**: `0.5.2` or `1.0.0`
 - **Pattern**: Removes `-SNAPSHOT-*` and `-{7-8 hex chars}` suffixes
 - **Purpose**: Clean, user-friendly installer names without development artifacts
+
+### Installer Cleanup Process
+- **Problem**: GoReleaser glob patterns match all installers in directory, including old versions
+- **Solution**: Clean installers directory before creating new ones in create_install_scripts()
+- **Implementation**: `rm -rf installers/` before `./buildtools/create-all-installers.sh`
+- **Benefit**: Ensures only current version installers are published
+- **Verification**: Dry-run testing confirms only current version installers are present
 
 ## Build Script Enhancements (v0.5.4)
 

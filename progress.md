@@ -71,6 +71,9 @@
 - **✅ Packaging Clean Function (v0.8.1)**: Fixed clean_build function to properly clean installers/ directory
 - **✅ Complete Build Cleanup (v0.8.1)**: Clean function now removes all build artifacts (dist/, bin/, installers/, .goreleaser-binaries/)
 - **✅ Release Preparation (v0.8.1)**: Ensured installers directory is empty before release as required
+- **✅ GoReleaser Old Installers Fix (v0.8.2)**: Fixed GoReleaser publishing old version installers by cleaning installers directory before creating new ones
+- **✅ Installer Cleanup Process (v0.8.2)**: Added cleanup step in create_install_scripts() to remove old installers before creating new ones
+- **✅ Build Process Enhancement (v0.8.2)**: Enhanced build process to ensure only current version installers are published
 
 ## What's Left to Build
 - **NEW FEATURES PLANNED**: Bump Command Implementation

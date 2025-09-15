@@ -1,9 +1,15 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**PROJECT.YML CONFIGURATION SUPPORT COMPLETED** - Successfully implemented .project.yml configuration file support with CLI options for testing and flexible configuration management. The version utility now supports both .project.yml configuration files and git-based detection with comprehensive CLI options for different use cases. This provides consistent project naming across build utilities and enables better testing capabilities.
+**INSTALLER SYSTEM ENHANCEMENT COMPLETED** - Successfully fixed GoReleaser publishing old version installers by implementing proper cleanup process in the build system. The installer system now ensures only current version installers are published, eliminating confusion from mixed version installers. This provides a clean, reliable installation experience for users across all platforms.
 
 ## Recent Changes
+- **FIXED (v0.8.2)**: GoReleaser Old Installers Issue
+  - **COMPLETED**: Fixed GoReleaser publishing old version installers by cleaning installers directory before creating new ones
+  - **COMPLETED**: Added cleanup step in create_install_scripts() function to remove old installers
+  - **COMPLETED**: Enhanced clean_build function to be more explicit about cleaning installers
+  - **COMPLETED**: Verified build process now only publishes current version installers
+  - **COMPLETED**: Tested dry-run process to confirm fix works correctly
 - **FIXED (v0.8.1)**: Packaging and Release Clean Function
   - **COMPLETED**: Fixed clean_build function in build-and-package.sh to properly clean installers/ directory
   - **COMPLETED**: Added .goreleaser-binaries/ directory to clean function for complete cleanup
@@ -112,6 +118,7 @@
 - **NEW FEATURES PLANNING**: Plan and implement bump command with intelligent version increment
 - **BUMP COMMAND FEATURE**: Implement new bump command with version type parameter and bump rules
 - **VERSION BUMP RULES**: Implement complex version bumping logic based on current version state
+- **INSTALLER SYSTEM**: Monitor installer system for any edge cases or user feedback
 - **PROJECT READY FOR USE**: All core functionality implemented and tested with library support
 - **LIBRARY READY**: Core version functionality available as reusable library package
 - **BUILD SYSTEM READY**: Conan build script fully functional for local development and cross-platform builds
@@ -130,6 +137,9 @@
 - Prepare for distribution via GoReleaser when ready
 
 ## Active Decisions and Considerations
+- **Installer Cleanup Process**: Clean installers directory before creating new ones to prevent old version installers from being published
+- **GoReleaser Integration**: Use glob patterns that match all installers, but ensure only current version installers exist in directory
+- **Build Process Order**: Create install scripts → Clean installers directory → Create new installers → Run GoReleaser
 - **Configuration File Support**: .project.yml takes precedence over git-based detection when present
 - **CLI Options**: --config FILE for custom config files, --git for forcing git detection
 - **Fallback Strategy**: Graceful fallback from .project.yml to git-based detection

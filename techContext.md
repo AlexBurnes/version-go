@@ -62,10 +62,11 @@
 - **✅ Version Control**: Git with semantic versioning tags for releases (working)
 
 ## Packaging Tools and Scripts
-- **✅ create-makeself-installer.sh**: Creates self-extracting installers for Linux and macOS
+- **✅ create-simple-installers.sh**: Creates simple installer scripts that download from GitHub releases
 - **✅ create-all-installers.sh**: Batch creation of installers for all platforms
-- **✅ makeself.sh**: Downloaded and integrated for creating self-extracting archives
-- **✅ makeself-header.sh**: Professional branding header for installers
+- **✅ installer-template.sh**: Template for simple installer scripts with platform-specific variables
+- **✅ install.sh**: Core installation script included in release archives for manual installation
 - **✅ GoReleaser Scoop Integration**: Automated Scoop manifest generation for Windows
 - **✅ Clean Naming Logic**: Version cleaning to remove SNAPSHOT and hex suffixes
 - **✅ No-Sudo Approach**: Install scripts don't use sudo internally - users run with sudo if needed
+- **✅ Installer Cleanup Process**: Old installers are removed before creating new ones to prevent version mixing
