@@ -68,6 +68,9 @@
 - **✅ Enhanced Commands (v0.8.0)**: Updated project and module commands to use configuration
 - **✅ Debug Output (v0.8.0)**: Added debug output showing configuration source
 - **✅ Documentation Updates (v0.8.0)**: Updated README, CHANGELOG, and library documentation
+- **✅ Packaging Clean Function (v0.8.1)**: Fixed clean_build function to properly clean installers/ directory
+- **✅ Complete Build Cleanup (v0.8.1)**: Clean function now removes all build artifacts (dist/, bin/, installers/, .goreleaser-binaries/)
+- **✅ Release Preparation (v0.8.1)**: Ensured installers directory is empty before release as required
 
 ## What's Left to Build
 - **NEW FEATURES PLANNED**: Bump Command Implementation

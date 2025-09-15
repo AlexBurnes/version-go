@@ -4,6 +4,11 @@
 **PROJECT.YML CONFIGURATION SUPPORT COMPLETED** - Successfully implemented .project.yml configuration file support with CLI options for testing and flexible configuration management. The version utility now supports both .project.yml configuration files and git-based detection with comprehensive CLI options for different use cases. This provides consistent project naming across build utilities and enables better testing capabilities.
 
 ## Recent Changes
+- **FIXED (v0.8.1)**: Packaging and Release Clean Function
+  - **COMPLETED**: Fixed clean_build function in build-and-package.sh to properly clean installers/ directory
+  - **COMPLETED**: Added .goreleaser-binaries/ directory to clean function for complete cleanup
+  - **COMPLETED**: Verified clean function removes all build artifacts (dist/, bin/, installers/, .goreleaser-binaries/)
+  - **COMPLETED**: Ensured installers directory is empty before release as required
 - **NEW (v0.8.0)**: .project.yml Configuration File Support
   - **COMPLETED**: Support for .project.yml file in project root for project name and module configuration
   - **COMPLETED**: Fallback to git-based detection when .project.yml doesn't exist

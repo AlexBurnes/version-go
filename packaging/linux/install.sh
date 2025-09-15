@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_DIR="${APP_DIR:-/usr/local/bin}"
+APP_DIR="${1-/usr/local/bin}"
 SELF=$(readlink -f "$0" || echo "$0")
 BASE_DIR=$(dirname "$SELF")
 

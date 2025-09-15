@@ -239,6 +239,8 @@ clean_build() {
     log_info "Cleaning build artifacts..."
     rm -rf dist/
     rm -rf bin/
+    rm -rf installers/
+    rm -rf .goreleaser-binaries/
     rm -f .goreleaser-skip-build.yml
     log_success "Build artifacts cleaned"
 }
