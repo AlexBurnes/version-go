@@ -1,27 +1,53 @@
 cmake_minimum_required(VERSION 3.16)
 
-# Get version from git using describe script
-execute_process(
-    COMMAND git describe --match "v[0-9]*" --abbrev=0 --tags
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE GIT_VERSION
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    RESULT_VARIABLE GIT_VERSION_RESULT
-)
+# Get version using built version utility or git describe as fallback
+set(VERSION_UTILITY "${CMAKE_SOURCE_DIR}/scripts/version")
+set(GIT_VERSION "")
+set(PROJECT_VERSION "")
 
-# Use git version if available, otherwise fail
-if(GIT_VERSION_RESULT EQUAL 0 AND GIT_VERSION)
-    # Extract base version (major.minor.patch) for CMake VERSION field
-    string(REGEX MATCH "^v?([0-9]+\\.[0-9]+\\.[0-9]+)" BASE_VERSION "${GIT_VERSION}")
-    if(BASE_VERSION)
-        set(PROJECT_VERSION ${CMAKE_MATCH_1})
-        set(FULL_GIT_VERSION ${GIT_VERSION})
-        message(STATUS "Using git version: ${GIT_VERSION} -> ${PROJECT_VERSION}")
+# Try to use built version utility first
+if(EXISTS ${VERSION_UTILITY})
+    execute_process(
+        COMMAND ${VERSION_UTILITY} version
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE VERSION_UTILITY_OUTPUT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE VERSION_UTILITY_RESULT
+    )
+    
+    if(VERSION_UTILITY_RESULT EQUAL 0 AND VERSION_UTILITY_OUTPUT)
+        set(GIT_VERSION ${VERSION_UTILITY_OUTPUT})
+        message(STATUS "Using built version utility: ${GIT_VERSION}")
     else()
-        message(FATAL_ERROR "Could not parse git version: ${GIT_VERSION}. Expected format: vX.Y.Z or X.Y.Z")
+        message(WARNING "Built version utility failed, falling back to git describe")
     endif()
+endif()
+
+# Fallback to git describe if version utility not available or failed
+if(NOT GIT_VERSION)
+    execute_process(
+        COMMAND git describe --match "v[0-9]*" --abbrev=0 --tags
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_VERSION
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE GIT_VERSION_RESULT
+    )
+    
+    if(GIT_VERSION_RESULT EQUAL 0 AND GIT_VERSION)
+        message(STATUS "Using git describe: ${GIT_VERSION}")
+    else()
+        message(FATAL_ERROR "Failed to get version from both built utility and git describe. Make sure you're in a git repository.")
+    endif()
+endif()
+
+# Extract base version (major.minor.patch) for CMake VERSION field
+string(REGEX MATCH "^v?([0-9]+\\.[0-9]+\\.[0-9]+)" BASE_VERSION "${GIT_VERSION}")
+if(BASE_VERSION)
+    set(PROJECT_VERSION ${CMAKE_MATCH_1})
+    set(FULL_GIT_VERSION ${GIT_VERSION})
+    message(STATUS "Parsed version: ${GIT_VERSION} -> ${PROJECT_VERSION}")
 else()
-    message(FATAL_ERROR "Failed to get version from git. Make sure you're in a git repository and the describe script is available.")
+    message(FATAL_ERROR "Could not parse version: ${GIT_VERSION}. Expected format: vX.Y.Z or X.Y.Z")
 endif()
 
 # Project configuration
@@ -29,6 +55,41 @@ project(version
     VERSION ${PROJECT_VERSION}
     DESCRIPTION "Build tools version - git describe CLI"
     LANGUAGES NONE
+)
+
+# Create scripts directory and build version utility for self-building
+file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/scripts)
+
+# Map CMake system to Go platform
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(GO_OS "linux")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(GO_OS "darwin")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(GO_OS "windows")
+else()
+    set(GO_OS "${CMAKE_SYSTEM_NAME}")
+endif()
+
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    set(GO_ARCH "amd64")
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64")
+    set(GO_ARCH "amd64")
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+    set(GO_ARCH "arm64")
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64")
+    set(GO_ARCH "arm64")
+else()
+    set(GO_ARCH "${CMAKE_SYSTEM_PROCESSOR}")
+endif()
+
+# Build version utility for self-building (bootstrap version)
+add_custom_target(bootstrap-version
+    COMMAND ${CMAKE_COMMAND} -E env CGO_ENABLED=0 GOOS=${GO_OS} GOARCH=${GO_ARCH}
+    ${GO_EXECUTABLE} build -a -ldflags "-X main.appVersion=${FULL_GIT_VERSION} -s -w" -o ${CMAKE_SOURCE_DIR}/scripts/version .
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
+    COMMENT "Building bootstrap version utility for self-building"
+    VERBATIM
 )
 
 # Include Conan generated files (if they exist)
@@ -102,6 +163,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         ${GO_EXECUTABLE} build -a -ldflags "-extldflags \"-static\"" ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME}-linux-amd64-static .
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
         COMMENT "Building static ${BINARY_NAME} for current platform (linux/amd64)"
+        DEPENDS bootstrap-version
         VERBATIM
     )
 else()
@@ -109,6 +171,7 @@ else()
         COMMAND ${GO_EXECUTABLE} build ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME} .
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
         COMMENT "Building ${BINARY_NAME} for current platform"
+        DEPENDS bootstrap-version
         VERBATIM
     )
 endif()
@@ -133,6 +196,7 @@ foreach(PLATFORM ${PLATFORMS})
             ${GO_EXECUTABLE} build -a -ldflags "-extldflags \"-static\"" ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME_PLATFORM} .
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
             COMMENT "Building static ${BINARY_NAME} for ${GOOS}/${GOARCH}"
+            DEPENDS bootstrap-version
             VERBATIM
         )
     else()
@@ -141,6 +205,7 @@ foreach(PLATFORM ${PLATFORMS})
             ${GO_EXECUTABLE} build ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME_PLATFORM} .
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
             COMMENT "Building ${BINARY_NAME} for ${GOOS}/${GOARCH}"
+            DEPENDS bootstrap-version
             VERBATIM
         )
     endif()
@@ -152,6 +217,7 @@ add_custom_target(${BINARY_NAME}-linux-amd64-static
     ${GO_EXECUTABLE} build -a -ldflags "-extldflags \"-static\"" ${GO_BUILD_FLAGS} -o ${BUILD_DIR}/${BINARY_NAME}-linux-amd64 .
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
     COMMENT "Building static ${BINARY_NAME} for linux/amd64 (maximum compatibility)"
+    DEPENDS bootstrap-version
     VERBATIM
 )
 
@@ -335,6 +401,7 @@ message(STATUS "Config directory: ${CONFIG_DIR}")
 # Print available targets
 message(STATUS "")
 message(STATUS "Available targets:")
+message(STATUS "  bootstrap-version       - Build version utility for self-building")
 message(STATUS "  ${BINARY_NAME}           - Build for current platform (static for Linux)")
 message(STATUS "  ${BINARY_NAME}-all       - Build for all platforms")
 message(STATUS "  ${BINARY_NAME}-linux-amd64        - Build for Linux/amd64")

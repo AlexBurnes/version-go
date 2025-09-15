@@ -4,12 +4,13 @@ bin/
 # build directory
 .build
 .toolchain
+.goreleaser-binaries/
+.goreleaser-skip-build.yml
 build
 CMakeUserPresets.json
 dist
-.goreleaser-binaries/
-.goreleaser-skip-build.yml
 installers
+scripts/version
 
 # environment and tockens
 .env

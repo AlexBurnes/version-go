@@ -87,6 +87,17 @@ check_prerequisites() {
 # Get version from VERSION file or git
 get_version() {
     local version=""
+    
+    # Try to use built version utility first
+    if [[ -f "scripts/version" ]]; then
+        version=$(scripts/version version 2>/dev/null || echo "")
+        if [[ -n "$version" ]]; then
+            echo "$version"
+            return
+        fi
+    fi
+    
+    # Fallback to VERSION file or git describe
     if [[ -f "VERSION" ]]; then
         version=$(cat VERSION)
     else

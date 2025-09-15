@@ -62,10 +62,27 @@ play_success_sound() {
     fi
 }
 
-# Get version from git using git describe
-VERSION=$(git describe --match "v[0-9]*" --abbrev=0 --tags 2>/dev/null || echo "")
+# Get version using built version utility or git describe as fallback
+VERSION=""
+
+# Try to use built version utility first
+if [[ -f "scripts/version" ]]; then
+    VERSION=$(scripts/version version 2>/dev/null || echo "")
+    if [[ -n "$VERSION" ]]; then
+        log_info "Using built version utility: $VERSION"
+    fi
+fi
+
+# Fallback to git describe if version utility not available or failed
+if [[ -z "$VERSION" ]]; then
+    VERSION=$(git describe --match "v[0-9]*" --abbrev=0 --tags 2>/dev/null || echo "")
+    if [[ -n "$VERSION" ]]; then
+        log_info "Using git describe: $VERSION"
+    fi
+fi
+
 if [ -z "$VERSION" ]; then
-    log_error "Failed to get version from git. Make sure you're in a git repository with version tags."
+    log_error "Failed to get version from both built utility and git. Make sure you're in a git repository with version tags."
     exit 1
 fi
 

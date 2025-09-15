@@ -1,9 +1,15 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**PROJECT COMPLETED WITH VERSION MANAGEMENT SYSTEM** - Successfully implemented complete Go CLI utility replacing legacy bash scripts. All core functionality, testing, and build system integration is complete and working. Additionally, implemented comprehensive version management system with automated checking, workflow enforcement, and developer tools. Version 0.5.8 includes complete developer workflow automation and version checking system.
+**SELF-BUILDING VERSION UTILITY COMPLETED** - Successfully implemented self-building capability where the version utility uses its own built binary for version detection during the build process. This eliminates the circular dependency where the project needs git describe to build itself, but the version utility is designed to replace git describe functionality. Version 0.7.0 includes complete self-building system that is fully functional and tested.
 
 ## Recent Changes
+- **NEW (v0.7.0)**: Self-Building Version Utility Implementation
+  - **COMPLETED**: Implemented self-building capability where version utility uses its own built binary
+  - **COMPLETED**: Updated CMakeLists.txt to use built version utility instead of git describe
+  - **COMPLETED**: Modified build scripts to use built version utility for version detection
+  - **COMPLETED**: Updated pre-push hook to use built version utility for version checking
+  - **COMPLETED**: Tested self-building process to ensure it works correctly
 - **NEW (v0.6.0)**: Script Rename and Documentation Updates
   - **COMPLETED**: Renamed `build-with-conan.sh` to `build-and-package.sh` for better semantic clarity
   - **COMPLETED**: Updated all documentation references to use new script name
@@ -85,6 +91,13 @@
 - **ENHANCED (v0.5.4)**: Custom installation directory support for Linux and macOS
 
 ## Next Steps
+- **SELF-BUILDING IMPLEMENTATION**: Complete self-building version utility system
+- **CMake Integration**: Update CMakeLists.txt to use built version utility instead of git describe
+- **Build Script Updates**: Modify all build scripts to use built version utility for version detection
+- **Pre-Push Hook Updates**: Update pre-push hook to use built version utility for version checking
+- **Self-Building Testing**: Test complete self-building process to ensure it works correctly
+- **Bootstrap Process**: Implement bootstrap process for initial version utility build
+- **Documentation Updates**: Update documentation to reflect self-building capabilities
 - **PROJECT READY FOR USE**: All core functionality implemented and tested with library support
 - **LIBRARY READY**: Core version functionality available as reusable library package
 - **BUILD SYSTEM READY**: Conan build script fully functional for local development and cross-platform builds
@@ -103,6 +116,10 @@
 - Prepare for distribution via GoReleaser when ready
 
 ## Active Decisions and Considerations
+- **Self-Building System**: Version utility must use its own built binary for version detection during build process
+- **Bootstrap Process**: Initial build must use git describe, subsequent builds use built version utility
+- **Circular Dependency Resolution**: Eliminate dependency on git describe by using built version utility
+- **Version Detection Strategy**: Use built version utility in scripts/ directory for all version operations
 - **Language Choice**: Go is already decided and specified in project requirements
 - **Build System**: CMake + Conan + bash scripts as specified in project.md
 - **Distribution**: GoReleaser for cross-platform builds and distribution

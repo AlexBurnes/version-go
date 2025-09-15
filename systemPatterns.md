@@ -1,7 +1,7 @@
 # System Patterns: Version CLI Utility
 
 ## System Architecture
-**✅ IMPLEMENTED WITH LIBRARY SUPPORT** - The system follows a modular CLI architecture with clear separation of concerns and reusable library package:
+**✅ IMPLEMENTED WITH LIBRARY SUPPORT AND SELF-BUILDING** - The system follows a modular CLI architecture with clear separation of concerns, reusable library package, and self-building capabilities:
 
 ```
 CLI Interface Layer ✅
@@ -33,7 +33,8 @@ Build System Layer ✅
 ├── Packaging: GoReleaser + Conan hooks ✅
 ├── Cross-Platform: Automated builds for Linux/Windows/macOS ✅
 ├── Environment Setup: Automatic Go PATH configuration ✅
-└── Environment Loading: .env file support for tokens and variables ✅
+├── Environment Loading: .env file support for tokens and variables ✅
+└── Self-Building: Version utility uses its own built binary for version detection ✅
 
 Packaging Layer ✅
 ├── Linux: Makeself Self-Extracting Archives ✅
@@ -43,6 +44,9 @@ Packaging Layer ✅
 ```
 
 ## Key Technical Decisions
+- **✅ Self-Building System**: Version utility uses its own built binary for version detection during build process
+- **✅ Bootstrap Process**: Initial build uses git describe, subsequent builds use built version utility
+- **✅ Circular Dependency Resolution**: Eliminate dependency on git describe by using built version utility
 - **✅ CLI Framework**: Implemented using Go's `flag` package for command parsing
 - **✅ Library Package**: Refactored core functionality into reusable `pkg/version` package
 - **✅ Grammar Engine**: Custom regex-based parser for extended version format support (avoiding semver library complexity)
@@ -81,9 +85,28 @@ Packaging Layer ✅
 1. **✅ Version Parsing Pipeline**: Input validation → Grammar parsing → Object creation → Validation
 2. **✅ Sorting Algorithm**: Parse all versions → Categorize by type → Apply precedence rules → Sort within categories
 3. **✅ Git Integration**: Read git tags → Parse versions → Validate → Return appropriate version
-4. **✅ Local Build Pipeline**: Source code → Conan deps → CMake config → Go compilation → Static binary
-5. **✅ Makeself Installer Pipeline**: Binary + install script + docs → Package directory → Makeself compression → Self-extracting archive
-6. **✅ Scoop Integration Pipeline**: GoReleaser build → Scoop manifest generation → Package manager distribution
+4. **✅ Self-Building Pipeline**: Bootstrap build (git describe) → Build version utility → Use built utility for subsequent builds
+5. **✅ Local Build Pipeline**: Source code → Conan deps → CMake config → Go compilation → Static binary
+6. **✅ Makeself Installer Pipeline**: Binary + install script + docs → Package directory → Makeself compression → Self-extracting archive
+7. **✅ Scoop Integration Pipeline**: GoReleaser build → Scoop manifest generation → Package manager distribution
+
+## Self-Building Implementation Pattern
+
+### Bootstrap Process
+1. **Initial Build**: Use `git describe` for version detection during first build
+2. **Build Version Utility**: Compile version utility binary to `scripts/version` directory
+3. **Subsequent Builds**: Use built version utility for all version operations
+
+### Version Detection Strategy
+- **CMakeLists.txt**: Use `scripts/version version` instead of `git describe`
+- **Build Scripts**: Use `scripts/version version` for version detection
+- **Pre-Push Hook**: Use `scripts/version check` for version validation
+- **Version Checking**: Use `scripts/version check-greatest` for version comparison
+
+### Circular Dependency Resolution
+- **Problem**: Project needs git describe to build, but version utility replaces git describe
+- **Solution**: Bootstrap process uses git describe initially, then switches to built version utility
+- **Benefits**: Eliminates external git dependency, uses own version utility for consistency
 
 ## Packaging Implementation Details
 ### Makeself Self-Extracting Installers

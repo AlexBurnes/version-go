@@ -58,7 +58,16 @@ fi
 # Check if we're pushing tags and validate them against VERSION file
 if [[ ! -z "${push_tag_ref}" ]]; then
     version_tag=$(echo $push_tag_ref | sed -r 's/^refs\/tags\///')
-    if [[ -e "scripts/version-check" ]]; then
+    
+    # Try to use built version utility first
+    if [[ -e "scripts/version" ]]; then
+        scripts/version check "$version_tag"
+        rc=$?
+        if [[ $rc -gt 0 ]]; then
+            echo -e "${red}Version check failed for tag: $version_tag${clre}"
+            exit 1
+        fi
+    elif [[ -e "scripts/version-check" ]]; then
         scripts/version-check "$version_tag"
         rc=$?
         if [[ $rc -gt 0 ]]; then
@@ -66,7 +75,7 @@ if [[ ! -z "${push_tag_ref}" ]]; then
             exit 1
         fi
     else
-        echo -e "${yellow}Warning: version-check script not found, skipping version validation${clre}"
+        echo -e "${yellow}Warning: neither version utility nor version-check script found, skipping version validation${clre}"
     fi
 fi
 

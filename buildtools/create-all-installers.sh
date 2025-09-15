@@ -33,11 +33,18 @@ log_error() {
 get_version() {
     local version="${1:-}"
     if [[ -z "$version" ]]; then
-        # Try to get version from git tag
-        if command -v git >/dev/null 2>&1; then
-            version=$(git describe --tags --always --dirty 2>/dev/null || echo "unknown")
-        else
-            version="unknown"
+        # Try to use built version utility first
+        if [[ -f "scripts/version" ]]; then
+            version=$(scripts/version version 2>/dev/null || echo "")
+        fi
+        
+        # Fallback to git describe if version utility not available or failed
+        if [[ -z "$version" ]]; then
+            if command -v git >/dev/null 2>&1; then
+                version=$(git describe --tags --always --dirty 2>/dev/null || echo "unknown")
+            else
+                version="unknown"
+            fi
         fi
     fi
     echo "$version"
