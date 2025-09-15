@@ -61,6 +61,17 @@
 - **✅ Self-Building Testing (v0.7.0)**: Tested complete self-building process to ensure it works correctly
 
 ## What's Left to Build
+- **NEW FEATURES PLANNED**: .project.yml Configuration File Support
+  - **PLANNED**: .project.yml file parser for project name and module configuration
+  - **PLANNED**: Fallback mechanism to git-based detection when .project.yml missing
+  - **PLANNED**: Integration with existing project and module commands
+  - **PLANNED**: Support for multiple modules with first as primary
+- **NEW FEATURES PLANNED**: Bump Command Implementation
+  - **PLANNED**: New `bump` command with version type parameter support
+  - **PLANNED**: Complex version bumping rules based on current version state
+  - **PLANNED**: Smart increment logic when no version type specified
+  - **PLANNED**: Support for major, minor, patch, prerelease, postrelease, intermediate bump types
+  - **PLANNED**: Version state detection and appropriate bump rule application
 - **SELF-BUILDING IMPLEMENTATION (v0.7.0)**: ✅ COMPLETED - Complete self-building version utility system
 - **CMake Integration (v0.7.0)**: ✅ COMPLETED - Updated CMakeLists.txt to use built version utility instead of git describe
 - **Build Script Updates (v0.7.0)**: ✅ COMPLETED - Modified all build scripts to use built version utility for version detection

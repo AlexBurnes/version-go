@@ -6,10 +6,12 @@ A cross-platform command-line utility `version`, written in Go, that provides se
 ## Core Requirements
 - Semantic version parsing and validation against a custom grammar (BNF)
 - Ordering and sorting of versions according to defined precedence rules
-- Command set for integration in CI/CD and build environments (`check`, `check-greatest`, `type`, etc.)
+- Command set for integration in CI/CD and build environments (`check`, `check-greatest`, `type`, `bump`, etc.)
 - Cross-platform support (Linux, Windows, macOS) with static binaries
 - Distribution via standard OS channels (Scoop for Windows, tar.gz + install.sh for Linux)
 - Git integration for describing current project version from git tags
+- Configuration file support (.project.yml) for project name and module configuration
+- Version bumping functionality with intelligent increment based on current version state
 
 ## Goals
 - Replace legacy bash scripts with a robust, maintainable Go implementation
@@ -25,6 +27,8 @@ A cross-platform command-line utility `version`, written in Go, that provides se
 - Cross-platform builds with GoReleaser
 - Integration with existing build scripts and CI/CD pipelines
 - Comprehensive testing and documentation
+- Configuration file support (.project.yml) for project and module naming
+- Version bumping system with intelligent increment rules
 
 **Out of Scope:**
 - GUI interface or web-based version management

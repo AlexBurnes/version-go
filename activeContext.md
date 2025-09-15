@@ -4,6 +4,15 @@
 **SELF-BUILDING VERSION UTILITY COMPLETED** - Successfully implemented self-building capability where the version utility uses its own built binary for version detection during the build process. This eliminates the circular dependency where the project needs git describe to build itself, but the version utility is designed to replace git describe functionality. Version 0.7.0 includes complete self-building system that is fully functional and tested.
 
 ## Recent Changes
+- **NEW FEATURES PLANNED**: .project.yml Configuration File Support
+  - **PLANNED**: Support for .project.yml file in project root for project name and module configuration
+  - **PLANNED**: Fallback to git-based detection when .project.yml doesn't exist
+  - **PLANNED**: Integration with other build utilities for consistent project naming
+- **NEW FEATURES PLANNED**: Bump Command Implementation
+  - **PLANNED**: New `bump` command with version type parameter support
+  - **PLANNED**: Intelligent version increment based on current version state
+  - **PLANNED**: Complex bump rules supporting major, minor, patch, prerelease, postrelease, intermediate
+  - **PLANNED**: Smart increment when no version type specified (increment last version number)
 - **NEW (v0.7.0)**: Self-Building Version Utility Implementation
   - **COMPLETED**: Implemented self-building capability where version utility uses its own built binary
   - **COMPLETED**: Updated CMakeLists.txt to use built version utility instead of git describe
@@ -91,13 +100,13 @@
 - **ENHANCED (v0.5.4)**: Custom installation directory support for Linux and macOS
 
 ## Next Steps
-- **SELF-BUILDING IMPLEMENTATION**: Complete self-building version utility system
-- **CMake Integration**: Update CMakeLists.txt to use built version utility instead of git describe
-- **Build Script Updates**: Modify all build scripts to use built version utility for version detection
-- **Pre-Push Hook Updates**: Update pre-push hook to use built version utility for version checking
-- **Self-Building Testing**: Test complete self-building process to ensure it works correctly
-- **Bootstrap Process**: Implement bootstrap process for initial version utility build
-- **Documentation Updates**: Update documentation to reflect self-building capabilities
+- **NEW FEATURES PLANNING**: Plan and implement .project.yml configuration file support
+- **NEW FEATURES PLANNING**: Plan and implement bump command with intelligent version increment
+- **PROJECT.YML FEATURE**: Implement .project.yml file support for project name and module configuration
+- **BUMP COMMAND FEATURE**: Implement new bump command with version type parameter and bump rules
+- **VERSION BUMP RULES**: Implement complex version bumping logic based on current version state
+- **CONFIGURATION FALLBACK**: Implement fallback from .project.yml to git-based detection
+- **BUILD UTILITY INTEGRATION**: Ensure .project.yml works with other build utilities
 - **PROJECT READY FOR USE**: All core functionality implemented and tested with library support
 - **LIBRARY READY**: Core version functionality available as reusable library package
 - **BUILD SYSTEM READY**: Conan build script fully functional for local development and cross-platform builds
