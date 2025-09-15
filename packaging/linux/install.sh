@@ -17,6 +17,8 @@ echo "[*] Source directory: $BASE_DIR"
 install_one() {
   local src="$1"
   local dst="$APP_DIR/$(basename "$src")"
+  # Create target directory if it doesn't exist
+  mkdir -p "$APP_DIR" 2>/dev/null || true # Attempt to create, ignore if fails (e.g., no permissions)
   install -m 0755 "$src" "$dst"
   echo "  + $(basename "$src") -> $dst"
 }

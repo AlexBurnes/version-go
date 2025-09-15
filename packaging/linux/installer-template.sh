@@ -21,6 +21,13 @@ else
     INSTALL_DIR="/usr/local/bin"
 fi
 
+# Convert relative paths to absolute paths before changing directory
+# This prevents issues when cd'ing to temp directory
+if ! echo "$INSTALL_DIR" | grep -q '^/'; then
+    # Relative path, convert to absolute using realpath (standard tool)
+    INSTALL_DIR="$(realpath "$INSTALL_DIR" 2>/dev/null || echo "$(pwd)/$INSTALL_DIR")"
+fi
+
 # GitHub release URL
 RELEASE_URL="https://github.com/AlexBurnes/version-go/releases/download/v${VERSION}/version_${VERSION}_${PLATFORM}_${ARCH}.tar.gz"
 
