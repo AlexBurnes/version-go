@@ -1,9 +1,19 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**INSTALLER SYSTEM ENHANCEMENT COMPLETED** - Successfully fixed GoReleaser publishing old version installers by implementing proper cleanup process in the build system. The installer system now ensures only current version installers are published, eliminating confusion from mixed version installers. This provides a clean, reliable installation experience for users across all platforms.
+**DOCUMENTATION FIXES COMPLETED** - Successfully fixed install command documentation format to show correct `INSTALL_DIR=install_dir` environment variable format instead of `APP_DIR` for simple installers. Updated README.md and build script output to ensure users can properly specify custom installation directories when using the `wget -O - url | sh` format. This provides clear, accurate installation instructions for all platforms.
 
 ## Recent Changes
+- **FIXED (v0.8.3)**: Install Command Documentation Format
+  - **COMPLETED**: Fixed README.md to show correct `INSTALL_DIR=install_dir` format instead of `APP_DIR` for simple installers
+  - **COMPLETED**: Updated both Linux and macOS installation sections in README.md
+  - **COMPLETED**: Enhanced build script output to show both argument and environment variable formats
+  - **COMPLETED**: Verified installer template correctly handles `INSTALL_DIR` environment variable
+  - **COMPLETED**: Ensured documentation consistency across all installation methods
+  - **COMPLETED**: Updated CHANGELOG.md with all missing entries from v0.6.1 through v0.8.3
+  - **COMPLETED**: Fixed all changelog dates using actual git tag release dates from git log
+  - **COMPLETED**: Created comprehensive changelog management rule (rule-changelog.mdc)
+  - **COMPLETED**: Updated main rules.mdc to mandate changelog updates for any changes
 - **FIXED (v0.8.2)**: GoReleaser Old Installers Issue
   - **COMPLETED**: Fixed GoReleaser publishing old version installers by cleaning installers directory before creating new ones
   - **COMPLETED**: Added cleanup step in create_install_scripts() function to remove old installers
@@ -137,6 +147,12 @@
 - Prepare for distribution via GoReleaser when ready
 
 ## Active Decisions and Considerations
+- **Changelog Management**: MANDATORY changelog updates for ANY documentation or code changes
+- **Date Accuracy**: Historical entries use git log dates, current changes use host date
+- **Changelog Rule**: Comprehensive rule-changelog.mdc created with detailed requirements
+- **Install Command Documentation**: Simple installers use `INSTALL_DIR` environment variable, makeself installers use `APP_DIR` environment variable
+- **Documentation Consistency**: All installation documentation must show correct environment variable format for each installer type
+- **Build Script Output**: Build scripts should show both argument and environment variable formats for maximum clarity
 - **Installer Cleanup Process**: Clean installers directory before creating new ones to prevent old version installers from being published
 - **GoReleaser Integration**: Use glob patterns that match all installers, but ensure only current version installers exist in directory
 - **Build Process Order**: Create install scripts → Clean installers directory → Create new installers → Run GoReleaser

@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.3] - 2025-09-15
+
+### Fixed
+- **Install Command Documentation**: Fixed install command documentation format to show correct `INSTALL_DIR=install_dir` format instead of `APP_DIR` for simple installers
+  - Updated README.md both Linux and macOS installation sections
+  - Enhanced build script output to show both argument and environment variable formats
+  - Ensured documentation consistency across all installation methods
+  - Verified installer template correctly handles `INSTALL_DIR` environment variable
+
+### Documentation
+- **README.md**: Updated installation commands to use correct `INSTALL_DIR=install_dir` format
+- **buildtools/create-simple-installers.sh**: Enhanced help output to show both installation formats
+
+## [0.8.2] - 2025-09-15
+
+### Fixed
+- **GoReleaser Old Installers Issue**: Fixed GoReleaser publishing old version installers by cleaning installers directory before creating new ones
+  - Added cleanup step in create_install_scripts() function to remove old installers
+  - Enhanced clean_build function to be more explicit about cleaning installers
+  - Verified build process now only publishes current version installers
+  - Tested dry-run process to confirm fix works correctly
+
+### Technical Details
+- Build process now follows: Create install scripts → Clean installers directory → Create new installers → Run GoReleaser
+- Only current version installers are published, eliminating confusion from mixed version installers
+
+## [0.8.1] - 2025-09-15
+
+### Fixed
+- **Packaging and Release Clean Function**: Fixed clean_build function in build-and-package.sh to properly clean installers/ directory
+  - Added .goreleaser-binaries/ directory to clean function for complete cleanup
+  - Verified clean function removes all build artifacts (dist/, bin/, installers/, .goreleaser-binaries/)
+  - Ensured installers directory is empty before release as required
+
+### Technical Details
+- Complete build cleanup now removes all build artifacts before new builds
+- Prevents old installer files from interfering with new releases
+
+## [0.8.0] - 2025-09-15
+
 ### Added
 - **Project Configuration Support**: Added `.project.yml` configuration file support for project name and module configuration
   - Configuration file takes precedence over git-based detection when present
@@ -16,7 +56,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated `project` and `module` commands to use configuration when available
   - Added debug output to show configuration source (file vs git fallback)
 
-## [0.6.0] - 2024-12-19
+### Changed
+- **CLI Options**: Added `--config FILE` and `--git` options for configuration control
+  - `--config FILE`: Specify custom configuration file path
+  - `--git`: Force git-based detection instead of configuration file
+- **Command Behavior**: `project` and `module` commands now use configuration when available
+
+### Technical Details
+- Added `gopkg.in/yaml.v3` dependency for YAML parsing
+- Configuration validation with comprehensive error handling
+- Test configuration files in `test/` directory for different scenarios
+
+## [0.7.0] - 2025-09-15
+
+### Added
+- **Self-Building Version Utility**: Implemented self-building capability where version utility uses its own built binary
+  - Version utility now uses its own built binary for version detection during build process
+  - Bootstrap process uses git describe initially, then switches to built version utility
+  - Eliminates external git dependency for version detection
+
+### Changed
+- **CMakeLists.txt**: Updated to use built version utility instead of git describe
+- **Build Scripts**: Modified all build scripts to use built version utility for version detection
+- **Pre-Push Hook**: Updated to use built version utility for version checking
+
+### Technical Details
+- Circular dependency resolution: Initial build uses git describe, subsequent builds use built version utility
+- Version detection strategy: Use built version utility in scripts/ directory for all version operations
+- Self-building process tested and verified to work correctly
+
+## [0.6.1] - 2025-09-15
+
+### Fixed
+- **License Inconsistencies**: Fixed license inconsistencies across all documentation to reference Apache 2.0 License
+  - Updated all documentation to consistently reference Apache 2.0 License
+  - Fixed license mentions in README.md, packaging docs, and library docs
+
+### Added
+- **BNF Grammar Documentation**: Created comprehensive BNF grammar specification document (docs/BNF_GRAMMAR.md)
+  - Complete grammar specification matching the implementation
+  - Detailed explanation of version format rules and precedence
+  - Examples for all supported version types
+
+### Documentation
+- **BNF Grammar References**: Updated project documentation to reference BNF grammar specification
+- **License Consistency**: All documentation now consistently references Apache 2.0 License
+
+## [0.6.0] - 2025-09-12
 
 ### Changed
 - **Build Script Rename**: Renamed `buildtools/build-with-conan.sh` to `buildtools/build-and-package.sh` for better semantic clarity
@@ -32,7 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **DEVELOPER_WORKFLOW.md**: Updated all references throughout the workflow documentation
 - **project.md**: Updated main build scripts list to include the new script name
 
-## [0.5.2] - 2024-12-19
+## [0.5.2] - 2025-09-11
 
 ### Verified
 - **GoReleaser Integration**: Cross-platform build and distribution system fully functional
@@ -41,7 +127,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Conan Profile Detection**: Respects existing profiles without overwriting
 - **Apache 2.0 License**: Properly integrated for distribution
 
-## [0.5.1] - 2024-12-19
+## [0.5.1] - 2025-09-11
 
 ### Fixed
 - **Conan Build Script**: Fixed critical issues in `buildtools/build-conan.sh` for local builds
@@ -65,7 +151,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All build targets accessible via `./build-conan.sh` commands
 - Dependencies managed via Conan: Go 1.21.0, CMake 3.31.8
 
-## [0.5.0] - 2024-12-19
+## [0.5.0] - 2025-09-11
 
 ### Added
 - **Clean Project Structure**: Reorganized project to follow Go conventions with `cmd/` directory
@@ -90,7 +176,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All functionality remains identical, only project structure improved
 - Maintains 100% backward compatibility with existing CLI interface
 
-## [0.4.0] - 2024-12-19
+## [0.4.0] - 2025-09-11
 
 ### Added
 - **Library Package**: Refactored core functionality into reusable `pkg/version` package
@@ -110,7 +196,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Maintains 100% backward compatibility with existing CLI interface
 - All tests passing for both CLI and library functionality
 
-## [0.3.0] - 2024-12-19
+## [0.3.0] - 2025-09-11
 
 ### Added
 - Initial implementation of version CLI utility

@@ -74,6 +74,13 @@
 - **✅ GoReleaser Old Installers Fix (v0.8.2)**: Fixed GoReleaser publishing old version installers by cleaning installers directory before creating new ones
 - **✅ Installer Cleanup Process (v0.8.2)**: Added cleanup step in create_install_scripts() to remove old installers before creating new ones
 - **✅ Build Process Enhancement (v0.8.2)**: Enhanced build process to ensure only current version installers are published
+- **✅ Install Command Documentation Fix (v0.8.3)**: Fixed install command documentation to show correct `INSTALL_DIR=install_dir` format instead of `APP_DIR` for simple installers
+- **✅ README Documentation Update (v0.8.3)**: Updated both Linux and macOS installation sections to use correct environment variable format
+- **✅ Build Script Output Enhancement (v0.8.3)**: Enhanced build script to show both argument and environment variable formats for maximum clarity
+- **✅ Documentation Consistency (v0.8.3)**: Ensured all installation documentation shows correct format for each installer type
+- **✅ Changelog Management Rule (v0.8.3)**: Created comprehensive changelog management rule (rule-changelog.mdc)
+- **✅ Changelog Date Accuracy (v0.8.3)**: Fixed all changelog dates using actual git tag release dates
+- **✅ Mandatory Changelog Updates (v0.8.3)**: Updated main rules to mandate changelog updates for any changes
 
 ## What's Left to Build
 - **NEW FEATURES PLANNED**: Bump Command Implementation

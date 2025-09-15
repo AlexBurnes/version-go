@@ -139,9 +139,21 @@ Packaging Layer ✅
 - **Format**: Single `.sh` file that downloads, extracts, and installs version utility
 - **Naming**: `version-{clean_version}-{platform}-{arch}-install.sh` (e.g., `version-0.8.2-linux-amd64-install.sh`)
 - **Installation**: Users run `wget -O - URL | sh` or `wget -O - URL | sudo sh` for system installation
+- **Custom Directory**: Users can specify custom installation directory using `INSTALL_DIR=install_dir` environment variable
+- **Documentation Format**: All installation documentation shows correct `INSTALL_DIR=install_dir` format for simple installers
 - **Features**: Downloads from GitHub releases, uses install.sh from archive, no-sudo internal approach
 - **Platforms**: Linux and macOS with platform-specific install scripts
 - **Cleanup Process**: Old installers are removed before creating new ones to prevent version mixing
+
+### Installer Environment Variables
+- **Simple Installers**: Use `INSTALL_DIR` environment variable for custom installation directory
+  - Format: `wget -O - URL | INSTALL_DIR=/custom/path sh`
+  - Fallback: Uses first argument if `INSTALL_DIR` not set
+  - Default: `/usr/local/bin` if neither environment variable nor argument provided
+- **Makeself Installers**: Use `APP_DIR` environment variable for custom installation directory
+  - Format: `APP_DIR=/custom/path ./installer.run`
+  - Used for self-extracting archives with professional branding
+  - Different from simple installers to avoid conflicts
 
 ### Scoop Package Manager Integration
 - **Tool**: GoReleaser Scoop integration for Windows package management

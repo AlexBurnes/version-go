@@ -36,6 +36,7 @@ rule_type: Always
 - `README.md`: what, how to install (Scoop + tar.gz install.sh), usage examples, versioning policy.
 - `/docs/RELEASE.md`: manual release steps + how to recover a failed release.
 - ADRs in `/docs/adr` and mirrored in MPC (memory-base).
+- **CHANGELOG.md**: MANDATORY update for ANY documentation or code changes (see rule-changelog.mdc).
 
 ## Versioning & Git
 - SemVer, tags like `vX.Y.Z`.
@@ -61,6 +62,7 @@ rule_type: Always
 - Lint & tests pass.
 - CLI help accurate.
 - Docs updated (README, RELEASE, ADR if needed).
+- **CHANGELOG.md updated** (MANDATORY for any changes).
 - MPC updated (decisions/changelog).
 - GoReleaser dry-run successful.
 
