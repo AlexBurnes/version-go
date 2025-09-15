@@ -203,6 +203,9 @@ create_install_scripts() {
     local version="${1:-}"
     log_info "Step 2: Creating install scripts..."
     
+    # Clean installers directory to remove old installers
+    rm -rf installers/
+    
     # Create simple installers in installers/ directory
     ./buildtools/create-all-installers.sh "$version" "installers"
     
@@ -242,7 +245,7 @@ clean_build() {
     rm -rf installers/
     rm -rf .goreleaser-binaries/
     rm -f .goreleaser-skip-build.yml
-    log_success "Build artifacts cleaned"
+    log_success "Build artifacts cleaned (including old installers)"
 }
 
 # Show help
