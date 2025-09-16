@@ -18,6 +18,8 @@ These limitations create friction in CI/CD workflows and make version management
 - **Cross-platform Users**: Single tool that works seamlessly on Linux, Windows, and macOS
 - **Project Managers**: Consistent project naming across build utilities via .project.yml configuration
 - **Test Engineers**: Flexible configuration options for testing different project scenarios
+- **Version Managers**: Intelligent version bumping with smart mode detection and specific bump types
+- **Release Engineers**: Comprehensive version incrementing with support for prerelease, postrelease, and intermediate versions
 
 ## Success Metrics
 - **Compatibility**: 100% feature parity with existing bash scripts
@@ -27,3 +29,5 @@ These limitations create friction in CI/CD workflows and make version management
 - **Adoption**: Seamless replacement of bash scripts in existing build pipelines
 - **Configuration**: Consistent project naming across build utilities via .project.yml
 - **Flexibility**: Support for custom configuration files and git fallback
+- **Version Bumping**: Intelligent version incrementing with smart mode and comprehensive bump type support
+- **Code Organization**: Well-structured codebase with clear separation of concerns between parsing and bumping logic

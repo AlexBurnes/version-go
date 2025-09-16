@@ -46,8 +46,12 @@ else
     exit 1
 fi
 
+# Normalize versions for comparison (remove 'v' prefix if present)
+CURRENT_TAG_NORMALIZED=$(echo "$CURRENT_TAG" | sed 's/^v//')
+VERSION_FILE_NORMALIZED=$(echo "$VERSION_FILE" | sed 's/^v//')
+
 # Check if versions match
-if [[ "$CURRENT_TAG" == "$VERSION_FILE" ]]; then
+if [[ "$CURRENT_TAG_NORMALIZED" == "$VERSION_FILE_NORMALIZED" ]]; then
     echo -e "${YELLOW}⚠️  VERSION file ($VERSION_FILE) matches current tag ($CURRENT_TAG)${NC}"
     echo -e "${YELLOW}📝 Suggestion: Increment version before making changes:${NC}"
     echo -e "   ${BLUE}./scripts/version-bump patch${NC}    # for bug fixes"

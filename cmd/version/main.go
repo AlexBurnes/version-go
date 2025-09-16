@@ -139,12 +139,15 @@ Commands:
     check-greatest [version] check if version is greatest among all tags
     type [version]    print version type (release, prerelease, postrelease, intermediate)
     build-type [version] print CMake build type (Release/Debug) based on version type
+    bump [version] [type] bump version with specified type (smart, major, minor, patch, pre, alpha, beta, rc, fix, next, post, feat)
     sort              sort version strings from stdin
 
 Examples:
     version check 1.2.3
     version check-greatest
     version type 1.2.3-alpha.1
+    version bump 1.2.3 major
+    version bump 1.2.3 alpha
     echo "1.2.3 1.2.4 1.2.3-alpha" | version sort
 `, appVersion)
 }
@@ -243,6 +246,31 @@ func main() {
         }
     case "sort":
         result, err = sortVersions()
+    case "bump":
+        if len(commandArgs) > 0 && (commandArgs[0] == "help" || commandArgs[0] == "--help" || commandArgs[0] == "-h") {
+            printBumpHelp()
+            os.Exit(0)
+        }
+        
+        // Validate arguments
+        if err := validateBumpArgs(commandArgs); err != nil {
+            printError("%v", err)
+            printBumpHelp()
+            os.Exit(1)
+        }
+        
+        // Get version to bump
+        versionToBump, err := getBumpVersion(commandArgs)
+        if err != nil {
+            printError("%v", err)
+            os.Exit(1)
+        }
+        
+        // Get bump type
+        bumpType := getBumpType(commandArgs)
+        
+        // Perform bump
+        result, err = bumpVersion(versionToBump, bumpType)
     default:
         printError("unknown command: %s", command)
         printHelp()

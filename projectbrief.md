@@ -12,7 +12,7 @@ A cross-platform command-line utility `version`, written in Go, that provides se
 - Git integration for describing current project version from git tags
 - Configuration file support (.project.yml) for project name and module configuration ✅ IMPLEMENTED
 - CLI options for configuration control (--config FILE, --git) ✅ IMPLEMENTED
-- Version bumping functionality with intelligent increment based on current version state
+- Version bumping functionality with intelligent increment based on current version state ✅ IMPLEMENTED
 
 ## Goals
 - Replace legacy bash scripts with a robust, maintainable Go implementation
@@ -30,7 +30,7 @@ A cross-platform command-line utility `version`, written in Go, that provides se
 - Comprehensive testing and documentation
 - Configuration file support (.project.yml) for project and module naming ✅ IMPLEMENTED
 - CLI options for testing and configuration control ✅ IMPLEMENTED
-- Version bumping system with intelligent increment rules
+- Version bumping system with intelligent increment rules ✅ IMPLEMENTED
 
 **Out of Scope:**
 - GUI interface or web-based version management

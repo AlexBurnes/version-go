@@ -9,6 +9,7 @@ A cross-platform command-line utility written in Go that provides semantic versi
 - **Semantic Version Parsing**: Custom BNF grammar engine supporting extended version formats beyond SemVer 2.0 (see [BNF Grammar](docs/BNF_GRAMMAR.md))
 - **Version Validation**: Validate version strings with detailed error reporting
 - **Version Sorting**: Sort version lists according to defined precedence rules
+- **Version Bumping**: Intelligent version incrementing with smart mode and specific bump types
 - **Git Integration**: Extract version information from git tags and remotes
 - **Cross-Platform**: Static binaries for Linux, Windows, and macOS
 - **Colored Output**: Terminal-friendly colored output with `--no-color` support
@@ -218,6 +219,34 @@ version full
 
 # Check if current version is greatest among all tags
 version check-greatest
+```
+
+### Version Bumping
+
+```bash
+# Smart bump (automatically determines appropriate increment)
+version bump                    # Uses current git version
+version bump 1.2.3             # Bump specific version
+
+# Specific bump types
+version bump 1.2.3 major       # 1.2.3 -> 2.0.0
+version bump 1.2.3 minor       # 1.2.3 -> 1.3.0
+version bump 1.2.3 patch       # 1.2.3 -> 1.2.4
+version bump 1.2.3 alpha       # 1.2.3 -> 1.2.3~alpha.1
+version bump 1.2.3 beta        # 1.2.3 -> 1.2.3~beta.1
+version bump 1.2.3 rc          # 1.2.3 -> 1.2.3~rc.1
+version bump 1.2.3 fix         # 1.2.3 -> 1.2.3.fix.1
+version bump 1.2.3 next        # 1.2.3 -> 1.2.3.next.1
+version bump 1.2.3 post        # 1.2.3 -> 1.2.3.post.1
+version bump 1.2.3 feat        # 1.2.3 -> 1.2.3_feat.1
+
+# Increment existing version types
+version bump 1.2.3~alpha.1     # 1.2.3~alpha.1 -> 1.2.3~alpha.2
+version bump 1.2.3.fix.1       # 1.2.3.fix.1 -> 1.2.3.fix.2
+version bump 1.2.3_feat.1      # 1.2.3_feat.1 -> 1.2.3_feat.2
+
+# Get help for bump command
+version bump --help
 ```
 
 ### Project Configuration (.project.yml)

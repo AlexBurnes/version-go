@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Bump Command**: New `bump` command for intelligent version incrementing
+  - Support for major, minor, patch, and specific identifier bump types (pre, alpha, beta, rc, fix, next, post, feat)
+  - Smart bump mode that automatically determines appropriate increment based on current version type
+  - Comprehensive bump functionality in `pkg/version` library package
+  - Detailed help text and usage examples for bump command
+  - Full test coverage for all bump scenarios and edge cases
+  - Support for complex version suffixes with proper numeric increment handling
+  - Intuitive naming convention matching version identifier prefixes
+  - **Code Organization**: Decomposed bump functionality into separate `pkg/version/bump.go` file for better maintainability
+  - **Code Structure**: Improved separation of concerns with core version parsing in `version.go` and bump logic in `bump.go`
+
+### Changed
+- **Code Organization**: Improved code structure and maintainability
+  - Decomposed bump functionality from `pkg/version/version.go` to separate `pkg/version/bump.go` file
+  - Better separation of concerns between core version parsing and bump logic
+  - Cleaner file organization with focused responsibilities
+  - Maintained full backward compatibility and functionality
+
+### Fixed
+- **Version Status Script**: Fixed version comparison logic in `scripts/check-version-status`
+  - Now correctly normalizes version strings by removing 'v' prefix before comparison
+  - Prevents false positive "ready for changes" when VERSION file matches current git tag
+  - Ensures accurate version status reporting for development workflow
+
 ## [0.8.7] - 2025-09-16
 
 ### Changed

@@ -17,8 +17,11 @@
 - **Go Environment**: Managed via Conan (`conan install golang/<version>`)
 - **Build Directory**: All build outputs go to `bin/` directory only
 - **Source Structure**: 
-  - Root - Go CLI source code (main.go, version.go, git.go)
+  - Root - Go CLI source code (main.go, version.go, git.go, bump.go)
   - `pkg/version/` - Reusable library package
+    - `version.go` - Core version parsing, validation, and sorting logic
+    - `bump.go` - Version bumping functionality with intelligent increment logic
+    - `config.go` - Configuration file parsing and project/module detection
   - `examples/basic/` - Library usage example
   - `bin/` - Built binaries
   - `docs/` - Documentation including library docs
