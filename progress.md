@@ -81,6 +81,14 @@
 - **✅ Changelog Management Rule (v0.8.3)**: Created comprehensive changelog management rule (rule-changelog.mdc)
 - **✅ Changelog Date Accuracy (v0.8.3)**: Fixed all changelog dates using actual git tag release dates
 - **✅ Mandatory Changelog Updates (v0.8.3)**: Updated main rules to mandate changelog updates for any changes
+- **✅ GoReleaser Artifact Naming Changes (v0.8.7)**: Updated GoReleaser configuration to remove version prefixes from artifact names
+- **✅ Archive Naming Update (v0.8.7)**: Changed archive naming from `version-{version}-{os}-{arch}` to `version-{os}-{arch}` format
+- **✅ Platform Rename (v0.8.7)**: Renamed darwin platform references to macos in user-facing documentation
+- **✅ GoReleaser Configuration (v0.8.7)**: Updated .goreleaser.yml with conditional logic for darwin→macos rename
+- **✅ Installer Script Updates (v0.8.7)**: Updated installer creation scripts to use macos instead of darwin
+- **✅ Documentation Updates (v0.8.7)**: Updated README.md installation examples to reference macos artifacts
+- **✅ Testing Verification (v0.8.7)**: Tested GoReleaser dry-run to verify artifact naming changes work correctly
+- **✅ Changelog Updates (v0.8.7)**: Updated CHANGELOG.md with comprehensive documentation of changes
 - **✅ Modules Command Implementation (v0.8.6)**: Added new `modules` command to list all modules from .project.yml configuration file
 - **✅ Modules Command Features (v0.8.6)**: Returns all modules from .project.yml if defined, otherwise falls back to single git module name
 - **✅ Modules Command Integration (v0.8.6)**: Supports --config and --git flags for configuration control
@@ -88,6 +96,7 @@
 - **✅ Modules Command Documentation (v0.8.6)**: Updated help text and changelog with new command
 
 ## What's Left to Build
+- **RELEASE v0.8.7**: Publish v0.8.7 release with GoReleaser artifact naming changes
 - **NEW FEATURES PLANNED**: Bump Command Implementation
   - **PLANNED**: New `bump` command with version type parameter support
   - **PLANNED**: Complex version bumping rules based on current version state

@@ -158,6 +158,17 @@ Packaging Layer ✅
   - Used for self-extracting archives with professional branding
   - Different from simple installers to avoid conflicts
 
+### GoReleaser Artifact Naming (v0.8.7)
+- **Archive Naming**: Removed version prefix from artifact names for better download script compatibility
+  - Format: `version-{os}-{arch}` instead of `version-{version}-{os}-{arch}`
+  - Enables consistent download URLs for latest release scripts
+  - Updated .goreleaser.yml archive name template with conditional logic
+- **Platform Naming**: Renamed darwin to macos in user-facing documentation
+  - GoReleaser goos field maintains "darwin" for compatibility
+  - Archive output names use "macos" for clearer platform identification
+  - Updated installer creation scripts to use macos platform name
+  - Updated README.md installation examples to reference macos artifacts
+
 ### Scoop Package Manager Integration
 - **Tool**: GoReleaser Scoop integration for Windows package management
 - **Repository**: `https://github.com/AlexBurnes/scoop-bucket`

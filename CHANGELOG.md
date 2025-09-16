@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.7] - 2025-09-16
+
+### Changed
+- **GoReleaser Artifact Naming**: Updated artifact naming to remove version prefix for better download script compatibility
+  - Archive names changed from `version-{version}-{os}-{arch}` to `version-{os}-{arch}` format
+  - This enables consistent download URLs for latest release scripts
+  - Updated .goreleaser.yml archive name template to remove version component
+  - Updated installer creation scripts to use new naming convention
+  - Updated README.md installation examples to use new artifact names
+
+### Added
+- **macOS Platform Rename**: Renamed darwin platform references to macos in user-facing documentation
+  - Updated GoReleaser archive naming to use "macos" instead of "darwin" in output files
+  - Updated README.md installation examples to reference macos artifacts
+  - Updated installer creation scripts to use macos platform name
+  - Maintained darwin in GoReleaser goos field for compatibility while using macos in output names
+  - This provides clearer platform identification for users
+
+## [0.8.6] - 2025-09-15
+
 ### Added
 - **Modules Command**: Added new `modules` command to list all modules from .project.yml configuration file
   - Returns all modules from .project.yml if defined, otherwise falls back to single git module name

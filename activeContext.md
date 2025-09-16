@@ -1,9 +1,18 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**MODULES COMMAND IMPLEMENTATION COMPLETED** - Successfully implemented the new `modules` command for the version CLI utility. The command returns a list of all modules from .project.yml configuration file if defined, otherwise falls back to returning the single git module name. Implementation includes CLI integration, configuration support, comprehensive testing, and documentation updates. Ready for v0.8.6 release.
+**GORELEASER ARTIFACT NAMING CHANGES COMPLETED** - Successfully updated GoReleaser configuration to remove version prefixes from artifact names and rename darwin to macos in user-facing documentation. This enables consistent download URLs for latest release scripts and provides clearer platform identification. Changes include .goreleaser.yml updates, installer script modifications, README.md updates, and comprehensive testing. Ready for v0.8.7 release.
 
 ## Recent Changes
+- **NEW (v0.8.7)**: GoReleaser Artifact Naming Changes
+  - **COMPLETED**: Updated .goreleaser.yml to remove version prefix from archive names
+  - **COMPLETED**: Changed archive naming from `version-{version}-{os}-{arch}` to `version-{os}-{arch}` format
+  - **COMPLETED**: Updated GoReleaser archive name template to use conditional logic for darwin→macos rename
+  - **COMPLETED**: Updated installer creation scripts to use macos instead of darwin platform name
+  - **COMPLETED**: Updated README.md installation examples to reference macos artifacts
+  - **COMPLETED**: Tested GoReleaser dry-run to verify artifact naming changes work correctly
+  - **COMPLETED**: Updated CHANGELOG.md with comprehensive documentation of changes
+  - **COMPLETED**: Ready for v0.8.7 release
 - **NEW (v0.8.6)**: Modules Command Implementation
   - **COMPLETED**: Added new `modules` command to CLI main.go command switch
   - **COMPLETED**: Implemented getModules() function in git.go with .project.yml and git fallback support
@@ -134,6 +143,7 @@
 - **ENHANCED (v0.5.4)**: Custom installation directory support for Linux and macOS
 
 ## Next Steps
+- **RELEASE v0.8.7**: Publish v0.8.7 release with GoReleaser artifact naming changes
 - **NEW FEATURES PLANNING**: Plan and implement bump command with intelligent version increment
 - **BUMP COMMAND FEATURE**: Implement new bump command with version type parameter and bump rules
 - **VERSION BUMP RULES**: Implement complex version bumping logic based on current version state
