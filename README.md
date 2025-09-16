@@ -44,20 +44,32 @@ The tool supports an extended grammar beyond SemVer 2.0 as defined in the [BNF G
 #### Quick Install (User Directory)
 ```bash
 # Download and run the self-extracting installer to ~/.local/bin
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-linux-amd64-install.sh | sh
+# For x86_64/amd64 systems:
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64-install.sh | sh
+
+# For ARM64 systems:
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-arm64-install.sh | sh
 ```
 **Note**: Default installation directory is `/usr/local/bin` (system-wide). For user-only installation, the installer will use `~/.local/bin` if `/usr/local/bin` is not writable.
 
 #### System-wide Install (Requires sudo)
 ```bash
 # Install to /usr/local/bin (system-wide)
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-linux-amd64-install.sh | sudo sh
+# For x86_64/amd64 systems:
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64-install.sh | sudo sh
+
+# For ARM64 systems:
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-arm64-install.sh | sudo sh
 ```
 
 #### Custom Directory Install
 ```bash
 # Install to custom directory (e.g., /opt/version)
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-linux-amd64-install.sh | INSTALL_DIR=/opt/version sh
+# For x86_64/amd64 systems:
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64-install.sh | INSTALL_DIR=/opt/version sh
+
+# For ARM64 systems:
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-arm64-install.sh | INSTALL_DIR=/opt/version sh
 
 # Add to PATH if needed
 echo 'export PATH="/opt/version:$PATH"' >> ~/.bashrc
@@ -110,20 +122,32 @@ If you prefer not to use Scoop:
 #### Quick Install (User Directory)
 ```bash
 # Download and run the self-extracting installer to ~/.local/bin
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-macos-amd64-install.sh | sh
+# For Intel Macs (x86_64/amd64):
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-amd64-install.sh | sh
+
+# For Apple Silicon Macs (ARM64):
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-arm64-install.sh | sh
 ```
 **Note**: Default installation directory is `/usr/local/bin` (system-wide). For user-only installation, the installer will use `~/.local/bin` if `/usr/local/bin` is not writable.
 
 #### System-wide Install (Requires sudo)
 ```bash
 # Install to /usr/local/bin (system-wide)
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-macos-amd64-install.sh | sudo sh
+# For Intel Macs (x86_64/amd64):
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-amd64-install.sh | sudo sh
+
+# For Apple Silicon Macs (ARM64):
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-arm64-install.sh | sudo sh
 ```
 
 #### Custom Directory Install
 ```bash
 # Install to custom directory (e.g., /opt/version)
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-*-macos-amd64-install.sh | INSTALL_DIR=/opt/version sh
+# For Intel Macs (x86_64/amd64):
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-amd64-install.sh | INSTALL_DIR=/opt/version sh
+
+# For Apple Silicon Macs (ARM64):
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-arm64-install.sh | INSTALL_DIR=/opt/version sh
 
 # Add to PATH if needed
 echo 'export PATH="/opt/version:$PATH"' >> ~/.zshrc

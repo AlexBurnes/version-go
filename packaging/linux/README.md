@@ -6,15 +6,29 @@ Download and run the installer script directly:
 
 ```bash
 # Download and install to /usr/local/bin (requires sudo)
-wget -O - https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version-1.0.0-linux-amd64-install.sh | sh
+# For x86_64/amd64 systems:
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64-install.sh | sh
+
+# For ARM64 systems:
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-arm64-install.sh | sh
 
 # Download and install to custom directory
-INSTALL_DIR=/opt/version wget -O - https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version-1.0.0-linux-amd64-install.sh | sh
+# For x86_64/amd64 systems:
+INSTALL_DIR=/opt/version wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64-install.sh | sh
+
+# For ARM64 systems:
+INSTALL_DIR=/opt/version wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-arm64-install.sh | sh
 
 # Or download first, then install
-wget https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version-1.0.0-linux-amd64-install.sh
-chmod +x version-1.0.0-linux-amd64-install.sh
-./version-1.0.0-linux-amd64-install.sh /usr/local/bin
+# For x86_64/amd64 systems:
+wget https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64-install.sh
+chmod +x version-linux-amd64-install.sh
+./version-linux-amd64-install.sh /usr/local/bin
+
+# For ARM64 systems:
+wget https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-arm64-install.sh
+chmod +x version-linux-arm64-install.sh
+./version-linux-arm64-install.sh /usr/local/bin
 ```
 
 ## Method 2: Manual Installation from Archive

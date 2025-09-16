@@ -83,10 +83,13 @@
 - **✅ Mandatory Changelog Updates (v0.8.3)**: Updated main rules to mandate changelog updates for any changes
 - **✅ GoReleaser Artifact Naming Changes (v0.8.7)**: Updated GoReleaser configuration to remove version prefixes from artifact names
 - **✅ Archive Naming Update (v0.8.7)**: Changed archive naming from `version-{version}-{os}-{arch}` to `version-{os}-{arch}` format
+- **✅ Installer Script Naming Update (v0.8.7)**: Changed installer script naming from `version-{version}-{os}-{arch}-install.sh` to `version-{os}-{arch}-install.sh` format
 - **✅ Platform Rename (v0.8.7)**: Renamed darwin platform references to macos in user-facing documentation
 - **✅ GoReleaser Configuration (v0.8.7)**: Updated .goreleaser.yml with conditional logic for darwin→macos rename
 - **✅ Installer Script Updates (v0.8.7)**: Updated installer creation scripts to use macos instead of darwin
-- **✅ Documentation Updates (v0.8.7)**: Updated README.md installation examples to reference macos artifacts
+- **✅ Documentation Updates (v0.8.7)**: Updated README.md installation examples to reference macos artifacts and correct GitHub URLs
+- **✅ GitHub Download URL Updates (v0.8.7)**: Updated all documentation with correct GitHub download URLs for latest release scripts
+- **✅ Memory Bank Updates (v0.8.7)**: Updated memory bank files to reflect all artifact naming and documentation changes
 - **✅ Testing Verification (v0.8.7)**: Tested GoReleaser dry-run to verify artifact naming changes work correctly
 - **✅ Changelog Updates (v0.8.7)**: Updated CHANGELOG.md with comprehensive documentation of changes
 - **✅ Modules Command Implementation (v0.8.6)**: Added new `modules` command to list all modules from .project.yml configuration file

@@ -61,15 +61,15 @@ This approach provides:
 **Method 1: Using Simple Installer Scripts**
 ```bash
 # Direct execution with custom directory
-wget https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version-1.0.0-linux-amd64-install.sh
-chmod +x version-1.0.0-linux-amd64-install.sh
-./version-1.0.0-linux-amd64-install.sh /usr/local/bin
+wget https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64-install.sh
+chmod +x version-linux-amd64-install.sh
+./version-linux-amd64-install.sh /usr/local/bin
 
 # Pipe execution (uses default directory)
-wget -O - https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version-1.0.0-linux-amd64-install.sh | sh
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64-install.sh | sh
 
 # Pipe execution with custom directory
-INSTALL_DIR=/custom/path wget -O - https://github.com/AlexBurnes/version-go/releases/download/v1.0.0/version-1.0.0-linux-amd64-install.sh | sh
+INSTALL_DIR=/custom/path wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-linux-amd64-install.sh | sh
 ```
 
 **Method 2: Manual Installation from Archive**

@@ -12,10 +12,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **GoReleaser Artifact Naming**: Updated artifact naming to remove version prefix for better download script compatibility
   - Archive names changed from `version-{version}-{os}-{arch}` to `version-{os}-{arch}` format
+  - Installer script names changed from `version-{version}-{os}-{arch}-install.sh` to `version-{os}-{arch}-install.sh` format
   - This enables consistent download URLs for latest release scripts
   - Updated .goreleaser.yml archive name template to remove version component
   - Updated installer creation scripts to use new naming convention
   - Updated README.md installation examples to use new artifact names
+  - GoReleaser picks up installer scripts directly from installers/ directory without copying to dist/
+
+### Documentation
+- **GitHub Download URLs**: Updated all documentation with correct download URLs for latest release scripts
+  - Updated README.md installation examples to use correct GitHub URLs without version numbers
+  - Updated packaging documentation with correct download instructions
+  - Updated memory bank files to reflect all artifact naming and documentation changes
+  - Enables reliable download scripts for latest releases across all platforms
 
 ### Added
 - **macOS Platform Rename**: Renamed darwin platform references to macos in user-facing documentation

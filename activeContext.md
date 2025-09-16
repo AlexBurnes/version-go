@@ -1,17 +1,20 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**GORELEASER ARTIFACT NAMING CHANGES COMPLETED** - Successfully updated GoReleaser configuration to remove version prefixes from artifact names and rename darwin to macos in user-facing documentation. This enables consistent download URLs for latest release scripts and provides clearer platform identification. Changes include .goreleaser.yml updates, installer script modifications, README.md updates, and comprehensive testing. Ready for v0.8.7 release.
+**GORELEASER ARTIFACT NAMING AND DOCUMENTATION UPDATES COMPLETED** - Successfully updated GoReleaser configuration to remove version prefixes from both archive names and installer script names, renamed darwin to macos in user-facing documentation, and updated all documentation with correct GitHub download URLs. This enables consistent download URLs for latest release scripts and provides clearer platform identification. Changes include .goreleaser.yml updates, installer script modifications, README.md updates, memory bank updates, and comprehensive testing. Ready for v0.8.7 release.
 
 ## Recent Changes
-- **NEW (v0.8.7)**: GoReleaser Artifact Naming Changes
+- **NEW (v0.8.7)**: GoReleaser Artifact Naming and Documentation Updates
   - **COMPLETED**: Updated .goreleaser.yml to remove version prefix from archive names
   - **COMPLETED**: Changed archive naming from `version-{version}-{os}-{arch}` to `version-{os}-{arch}` format
+  - **COMPLETED**: Updated installer script naming from `version-{version}-{os}-{arch}-install.sh` to `version-{os}-{arch}-install.sh` format
   - **COMPLETED**: Updated GoReleaser archive name template to use conditional logic for darwin→macos rename
   - **COMPLETED**: Updated installer creation scripts to use macos instead of darwin platform name
-  - **COMPLETED**: Updated README.md installation examples to reference macos artifacts
+  - **COMPLETED**: Updated README.md installation examples to reference macos artifacts and correct GitHub URLs
+  - **COMPLETED**: Updated all documentation with correct GitHub download URLs for latest release scripts
   - **COMPLETED**: Tested GoReleaser dry-run to verify artifact naming changes work correctly
   - **COMPLETED**: Updated CHANGELOG.md with comprehensive documentation of changes
+  - **COMPLETED**: Updated memory bank files to reflect all changes
   - **COMPLETED**: Ready for v0.8.7 release
 - **NEW (v0.8.6)**: Modules Command Implementation
   - **COMPLETED**: Added new `modules` command to CLI main.go command switch

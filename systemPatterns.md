@@ -140,7 +140,7 @@ Packaging Layer ✅
 ### Simple Installer Scripts
 - **Tool**: Custom shell scripts that download archives from GitHub releases
 - **Format**: Single `.sh` file that downloads, extracts, and installs version utility
-- **Naming**: `version-{clean_version}-{platform}-{arch}-install.sh` (e.g., `version-0.8.2-linux-amd64-install.sh`)
+- **Naming**: `version-{platform}-{arch}-install.sh` (e.g., `version-linux-amd64-install.sh`)
 - **Installation**: Users run `wget -O - URL | sh` or `wget -O - URL | sudo sh` for system installation
 - **Custom Directory**: Users can specify custom installation directory using `INSTALL_DIR=install_dir` environment variable
 - **Documentation Format**: All installation documentation shows correct `INSTALL_DIR=install_dir` format for simple installers
@@ -163,11 +163,20 @@ Packaging Layer ✅
   - Format: `version-{os}-{arch}` instead of `version-{version}-{os}-{arch}`
   - Enables consistent download URLs for latest release scripts
   - Updated .goreleaser.yml archive name template with conditional logic
+- **Installer Script Naming**: Removed version prefix from installer script names
+  - Format: `version-{os}-{arch}-install.sh` instead of `version-{version}-{os}-{arch}-install.sh`
+  - Enables consistent download URLs for latest release scripts
+  - Updated installer creation scripts to use new naming convention
+  - GoReleaser picks up installer scripts directly from installers/ directory
 - **Platform Naming**: Renamed darwin to macos in user-facing documentation
   - GoReleaser goos field maintains "darwin" for compatibility
   - Archive output names use "macos" for clearer platform identification
   - Updated installer creation scripts to use macos platform name
   - Updated README.md installation examples to reference macos artifacts
+- **GitHub Download URLs**: Updated all documentation with correct download URLs
+  - Latest release scripts can use consistent URLs without version numbers
+  - Updated README.md, packaging docs, and other documentation
+  - Enables reliable download scripts for latest releases
 
 ### Scoop Package Manager Integration
 - **Tool**: GoReleaser Scoop integration for Windows package management

@@ -32,7 +32,7 @@ for platform in "${PLATFORMS[@]}"; do
         
         # Determine binary name and extension
         BINARY_NAME="version"
-        INSTALLER_NAME="version-${CLEAN_VERSION}-${platform}-${arch}-install.sh"
+        INSTALLER_NAME="version-${platform}-${arch}-install.sh"
         
         # Create installer script
         INSTALLER_PATH="${TARGET_DIR}/${INSTALLER_NAME}"
