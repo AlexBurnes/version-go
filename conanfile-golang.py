@@ -10,8 +10,7 @@ class GolangConan(ConanFile):
     description = "Go toolchain (compiler + tools)"
     license = "BSD-3-Clause"
     url = "https://go.dev"
-    #settings = "os", "arch"
-    settings = None
+    settings = "os", "arch"
     package_type = "application"   # это тул, а не C/C++ lib
     # этот пакет обычно используют как tool_requires (build-require)
 
