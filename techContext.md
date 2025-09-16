@@ -61,6 +61,14 @@
 - **✅ Documentation**: Markdown files with Memory Bank integration and library documentation (complete)
 - **✅ Version Control**: Git with semantic versioning tags for releases (working)
 
+## CLI Commands
+- **✅ Core Commands**: `project`, `module`, `modules`, `version`, `release`, `full` (implemented)
+- **✅ Validation Commands**: `check`, `check-greatest` (implemented)
+- **✅ Type Commands**: `type`, `build-type` (implemented)
+- **✅ Utility Commands**: `sort` (implemented)
+- **✅ Modules Command**: New `modules` command returns all modules from .project.yml or single git module name (v0.8.6)
+- **✅ Configuration Support**: All commands support --config and --git flags for configuration control
+
 ## Packaging Tools and Scripts
 - **✅ create-simple-installers.sh**: Creates simple installer scripts that download from GitHub releases
 - **✅ create-all-installers.sh**: Batch creation of installers for all platforms
