@@ -131,6 +131,7 @@ Options:
 Commands:
     project           print project name from git remote
     module            print module name from git remote
+    modules           print all module names from .project.yml or single git module name
     version           print project version from git tags
     release           print project release number
     full              print full project name-version-release
@@ -188,6 +189,8 @@ func main() {
         result, err = getProject()
     case "module":
         result, err = getModule()
+    case "modules":
+        result, err = getModules()
     case "version":
         result, err = getVersion()
     case "release":

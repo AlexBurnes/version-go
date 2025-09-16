@@ -107,6 +107,34 @@ func TestConfigCLIOptions(t *testing.T) {
 			expectedError:  true,
 			description:    "Should error when both --config and --git flags are used",
 		},
+		{
+			name:           "modules_command_default_behavior",
+			args:           []string{"modules"},
+			expectedOutput: "version",
+			expectedError:  false,
+			description:    "Should use .project.yml modules when present (default behavior)",
+		},
+		{
+			name:           "modules_command_git_flag",
+			args:           []string{"--git", "modules"},
+			expectedOutput: "version-go",
+			expectedError:  false,
+			description:    "Should force git detection for modules when --git flag is used",
+		},
+		{
+			name:           "modules_command_single_module",
+			args:           []string{"--config", "test/project_module_single.yml", "modules"},
+			expectedOutput: "single-module",
+			expectedError:  false,
+			description:    "Should use single module from custom config file",
+		},
+		{
+			name:           "modules_command_multiple_modules",
+			args:           []string{"--config", "test/project_module_multiple.yml", "modules"},
+			expectedOutput: "primary-module\nsecondary-module\ntertiary-module",
+			expectedError:  false,
+			description:    "Should use all modules from multiple modules config file",
+		},
 	}
 
 	for _, tt := range tests {

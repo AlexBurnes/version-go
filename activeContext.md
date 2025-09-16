@@ -1,9 +1,18 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**DOCUMENTATION FIXES COMPLETED** - Successfully fixed install command documentation format to show correct `INSTALL_DIR=install_dir` environment variable format instead of `APP_DIR` for simple installers. Updated README.md and build script output to ensure users can properly specify custom installation directories when using the `wget -O - url | sh` format. This provides clear, accurate installation instructions for all platforms.
+**MODULES COMMAND IMPLEMENTATION COMPLETED** - Successfully implemented the new `modules` command for the version CLI utility. The command returns a list of all modules from .project.yml configuration file if defined, otherwise falls back to returning the single git module name. Implementation includes CLI integration, configuration support, comprehensive testing, and documentation updates. Ready for v0.8.6 release.
 
 ## Recent Changes
+- **NEW (v0.8.6)**: Modules Command Implementation
+  - **COMPLETED**: Added new `modules` command to CLI main.go command switch
+  - **COMPLETED**: Implemented getModules() function in git.go with .project.yml and git fallback support
+  - **COMPLETED**: Added getModulesFromCustomConfig() function for custom config file support
+  - **COMPLETED**: Updated help text to include modules command with proper description
+  - **COMPLETED**: Added comprehensive tests for single and multiple module scenarios
+  - **COMPLETED**: Updated CHANGELOG.md with new modules command feature
+  - **COMPLETED**: Verified functionality with manual testing (single module, multiple modules, --git flag, --config flag)
+  - **COMPLETED**: Ready for v0.8.6 release
 - **FIXED (v0.8.3)**: Install Command Documentation Format
   - **COMPLETED**: Fixed README.md to show correct `INSTALL_DIR=install_dir` format instead of `APP_DIR` for simple installers
   - **COMPLETED**: Updated both Linux and macOS installation sections in README.md

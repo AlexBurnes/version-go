@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Modules Command**: Added new `modules` command to list all modules from .project.yml configuration file
+  - Returns all modules from .project.yml if defined, otherwise falls back to single git module name
+  - Supports --config and --git flags for configuration control
+  - Outputs modules as newline-separated list for easy parsing
+  - Integrated with existing configuration system and CLI framework
+  - Added comprehensive tests for single and multiple module scenarios
+
 ## [0.8.3] - 2025-09-15
 
 ### Fixed

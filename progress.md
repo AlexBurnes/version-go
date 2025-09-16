@@ -9,7 +9,7 @@
 - **✅ Version Validator**: Comprehensive input validation with detailed error reporting
 - **✅ Version Sorter**: Correct sorting algorithm with proper precedence rules
 - **✅ Git Integration**: Full git tag reading and version extraction functionality
-- **✅ Command Implementation**: All CLI commands implemented and tested
+- **✅ Command Implementation**: All CLI commands implemented and tested including new modules command
 - **✅ Testing Suite**: Comprehensive unit tests, integration tests, and library tests
 - **✅ Colored Output**: Terminal-friendly colored output matching bash script patterns
 - **✅ Build System**: CMake integration with cross-platform builds working
@@ -81,6 +81,11 @@
 - **✅ Changelog Management Rule (v0.8.3)**: Created comprehensive changelog management rule (rule-changelog.mdc)
 - **✅ Changelog Date Accuracy (v0.8.3)**: Fixed all changelog dates using actual git tag release dates
 - **✅ Mandatory Changelog Updates (v0.8.3)**: Updated main rules to mandate changelog updates for any changes
+- **✅ Modules Command Implementation (v0.8.6)**: Added new `modules` command to list all modules from .project.yml configuration file
+- **✅ Modules Command Features (v0.8.6)**: Returns all modules from .project.yml if defined, otherwise falls back to single git module name
+- **✅ Modules Command Integration (v0.8.6)**: Supports --config and --git flags for configuration control
+- **✅ Modules Command Testing (v0.8.6)**: Added comprehensive tests for single and multiple module scenarios
+- **✅ Modules Command Documentation (v0.8.6)**: Updated help text and changelog with new command
 
 ## What's Left to Build
 - **NEW FEATURES PLANNED**: Bump Command Implementation

@@ -315,6 +315,64 @@ func getModuleFromGit() (string, error) {
     return "", fmt.Errorf("no git remote found - please add a remote to your repository")
 }
 
+// getModules returns all module names from .project.yml or single git module name
+func getModules() (string, error) {
+    // Check if --git flag is set (force git-based detection)
+    if gitFlag {
+        printDebug("--git flag set, forcing git-based detection")
+        moduleName, err := getModuleFromGit()
+        if err != nil {
+            return "", err
+        }
+        return moduleName, nil
+    }
+    
+    // Check if --config flag is set (use custom config file)
+    if configFile != "" {
+        printDebug("--config flag set, using custom config file: %s", configFile)
+        return getModulesFromCustomConfig(configFile)
+    }
+    
+    // Default behavior: try .project.yml first, fallback to git
+    // Try to load .project.yml configuration first
+    config, err := configProvider.LoadProjectConfig()
+    if err != nil {
+        printDebug("Failed to load .project.yml: %v", err)
+    } else if config != nil {
+        modules := configProvider.GetAllModules()
+        if len(modules) > 0 {
+            printDebug("Using modules from .project.yml: %v", modules)
+            return strings.Join(modules, "\n"), nil
+        }
+    }
+    
+    printDebug("No .project.yml found or invalid, falling back to git remote")
+    
+    // Fallback to git remote (single module)
+    moduleName, err := getModuleFromGit()
+    if err != nil {
+        return "", err
+    }
+    return moduleName, nil
+}
+
+// getModulesFromCustomConfig returns all module names from custom configuration file
+func getModulesFromCustomConfig(configPath string) (string, error) {
+    config, err := version.GetProjectConfigFromFile(configPath)
+    if err != nil {
+        return "", fmt.Errorf("failed to load config file %s: %v", configPath, err)
+    }
+    
+    // Extract all module names from the loaded config
+    if len(config.Project.Modules) == 0 {
+        return "", fmt.Errorf("no modules specified in config file %s", configPath)
+    }
+    
+    modules := config.Project.Modules
+    printDebug("Using modules from config file %s: %v", configPath, modules)
+    return strings.Join(modules, "\n"), nil
+}
+
 // getRelease returns the release number (always 1 for now)
 func getRelease() (string, error) {
     return "1", nil
