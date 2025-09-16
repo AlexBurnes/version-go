@@ -140,15 +140,6 @@ else()
     set(GO_ARCH "${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
-# Build version utility for self-building (bootstrap version)
-add_custom_target(bootstrap-version
-    COMMAND ${CMAKE_COMMAND} -E env CGO_ENABLED=0 GOOS=${GO_OS} GOARCH=${GO_ARCH}
-    ${GO_EXECUTABLE} build -a -ldflags "-X main.appVersion=${FULL_GIT_VERSION} -s -w" -o ${CMAKE_SOURCE_DIR}/scripts/version .
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
-    COMMENT "Building bootstrap version utility for self-building"
-    VERBATIM
-)
-
 # Include Conan generated files (if they exist)
 if(EXISTS "${CMAKE_BINARY_DIR}/conan_toolchain.cmake")
     include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake)
@@ -164,6 +155,15 @@ find_program(GO_EXECUTABLE go REQUIRED)
 if(NOT GO_EXECUTABLE)
     message(FATAL_ERROR "Go compiler not found. Please install Go ${GO_VERSION_REQUIRED} or later.")
 endif()
+
+# Build version utility for self-building (bootstrap version)
+add_custom_target(bootstrap-version
+    COMMAND ${CMAKE_COMMAND} -E env CGO_ENABLED=0 GOOS=${GO_OS} GOARCH=${GO_ARCH}
+    ${GO_EXECUTABLE} build -a -ldflags "-X main.appVersion=${FULL_GIT_VERSION} -s -w" -o ${CMAKE_SOURCE_DIR}/scripts/version .
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cmd/version
+    COMMENT "Building bootstrap version utility for self-building"
+    VERBATIM
+)
 
 # Check Go version
 execute_process(

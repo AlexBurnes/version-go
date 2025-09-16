@@ -18,6 +18,16 @@ jobs:
         with:
           go-version: '1.23.x'
 
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
       - name: Cache Conan
         uses: actions/cache@v4
         with:
@@ -29,7 +39,12 @@ jobs:
       - name: Install Conan
         uses: conan-io/setup-conan@v1
         with:
-          version: ">=2,<3"
+          version: "2.10.1"
+
+      - name: Init Conan config & profile
+        shell: bash
+        run: |
+          conan profile detect --force
 
       - name: Check for golang package in Conan
         shell: bash
@@ -40,17 +55,17 @@ jobs:
           else
             echo "⚠️  golang package not found in Conan remote repositories"
             echo "📦 Creating golang package locally..."
-            
+
             # Check if conanfile-golang.py exists
             if [ ! -f "conanfile-golang.py" ]; then
               echo "❌ conanfile-golang.py not found in project root"
               exit 1
             fi
-            
+
             # Create golang package locally
             echo "🔨 Creating golang package from local recipe..."
             conan create conanfile-golang.py --build=missing
-            
+
             echo "✅ golang package created locally and available for use"
           fi
 
@@ -58,18 +73,110 @@ jobs:
         run: |
           # Create Conan profile if it doesn't exist
           conan profile show default >/dev/null 2>&1 || conan profile detect --force
-          
+
           # Install dependencies
           conan install . --build=missing
+
+      - name: Configure CMake preset
+        run: |
+          cmake --preset conan-release
 
       - name: Download dependencies
         run: go mod download
 
-      - name: Release with GoReleaser
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          version: latest
-          args: release --clean
+      - name: Build for all platforms
+        run: |
+          cmake --build --preset conan-release --target version-all
+
+      - name: Create GoReleaser binary backup
+        run: |
+          # Get version for naming
+          VERSION=$(git describe --match "v[0-9]*" --abbrev=0 --tags 2>/dev/null || echo "v0.0.0")
+          CLEAN_VERSION=$(echo "$VERSION" | sed 's/^v//' | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//' | sed 's/-dirty$//')
+          
+          # Create backup directory for binaries
+          mkdir -p .goreleaser-binaries
+          
+          # Copy binaries with GoReleaser naming convention to backup location
+          cp bin/version-linux-amd64 ".goreleaser-binaries/version_${CLEAN_VERSION}_linux_amd64" 2>/dev/null || true
+          cp bin/version-linux-arm64 ".goreleaser-binaries/version_${CLEAN_VERSION}_linux_arm64" 2>/dev/null || true
+          cp bin/version-darwin-amd64 ".goreleaser-binaries/version_${CLEAN_VERSION}_darwin_amd64" 2>/dev/null || true
+          cp bin/version-darwin-arm64 ".goreleaser-binaries/version_${CLEAN_VERSION}_darwin_arm64" 2>/dev/null || true
+          cp bin/version-windows-amd64.exe ".goreleaser-binaries/version_${CLEAN_VERSION}_windows_amd64.exe" 2>/dev/null || true
+
+      - name: Create archives in GoReleaser format
+        run: |
+          # Get version for archive naming
+          VERSION=$(git describe --match "v[0-9]*" --abbrev=0 --tags 2>/dev/null || echo "v0.0.0")
+          CLEAN_VERSION=$(echo "$VERSION" | sed 's/^v//' | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//' | sed 's/-dirty$//')
+          
+          # Ensure dist directory exists
+          mkdir -p dist/
+          
+          # Create temporary directories for each platform
+          TEMP_DIRS=()
+          
+          # Linux amd64
+          LINUX_AMD64_DIR=$(mktemp -d)
+          TEMP_DIRS+=("$LINUX_AMD64_DIR")
+          cp bin/version-linux-amd64 "$LINUX_AMD64_DIR/version" 2>/dev/null || true
+          cp LICENSE "$LINUX_AMD64_DIR/" 2>/dev/null || true
+          cp README.md "$LINUX_AMD64_DIR/" 2>/dev/null || true
+          tar -czf "dist/version_${CLEAN_VERSION}_linux_amd64.tar.gz" -C "$LINUX_AMD64_DIR" . 2>/dev/null || true
+          
+          # Linux arm64
+          LINUX_ARM64_DIR=$(mktemp -d)
+          TEMP_DIRS+=("$LINUX_ARM64_DIR")
+          cp bin/version-linux-arm64 "$LINUX_ARM64_DIR/version" 2>/dev/null || true
+          cp LICENSE "$LINUX_ARM64_DIR/" 2>/dev/null || true
+          cp README.md "$LINUX_ARM64_DIR/" 2>/dev/null || true
+          tar -czf "dist/version_${CLEAN_VERSION}_linux_arm64.tar.gz" -C "$LINUX_ARM64_DIR" . 2>/dev/null || true
+          
+          # Darwin amd64
+          DARWIN_AMD64_DIR=$(mktemp -d)
+          TEMP_DIRS+=("$DARWIN_AMD64_DIR")
+          cp bin/version-darwin-amd64 "$DARWIN_AMD64_DIR/version" 2>/dev/null || true
+          cp LICENSE "$DARWIN_AMD64_DIR/" 2>/dev/null || true
+          cp README.md "$DARWIN_AMD64_DIR/" 2>/dev/null || true
+          tar -czf "dist/version_${CLEAN_VERSION}_darwin_amd64.tar.gz" -C "$DARWIN_AMD64_DIR" . 2>/dev/null || true
+          
+          # Darwin arm64
+          DARWIN_ARM64_DIR=$(mktemp -d)
+          TEMP_DIRS+=("$DARWIN_ARM64_DIR")
+          cp bin/version-darwin-arm64 "$DARWIN_ARM64_DIR/version" 2>/dev/null || true
+          cp LICENSE "$DARWIN_ARM64_DIR/" 2>/dev/null || true
+          cp README.md "$DARWIN_ARM64_DIR/" 2>/dev/null || true
+          tar -czf "dist/version_${CLEAN_VERSION}_darwin_arm64.tar.gz" -C "$DARWIN_ARM64_DIR" . 2>/dev/null || true
+          
+          # Windows amd64
+          WINDOWS_AMD64_DIR=$(mktemp -d)
+          TEMP_DIRS+=("$WINDOWS_AMD64_DIR")
+          cp bin/version-windows-amd64.exe "$WINDOWS_AMD64_DIR/version.exe" 2>/dev/null || true
+          cp LICENSE "$WINDOWS_AMD64_DIR/" 2>/dev/null || true
+          cp README.md "$WINDOWS_AMD64_DIR/" 2>/dev/null || true
+          DIST_PATH=$(realpath dist)
+          (cd "$WINDOWS_AMD64_DIR" && zip -r "$DIST_PATH/version_${CLEAN_VERSION}_windows_amd64.zip" .) 2>/dev/null || true
+          
+          # Clean up temporary directories
+          for dir in "${TEMP_DIRS[@]}"; do
+            rm -rf "$dir"
+          done
+
+      - name: Create install scripts
+        run: |
+          # Clean installers directory to remove old installers
+          rm -rf installers/
+          
+          # Create simple installers in installers/ directory
+          ./buildtools/create-all-installers.sh "$(git describe --match "v[0-9]*" --abbrev=0 --tags 2>/dev/null || echo "v0.0.0")" "installers"
+
+      - name: Run GoReleaser release
+        run: |
+          # Install GoReleaser
+          go install github.com/goreleaser/goreleaser@latest
+          
+          # Run release
+          goreleaser release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Если ваш Scoop bucket приватный/другой репозиторий:
