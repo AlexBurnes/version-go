@@ -181,6 +181,33 @@ Examples:
     version bump 1.2.3 fix         # Convert to postrelease with fix.1
     version bump 1.2.3 feat        # Convert to intermediate with feat.1
 
+Build Script Usage:
+    # Bump current git version and capture result (already silent by default)
+    NEW_VERSION=$(scripts/version bump patch)
+    echo "New version: $NEW_VERSION"
+    
+    # Smart bump current git version
+    BUMPED=$(scripts/version bump)
+    echo "Bumped version: $BUMPED"
+    
+    # Bump specific version with specific type
+    NEXT_VERSION=$(scripts/version bump 1.2.3 minor)
+    echo "Next version: $NEXT_VERSION"
+    
+    # Use in CMake or other build systems
+    set(APP_VERSION "${NEW_VERSION}")
+    message(STATUS "Building version: ${APP_VERSION}")
+    
+    # Use in shell scripts for version management
+    CURRENT_VERSION=$(scripts/version version)
+    NEW_VERSION=$(scripts/version bump patch)
+    echo "Current: $CURRENT_VERSION -> New: $NEW_VERSION"
+    
+    # Direct usage with version utility
+    scripts/version bump patch      # Basic patch bump
+    scripts/version bump alpha      # Convert to prerelease
+    scripts/version bump smart      # Intelligent bump
+
 Smart bump behavior:
     - Release versions: increment patch
     - Prerelease versions: increment prerelease identifier

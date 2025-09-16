@@ -54,9 +54,9 @@ VERSION_FILE_NORMALIZED=$(echo "$VERSION_FILE" | sed 's/^v//')
 if [[ "$CURRENT_TAG_NORMALIZED" == "$VERSION_FILE_NORMALIZED" ]]; then
     echo -e "${YELLOW}⚠️  VERSION file ($VERSION_FILE) matches current tag ($CURRENT_TAG)${NC}"
     echo -e "${YELLOW}📝 Suggestion: Increment version before making changes:${NC}"
-    echo -e "   ${BLUE}./scripts/version-bump patch${NC}    # for bug fixes"
-    echo -e "   ${BLUE}./scripts/version-bump minor${NC}    # for new features" 
-    echo -e "   ${BLUE}./scripts/version-bump major${NC}    # for breaking changes"
+    echo -e "   ${BLUE}scripts/version bump patch${NC}    # for bug fixes"
+    echo -e "   ${BLUE}scripts/version bump minor${NC}    # for new features" 
+    echo -e "   ${BLUE}scripts/version bump major${NC}    # for breaking changes"
     echo ""
     echo -e "${YELLOW}Then make your changes and follow the workflow in DEVELOPER_WORKFLOW.md${NC}"
     exit 1

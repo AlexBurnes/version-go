@@ -8,6 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Simplified Bump Workflow (v0.8.10)**: Streamlined bump functionality for build script usage
+  - **Direct Usage**: Use `scripts/version bump` directly instead of wrapper scripts
+  - **Removed Redundancy**: Eliminated `scripts/version-bump` wrapper script (only used in documentation examples)
+  - **Updated References**: All documentation and scripts now use direct version utility commands
+  - **Simplified Workflow**: Cleaner, more straightforward approach to version bumping in build scripts
+  - **Comprehensive Support**: Full support for all bump types (major, minor, patch, pre, alpha, beta, rc, fix, next, post, feat, smart)
+
+### Removed
+- **Redundant Scripts (v0.8.10)**: Removed unnecessary wrapper scripts
+  - **scripts/version-bump**: Removed redundant wrapper script that only provided documentation examples
+  - **Simplified Maintenance**: Reduced codebase complexity by eliminating unnecessary wrapper layer
+
+### Changed
+- **Build Script Integration (v0.8.10)**: Updated build script usage patterns
+  - **Direct Commands**: Updated `scripts/check-version-status` to suggest `scripts/version bump` directly
+  - **Documentation**: Updated all examples to use direct version utility commands
+  - **Help Text**: Updated help text to reflect simplified workflow
+
+## [v0.8.9] - 2025-01-27
+
+### Added
 - **Bump Command**: New `bump` command for intelligent version incrementing
   - Support for major, minor, patch, and specific identifier bump types (pre, alpha, beta, rc, fix, next, post, feat)
   - Smart bump mode that automatically determines appropriate increment based on current version type
