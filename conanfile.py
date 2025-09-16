@@ -3,7 +3,7 @@ from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
 from conan.tools.files import copy, get, chdir
 import os
 
-class RoamCtrlConan(ConanFile):
+class VersionConan(ConanFile):
     name = "version"
     version = "0.1.0"
     description = "Build tools - version: git describe CLI"
