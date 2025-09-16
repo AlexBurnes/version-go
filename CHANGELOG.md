@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2025-09-16
 
 ### Added
+- **GitHub Actions CI/CD Pipeline**: Comprehensive continuous integration and deployment workflow
+  - **CI Workflow**: Automated testing on Ubuntu, Windows, and macOS with Go 1.23.x
+  - **Conan Integration**: Automatic golang package management with local creation if not available
+  - **Multi-Platform Testing**: Cross-platform test execution with race detection and linting
+  - **Build Artifacts**: Automated build and package artifact generation
+  - **Release Workflow**: Automated releases with GoReleaser integration
+  - **Package Management**: Conan 2.0 integration for Go toolchain dependencies
+  - **Local Golang Recipe**: `conanfile-golang.py` for Go 1.23.0 with cross-platform support
+  - **Automated Package Creation**: Creates golang package locally when not available in remote repositories
+  - **Build Script Integration**: Updated all build scripts to include golang package checks
+  - **Comprehensive Documentation**: Complete CI/CD workflow documentation in `docs/CI_CD.md`
 - **Auto-Download Version Utility**: Enhanced bootstrap process with automatic download of latest version utility from GitHub releases
   - **Priority Order**: Built utility → Auto-download → Git describe fallback
   - **Platform Detection**: Automatic detection of platform (linux/macos) and architecture (amd64/arm64)

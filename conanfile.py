@@ -28,7 +28,7 @@ class RoamCtrlConan(ConanFile):
     
     def build_requirements(self):
         # Go as build requirement
-        self.tool_requires("golang/1.21.0")
+        self.tool_requires("golang/1.23.0")
         
         # CMake as build requirement
         self.tool_requires("cmake/[>=3.16]")

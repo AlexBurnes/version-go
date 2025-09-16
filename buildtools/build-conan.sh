@@ -164,9 +164,45 @@ check_cmake() {
     fi
 }
 
+# Check for golang package in Conan
+check_golang_package() {
+    log_info "Checking for golang package in Conan..."
+    
+    if conan search golang --remote=all 2>/dev/null | grep -q "golang/"; then
+        log_success "golang package found in Conan remote repositories"
+        return 0
+    else
+        log_warning "golang package not found in Conan remote repositories"
+        log_info "Creating golang package locally..."
+        
+        # Check if conanfile-golang.py exists
+        if [ ! -f "conanfile-golang.py" ]; then
+            log_error "conanfile-golang.py not found in project root"
+            log_info "Please ensure conanfile-golang.py exists before running this script"
+            return 1
+        fi
+        
+        # Create golang package locally
+        log_info "Creating golang package from local recipe..."
+        if conan create conanfile-golang.py --build=missing; then
+            log_success "golang package created locally and available for use"
+            return 0
+        else
+            log_error "Failed to create golang package locally"
+            return 1
+        fi
+    fi
+}
+
 # Install dependencies with Conan
 install_deps() {
     log_info "Installing dependencies with Conan..."
+    
+    # Check for golang package first
+    if ! check_golang_package; then
+        log_error "Failed to ensure golang package is available"
+        exit 1
+    fi
     
     # Create conan profile if it doesn't exist
     #if ! conan profile show $CONAN_PROFILE &> /dev/null; then

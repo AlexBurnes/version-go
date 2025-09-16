@@ -1,0 +1,211 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        go-version: ['1.23.x']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ matrix.go-version }}
+
+    - name: Install Conan
+      uses: conan-io/conan-action@v2
+      with:
+        conan-version: 2.0
+
+    - name: Check for golang package in Conan
+      run: |
+        echo "🔍 Checking for golang package in Conan..."
+        if conan search golang --remote=all 2>/dev/null | grep -q "golang/"; then
+          echo "✅ golang package found in Conan remote repositories"
+        else
+          echo "⚠️  golang package not found in Conan remote repositories"
+          echo "📦 Creating golang package locally..."
+          
+          # Check if conanfile-golang.py exists
+          if [ ! -f "conanfile-golang.py" ]; then
+            echo "❌ conanfile-golang.py not found in project root"
+            exit 1
+          fi
+          
+          # Create golang package locally
+          echo "🔨 Creating golang package from local recipe..."
+          conan create conanfile-golang.py --build=missing
+          
+          echo "✅ golang package created locally and available for use"
+        fi
+
+    - name: Install dependencies with Conan
+      run: |
+        # Create Conan profile if it doesn't exist
+        conan profile show default >/dev/null 2>&1 || conan profile detect --force
+        
+        # Install dependencies
+        conan install . --build=missing
+
+    - name: Download dependencies
+      run: go mod download
+
+    - name: Run tests
+      run: go test ./... -v -race
+
+    - name: Run linting
+      run: |
+        # Install golangci-lint if not available
+        if ! command -v golangci-lint &> /dev/null; then
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
+        fi
+        golangci-lint run
+
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs: test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        go-version: ['1.23.x']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ matrix.go-version }}
+
+    - name: Install Conan
+      uses: conan-io/conan-action@v2
+      with:
+        conan-version: 2.0
+
+    - name: Check for golang package in Conan
+      run: |
+        echo "🔍 Checking for golang package in Conan..."
+        if conan search golang --remote=all 2>/dev/null | grep -q "golang/"; then
+          echo "✅ golang package found in Conan remote repositories"
+        else
+          echo "⚠️  golang package not found in Conan remote repositories"
+          echo "📦 Creating golang package locally..."
+          
+          # Check if conanfile-golang.py exists
+          if [ ! -f "conanfile-golang.py" ]; then
+            echo "❌ conanfile-golang.py not found in project root"
+            exit 1
+          fi
+          
+          # Create golang package locally
+          echo "🔨 Creating golang package from local recipe..."
+          conan create conanfile-golang.py --build=missing
+          
+          echo "✅ golang package created locally and available for use"
+        fi
+
+    - name: Install dependencies with Conan
+      run: |
+        # Create Conan profile if it doesn't exist
+        conan profile show default >/dev/null 2>&1 || conan profile detect --force
+        
+        # Install dependencies
+        conan install . --build=missing
+
+    - name: Build with Conan
+      run: |
+        conan build . --build=missing
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: version-${{ matrix.os }}-${{ matrix.go-version }}
+        path: bin/
+        retention-days: 7
+
+  package:
+    name: Package and Test Distribution
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23.x'
+
+    - name: Install Conan
+      uses: conan-io/conan-action@v2
+      with:
+        conan-version: 2.0
+
+    - name: Check for golang package in Conan
+      run: |
+        echo "🔍 Checking for golang package in Conan..."
+        if conan search golang --remote=all 2>/dev/null | grep -q "golang/"; then
+          echo "✅ golang package found in Conan remote repositories"
+        else
+          echo "⚠️  golang package not found in Conan remote repositories"
+          echo "📦 Creating golang package locally..."
+          
+          # Check if conanfile-golang.py exists
+          if [ ! -f "conanfile-golang.py" ]; then
+            echo "❌ conanfile-golang.py not found in project root"
+            exit 1
+          fi
+          
+          # Create golang package locally
+          echo "🔨 Creating golang package from local recipe..."
+          conan create conanfile-golang.py --build=missing
+          
+          echo "✅ golang package created locally and available for use"
+        fi
+
+    - name: Install dependencies with Conan
+      run: |
+        # Create Conan profile if it doesn't exist
+        conan profile show default >/dev/null 2>&1 || conan profile detect --force
+        
+        # Install dependencies
+        conan install . --build=missing
+
+    - name: Download dependencies
+      run: go mod download
+
+    - name: Test GoReleaser dry-run
+      run: |
+        # Install GoReleaser
+        go install github.com/goreleaser/goreleaser@latest
+        
+        # Run dry-run to test packaging
+        goreleaser release --snapshot --clean --skip=publish
+
+    - name: Upload package artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: packages
+        path: dist/
+        retention-days: 7
