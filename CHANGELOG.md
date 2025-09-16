@@ -5,9 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased] - 2025-09-16
 
 ### Added
+- **Auto-Download Version Utility**: Enhanced bootstrap process with automatic download of latest version utility from GitHub releases
+  - **Priority Order**: Built utility → Auto-download → Git describe fallback
+  - **Platform Detection**: Automatic detection of platform (linux/macos) and architecture (amd64/arm64)
+  - **Latest Release URLs**: Uses `/releases/latest/download/` URLs without version numbers for consistent downloads
+  - **Simplified Download**: Uses `wget -O - url | INSTALL_DIR=./scripts sh` pipe approach for streamlined installation
+  - **Cross-Platform Support**: Works on Linux and macOS with proper architecture mapping
+  - **Error Handling**: Graceful fallback to git describe if download fails
+  - **Build Script Integration**: Updated all build scripts (build-and-package.sh, build-conan.sh, check-version-status, CMakeLists.txt)
+  - **Zero Setup**: New developers can build immediately without git tags or existing version utility
+  - **CI/CD Friendly**: Works in clean CI environments without pre-existing version utility
 - **Simplified Bump Workflow (v0.8.10)**: Streamlined bump functionality for build script usage
   - **Direct Usage**: Use `scripts/version bump` directly instead of wrapper scripts
   - **Removed Redundancy**: Eliminated `scripts/version-bump` wrapper script (only used in documentation examples)
@@ -26,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Documentation**: Updated all examples to use direct version utility commands
   - **Help Text**: Updated help text to reflect simplified workflow
 
-## [v0.8.9] - 2025-01-27
+## [v0.8.9] - 2025-09-16
 
 ### Added
 - **Bump Command**: New `bump` command for intelligent version incrementing

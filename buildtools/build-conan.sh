@@ -62,10 +62,56 @@ play_success_sound() {
     fi
 }
 
-# Get version using built version utility or git describe as fallback
+# Download version utility from GitHub releases
+download_version_utility() {
+    log_info "No version utility found, downloading latest from GitHub..."
+    
+    # Detect platform and architecture
+    local platform=$(uname -s | tr '[:upper:]' '[:lower:]')
+    local arch=$(uname -m)
+    
+    # Map architecture names
+    case "$arch" in
+        x86_64) arch="amd64" ;;
+        arm64|aarch64) arch="arm64" ;;
+        *) log_error "Unsupported architecture: $arch"; return 1 ;;
+    esac
+    
+    # Map platform names
+    case "$platform" in
+        darwin) platform="macos" ;;
+        linux) platform="linux" ;;
+        *) log_error "Unsupported platform: $platform"; return 1 ;;
+    esac
+    
+    log_info "Detected platform: ${platform}-${arch}"
+    
+    # Download URL using latest release (no version number in URL)
+    local download_url="https://github.com/AlexBurnes/version-go/releases/latest/download/version-${platform}-${arch}.tar.gz"
+    
+    # Create scripts directory
+    mkdir -p scripts
+    
+    # Download and install using pipe approach
+    log_info "Downloading version utility from: $download_url"
+    if wget -q -O - "$download_url" | INSTALL_DIR="$(dirname "$0")/scripts" sh; then
+        if [[ -f "scripts/version" ]]; then
+            log_success "Successfully downloaded version utility"
+            return 0
+        else
+            log_error "Version binary not found after installation"
+            return 1
+        fi
+    else
+        log_error "Failed to download and install version utility from GitHub"
+        return 1
+    fi
+}
+
+# Get version with corrected priority order
 VERSION=""
 
-# Try to use built version utility first
+# 1. Try to use built version utility first
 if [[ -f "scripts/version" ]]; then
     VERSION=$(scripts/version version 2>/dev/null || echo "")
     if [[ -n "$VERSION" ]]; then
@@ -73,7 +119,17 @@ if [[ -f "scripts/version" ]]; then
     fi
 fi
 
-# Fallback to git describe if version utility not available or failed
+# 2. NEW: Auto-download latest version utility
+if [[ -z "$VERSION" ]]; then
+    if download_version_utility; then
+        VERSION=$(scripts/version version 2>/dev/null || echo "")
+        if [[ -n "$VERSION" ]]; then
+            log_info "Using downloaded version utility: $VERSION"
+        fi
+    fi
+fi
+
+# 3. Fallback to git describe if version utility not available or failed
 if [[ -z "$VERSION" ]]; then
     VERSION=$(git describe --match "v[0-9]*" --abbrev=0 --tags 2>/dev/null || echo "")
     if [[ -n "$VERSION" ]]; then
@@ -82,7 +138,7 @@ if [[ -z "$VERSION" ]]; then
 fi
 
 if [ -z "$VERSION" ]; then
-    log_error "Failed to get version from both built utility and git. Make sure you're in a git repository with version tags."
+    log_error "Failed to get version from built utility, download, and git. Make sure you're in a git repository with version tags."
     exit 1
 fi
 

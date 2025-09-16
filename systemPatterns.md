@@ -1,7 +1,7 @@
 # System Patterns: Version CLI Utility
 
 ## System Architecture
-**✅ IMPLEMENTED WITH LIBRARY SUPPORT AND SELF-BUILDING** - The system follows a modular CLI architecture with clear separation of concerns, reusable library package, and self-building capabilities:
+**✅ IMPLEMENTED WITH LIBRARY SUPPORT, SELF-BUILDING, AND AUTO-DOWNLOAD** - The system follows a modular CLI architecture with clear separation of concerns, reusable library package, self-building capabilities, and automatic download functionality:
 
 ```
 CLI Interface Layer ✅
@@ -57,7 +57,8 @@ Build System Layer ✅
 ├── Cross-Platform: Automated builds for Linux/Windows/macOS ✅
 ├── Environment Setup: Automatic Go PATH configuration ✅
 ├── Environment Loading: .env file support for tokens and variables ✅
-└── Self-Building: Version utility uses its own built binary for version detection ✅
+├── Self-Building: Version utility uses its own built binary for version detection ✅
+└── Auto-Download: Automatic download of latest version utility from GitHub releases ✅
 
 Packaging Layer ✅
 ├── Linux: Makeself Self-Extracting Archives ✅
@@ -76,6 +77,10 @@ Packaging Layer ✅
 - **✅ Self-Building System**: Version utility uses its own built binary for version detection during build process
 - **✅ Bootstrap Process**: Initial build uses git describe, subsequent builds use built version utility
 - **✅ Circular Dependency Resolution**: Eliminate dependency on git describe by using built version utility
+- **✅ Auto-Download System**: Three-tier priority order for version detection: built utility → auto-download → git describe
+- **✅ Platform Detection**: Automatic detection of platform (linux/macos) and architecture (amd64/arm64) for downloads
+- **✅ Simplified Download**: Use `wget -O - url | INSTALL_DIR=./scripts sh` pipe approach for streamlined installation
+- **✅ Latest Release URLs**: Use `/releases/latest/download/` URLs without version numbers for consistent downloads
 - **✅ CLI Framework**: Implemented using Go's `flag` package for command parsing
 - **✅ Library Package**: Refactored core functionality into reusable `pkg/version` package
 - **✅ Grammar Engine**: Custom regex-based parser for extended version format support (avoiding semver library complexity)
@@ -117,9 +122,10 @@ Packaging Layer ✅
 4. **✅ Configuration Pipeline**: Check .project.yml → Parse YAML → Extract project/module info → Fallback to git if missing
 5. **✅ Version Bumping Pipeline**: Parse current version → Detect version state → Apply bump rules → Generate new version
 6. **✅ Self-Building Pipeline**: Bootstrap build (git describe) → Build version utility → Use built utility for subsequent builds
-7. **✅ Local Build Pipeline**: Source code → Conan deps → CMake config → Go compilation → Static binary
-8. **✅ Makeself Installer Pipeline**: Binary + install script + docs → Package directory → Makeself compression → Self-extracting archive
-9. **✅ Scoop Integration Pipeline**: GoReleaser build → Scoop manifest generation → Package manager distribution
+7. **✅ Auto-Download Pipeline**: Check built utility → Download latest from GitHub → Install to scripts/ → Use downloaded utility
+8. **✅ Local Build Pipeline**: Source code → Conan deps → CMake config → Go compilation → Static binary
+9. **✅ Makeself Installer Pipeline**: Binary + install script + docs → Package directory → Makeself compression → Self-extracting archive
+10. **✅ Scoop Integration Pipeline**: GoReleaser build → Scoop manifest generation → Package manager distribution
 
 ## Self-Building Implementation Pattern
 
@@ -138,6 +144,30 @@ Packaging Layer ✅
 - **Problem**: Project needs git describe to build, but version utility replaces git describe
 - **Solution**: Bootstrap process uses git describe initially, then switches to built version utility
 - **Benefits**: Eliminates external git dependency, uses own version utility for consistency
+
+## Auto-Download Implementation Pattern
+
+### Three-Tier Priority Order
+1. **Built Version Utility**: Use `scripts/version` if it exists and works
+2. **Auto-Download**: Download latest version utility from GitHub releases if built utility not available
+3. **Git Describe Fallback**: Use `git describe --tags` if download fails
+
+### Platform and Architecture Detection
+- **Platform Detection**: `uname -s` → `linux`/`macos` (darwin mapped to macos)
+- **Architecture Detection**: `uname -m` → `amd64`/`arm64` (x86_64→amd64, aarch64→arm64)
+- **Download URL**: `https://github.com/AlexBurnes/version-go/releases/latest/download/version-{platform}-{arch}.tar.gz`
+
+### Simplified Download Process
+- **Method**: `wget -O - url | INSTALL_DIR=./scripts sh`
+- **Benefits**: No temporary directories, uses existing installer infrastructure, single command
+- **Error Handling**: Graceful fallback to git describe if download fails
+- **Installation**: Direct installation to `scripts/version` with proper permissions
+
+### Zero-Setup Benefits
+- **New Developers**: Can build immediately without git tags or existing version utility
+- **CI/CD Environments**: Works in clean environments without pre-existing version utility
+- **Self-Healing**: Automatically recovers from missing version utility
+- **Cross-Platform**: Works on Linux and macOS with proper architecture mapping
 
 ## Packaging Implementation Details
 ### Simple Installer Scripts

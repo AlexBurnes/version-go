@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 
-# Get version using built version utility or git describe as fallback
+# Get version with corrected priority order
 set(VERSION_UTILITY "${CMAKE_SOURCE_DIR}/scripts/version")
 set(GIT_VERSION "")
 set(PROJECT_VERSION "")
 
-# Try to use built version utility first
+# 1. Try to use built version utility first
 if(EXISTS ${VERSION_UTILITY})
     execute_process(
         COMMAND ${VERSION_UTILITY} version
@@ -19,11 +19,68 @@ if(EXISTS ${VERSION_UTILITY})
         set(GIT_VERSION ${VERSION_UTILITY_OUTPUT})
         message(STATUS "Using built version utility: ${GIT_VERSION}")
     else()
-        message(WARNING "Built version utility failed, falling back to git describe")
+        message(WARNING "Built version utility failed, trying auto-download")
     endif()
 endif()
 
-# Fallback to git describe if version utility not available or failed
+# 2. NEW: Auto-download latest version utility
+if(NOT GIT_VERSION)
+    message(STATUS "No version utility found, downloading latest from GitHub...")
+    
+    # Detect platform and architecture
+    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        set(DOWNLOAD_PLATFORM "linux")
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+        set(DOWNLOAD_PLATFORM "macos")
+    else()
+        message(WARNING "Auto-download not supported on ${CMAKE_SYSTEM_NAME}, falling back to git describe")
+    endif()
+    
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64")
+        set(DOWNLOAD_ARCH "amd64")
+    elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64")
+        set(DOWNLOAD_ARCH "arm64")
+    else()
+        message(WARNING "Auto-download not supported for ${CMAKE_SYSTEM_PROCESSOR}, falling back to git describe")
+    endif()
+    
+    if(DOWNLOAD_PLATFORM AND DOWNLOAD_ARCH)
+        message(STATUS "Detected platform: ${DOWNLOAD_PLATFORM}-${DOWNLOAD_ARCH}")
+        
+        # Download URL using latest release (no version number in URL)
+        set(DOWNLOAD_URL "https://github.com/AlexBurnes/version-go/releases/latest/download/version-${DOWNLOAD_PLATFORM}-${DOWNLOAD_ARCH}.tar.gz")
+        
+        # Create scripts directory
+        file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/scripts)
+        
+        # Download and install using pipe approach
+        execute_process(
+            COMMAND bash -c "wget -q -O - ${DOWNLOAD_URL} | INSTALL_DIR=${CMAKE_SOURCE_DIR}/scripts sh"
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            RESULT_VARIABLE DOWNLOAD_RESULT
+        )
+        
+        if(DOWNLOAD_RESULT EQUAL 0)
+            if(EXISTS ${VERSION_UTILITY})
+                # Try to use downloaded version utility
+                execute_process(
+                    COMMAND ${VERSION_UTILITY} version
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                    OUTPUT_VARIABLE VERSION_UTILITY_OUTPUT
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    RESULT_VARIABLE VERSION_UTILITY_RESULT
+                )
+                
+                if(VERSION_UTILITY_RESULT EQUAL 0 AND VERSION_UTILITY_OUTPUT)
+                    set(GIT_VERSION ${VERSION_UTILITY_OUTPUT})
+                    message(STATUS "Using downloaded version utility: ${GIT_VERSION}")
+                endif()
+            endif()
+        endif()
+    endif()
+endif()
+
+# 3. Fallback to git describe if version utility not available or failed
 if(NOT GIT_VERSION)
     execute_process(
         COMMAND git describe --match "v[0-9]*" --abbrev=0 --tags
@@ -36,7 +93,7 @@ if(NOT GIT_VERSION)
     if(GIT_VERSION_RESULT EQUAL 0 AND GIT_VERSION)
         message(STATUS "Using git describe: ${GIT_VERSION}")
     else()
-        message(FATAL_ERROR "Failed to get version from both built utility and git describe. Make sure you're in a git repository.")
+        message(FATAL_ERROR "Failed to get version from built utility, download, and git describe. Make sure you're in a git repository.")
     endif()
 endif()
 

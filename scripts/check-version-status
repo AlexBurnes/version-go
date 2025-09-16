@@ -18,10 +18,56 @@ fi
 
 echo -e "${BLUE}🔍 Checking version status...${NC}"
 
-# Get current version using built utility or git describe
+# Download version utility from GitHub releases
+download_version_utility() {
+    echo -e "${BLUE}No version utility found, downloading latest from GitHub...${NC}"
+    
+    # Detect platform and architecture
+    local platform=$(uname -s | tr '[:upper:]' '[:lower:]')
+    local arch=$(uname -m)
+    
+    # Map architecture names
+    case "$arch" in
+        x86_64) arch="amd64" ;;
+        arm64|aarch64) arch="arm64" ;;
+        *) echo -e "${RED}Unsupported architecture: $arch${NC}"; return 1 ;;
+    esac
+    
+    # Map platform names
+    case "$platform" in
+        darwin) platform="macos" ;;
+        linux) platform="linux" ;;
+        *) echo -e "${RED}Unsupported platform: $platform${NC}"; return 1 ;;
+    esac
+    
+    echo -e "${BLUE}Detected platform: ${platform}-${arch}${NC}"
+    
+    # Download URL using latest release (no version number in URL)
+    local download_url="https://github.com/AlexBurnes/version-go/releases/latest/download/version-${platform}-${arch}.tar.gz"
+    
+    # Create scripts directory
+    mkdir -p scripts
+    
+    # Download and install using pipe approach
+    echo -e "${BLUE}Downloading version utility from: $download_url${NC}"
+    if wget -q -O - "$download_url" | INSTALL_DIR="$(dirname "$0")/scripts" sh; then
+        if [[ -f "scripts/version" ]]; then
+            echo -e "${GREEN}Successfully downloaded version utility${NC}"
+            return 0
+        else
+            echo -e "${RED}Version binary not found after installation${NC}"
+            return 1
+        fi
+    else
+        echo -e "${RED}Failed to download and install version utility from GitHub${NC}"
+        return 1
+    fi
+}
+
+# Get current version with corrected priority order
 CURRENT_TAG=""
 
-# Try to use built version utility first
+# 1. Try to use built version utility first
 if [[ -f "scripts/version" ]]; then
     CURRENT_TAG=$(scripts/version version 2>/dev/null || echo "")
     if [[ -n "$CURRENT_TAG" ]]; then
@@ -29,7 +75,17 @@ if [[ -f "scripts/version" ]]; then
     fi
 fi
 
-# Fallback to git describe if version utility not available or failed
+# 2. NEW: Auto-download latest version utility
+if [[ -z "$CURRENT_TAG" ]]; then
+    if download_version_utility; then
+        CURRENT_TAG=$(scripts/version version 2>/dev/null || echo "")
+        if [[ -n "$CURRENT_TAG" ]]; then
+            echo -e "Current version (from downloaded utility): ${GREEN}$CURRENT_TAG${NC}"
+        fi
+    fi
+fi
+
+# 3. Fallback to git describe if version utility not available or failed
 if [[ -z "$CURRENT_TAG" ]]; then
     CURRENT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
     echo -e "Current git tag: ${GREEN}$CURRENT_TAG${NC}"

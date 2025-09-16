@@ -1,9 +1,20 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**BUMP FUNCTIONALITY SIMPLIFIED FOR BUILD SCRIPTS** - Successfully simplified bump functionality for build script usage. The version utility already outputs only results by default, so no silent mode was needed. Removed redundant `scripts/version-bump` wrapper script since it was only used in documentation examples. Updated all references to use `scripts/version bump` directly. The bump functionality is now ready for use in build scripts with comprehensive support for all version types and intelligent smart bumping. Ready for v0.8.10 release.
+**AUTO-DOWNLOAD VERSION UTILITY IMPLEMENTATION** - Successfully implemented automatic download functionality for the version utility with simplified pipe-based installation. The system now uses a three-tier priority order: built utility → auto-download → git describe fallback. The download process uses `wget -O - url | INSTALL_DIR=./scripts sh` for streamlined installation without temporary directories. Platform and architecture detection automatically selects the correct binary from GitHub releases. This enables zero-setup development and CI/CD environments. Ready for v0.8.11 release.
 
 ## Recent Changes
+- **NEW (v0.8.11)**: Auto-Download Version Utility Implementation
+  - **COMPLETED**: Implemented automatic download functionality for version utility from GitHub releases
+  - **COMPLETED**: Added three-tier priority order: built utility → auto-download → git describe fallback
+  - **COMPLETED**: Implemented platform and architecture detection (linux/macos, amd64/arm64)
+  - **COMPLETED**: Used latest release URLs without version numbers for consistent downloads
+  - **COMPLETED**: Simplified download process using `wget -O - url | INSTALL_DIR=./scripts sh` pipe approach
+  - **COMPLETED**: Updated all build scripts (build-and-package.sh, build-conan.sh, check-version-status, CMakeLists.txt)
+  - **COMPLETED**: Added graceful error handling with fallback to git describe if download fails
+  - **COMPLETED**: Enabled zero-setup development and CI/CD environments
+  - **COMPLETED**: Updated CHANGELOG.md with comprehensive documentation of auto-download feature
+  - **COMPLETED**: Ready for v0.8.11 release
 - **NEW (v0.8.10)**: Bump Functionality Simplified for Build Scripts
   - **COMPLETED**: Removed redundant `scripts/version-bump` wrapper script (only used in documentation examples)
   - **COMPLETED**: Updated all references to use `scripts/version bump` directly
@@ -177,7 +188,7 @@
 - **ENHANCED (v0.5.4)**: Custom installation directory support for Linux and macOS
 
 ## Next Steps
-- **RELEASE v0.8.9**: Publish v0.8.9 release with bump functionality implementation
+- **RELEASE v0.8.11**: Publish v0.8.11 release with auto-download version utility functionality
 - **MONITOR USAGE**: Monitor bump command usage and gather user feedback
 - **ENHANCEMENT IDEAS**: Consider additional bump features based on user feedback
 - **INSTALLER SYSTEM**: Monitor installer system for any edge cases or user feedback
@@ -216,6 +227,10 @@
 - **Bootstrap Process**: Initial build must use git describe, subsequent builds use built version utility
 - **Circular Dependency Resolution**: Eliminate dependency on git describe by using built version utility
 - **Version Detection Strategy**: Use built version utility in scripts/ directory for all version operations
+- **Auto-Download System**: Three-tier priority order for version detection: built utility → auto-download → git describe
+- **Platform Detection**: Automatic detection of platform (linux/macos) and architecture (amd64/arm64) for downloads
+- **Simplified Download**: Use `wget -O - url | INSTALL_DIR=./scripts sh` pipe approach for streamlined installation
+- **Latest Release URLs**: Use `/releases/latest/download/` URLs without version numbers for consistent downloads
 - **Language Choice**: Go is already decided and specified in project requirements
 - **Build System**: CMake + Conan + bash scripts as specified in project.md
 - **Distribution**: GoReleaser for cross-platform builds and distribution
