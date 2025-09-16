@@ -34,7 +34,6 @@ jobs:
       - name: Init Conan config & profile
         shell: bash
         run: |
-          conan config init --force
           conan profile detect --force
 
       - name: Check for golang package in Conan
