@@ -26,12 +26,21 @@ jobs:
       with:
         go-version: ${{ matrix.go-version }}
 
-    - name: Install Conan
-      uses: conan-io/conan-action@v2
+    - name: Cache Conan
+      uses: actions/cache@v4
       with:
-        conan-version: 2.0
+        path: ~/.conan2
+        key: conan2-${{ runner.os }}-${{ hashFiles('**/conanfile.*', 'conan.lock') }}
+        restore-keys: |
+            conan2-${{ runner.os }}-
+
+    - name: Install Conan
+      uses: conan-io/setup-conan@v1
+      with:
+        version: "2.x"
 
     - name: Check for golang package in Conan
+      shell: bash
       run: |
         echo "🔍 Checking for golang package in Conan..."
         if conan search golang --remote=all 2>/dev/null | grep -q "golang/"; then
@@ -95,12 +104,21 @@ jobs:
       with:
         go-version: ${{ matrix.go-version }}
 
-    - name: Install Conan
-      uses: conan-io/conan-action@v2
+    - name: Cache Conan
+      uses: actions/cache@v4
       with:
-        conan-version: 2.0
+        path: ~/.conan2
+        key: conan2-${{ runner.os }}-${{ hashFiles('**/conanfile.*', 'conan.lock') }}
+        restore-keys: |
+            conan2-${{ runner.os }}-
+
+    - name: Install Conan
+      uses: conan-io/setup-conan@v1
+      with:
+        version: "2.x"
 
     - name: Check for golang package in Conan
+      shell: bash
       run: |
         echo "🔍 Checking for golang package in Conan..."
         if conan search golang --remote=all 2>/dev/null | grep -q "golang/"; then
@@ -157,12 +175,21 @@ jobs:
       with:
         go-version: '1.23.x'
 
-    - name: Install Conan
-      uses: conan-io/conan-action@v2
+    - name: Cache Conan
+      uses: actions/cache@v4
       with:
-        conan-version: 2.0
+        path: ~/.conan2
+        key: conan2-${{ runner.os }}-${{ hashFiles('**/conanfile.*', 'conan.lock') }}
+        restore-keys: |
+            conan2-${{ runner.os }}-
+
+    - name: Install Conan
+      uses: conan-io/setup-conan@v1
+      with:
+        version: "2.x"
 
     - name: Check for golang package in Conan
+      shell: bash
       run: |
         echo "🔍 Checking for golang package in Conan..."
         if conan search golang --remote=all 2>/dev/null | grep -q "golang/"; then
