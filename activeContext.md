@@ -1,9 +1,17 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**BUMP FUNCTIONALITY IMPLEMENTATION COMPLETED** - Successfully implemented comprehensive version bumping functionality with intelligent increment logic, smart mode detection, and support for all version types (major, minor, patch, prerelease, postrelease, intermediate). The implementation includes a complete library package with comprehensive tests, CLI integration with detailed help text, and proper code decomposition into separate bump.go file. Also fixed version status script comparison logic and updated all documentation. Ready for v0.8.9 release.
+**BUMP COMMAND ARGUMENT PARSING FIXED** - Successfully fixed bump command argument parsing logic to correctly handle single argument as either version or bump type. The fix resolves the issue where `version bump patch` was incorrectly treated as version instead of bump type. Now supports all argument combinations: no args (smart bump current version), single arg as version or bump type, and two args as version and bump type. Enhanced validation and error messages for better user experience. Ready for v0.8.9 release.
 
 ## Recent Changes
+- **FIXED (v0.8.9)**: Bump Command Argument Parsing
+  - **COMPLETED**: Fixed bump command argument parsing logic to correctly handle single argument as either version or bump type
+  - **COMPLETED**: Resolved issue where `version bump patch` was incorrectly treated as version instead of bump type
+  - **COMPLETED**: Enhanced argument validation to accept valid versions or bump types as single argument
+  - **COMPLETED**: Improved error messages to clearly indicate whether argument should be version or bump type
+  - **COMPLETED**: Updated CHANGELOG.md with comprehensive documentation of the fix
+  - **COMPLETED**: Tested all argument combinations to ensure correct behavior
+  - **COMPLETED**: Ready for v0.8.9 release
 - **NEW (v0.8.9)**: Bump Functionality Implementation
   - **COMPLETED**: Implemented comprehensive version bumping functionality in pkg/version library
   - **COMPLETED**: Added BumpType enum with major, minor, patch, prerelease, postrelease, intermediate, smart types

@@ -105,6 +105,10 @@
 - **✅ Version Status Script Fix (v0.8.9)**: Fixed version comparison logic to properly normalize version strings
 - **✅ Code Decomposition (v0.8.9)**: Decomposed bump functionality from pkg/version/version.go to separate pkg/version/bump.go file
 - **✅ Code Organization (v0.8.9)**: Improved code organization with better separation of concerns between core parsing and bump logic
+- **✅ Bump Command Argument Parsing Fix (v0.8.9)**: Fixed bump command argument parsing to correctly handle single argument as either version or bump type
+- **✅ Argument Validation Enhancement (v0.8.9)**: Enhanced validation logic to accept valid versions or bump types as single argument
+- **✅ Error Message Improvement (v0.8.9)**: Improved error messages to clearly indicate whether argument should be version or bump type
+- **✅ Comprehensive Testing (v0.8.9)**: Tested all argument combinations to ensure correct behavior
 
 ## What's Left to Build
 - **RELEASE v0.8.9**: Publish v0.8.9 release with bump functionality implementation

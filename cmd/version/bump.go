@@ -31,31 +31,79 @@ func bumpVersion(versionStr string, bumpTypeStr string) (string, error) {
 
 // getBumpVersion gets the version to bump (from argument or current git version)
 func getBumpVersion(args []string) (string, error) {
-	if len(args) > 0 {
-		// Version provided as argument
-		return args[0], nil
+	if len(args) == 0 {
+		// No arguments provided, use current git version
+		version, err := getVersion()
+		if err != nil {
+			return "", fmt.Errorf("no version specified and failed to get current version: %v", err)
+		}
+		printDebug("Using current git version: %s", version)
+		return version, nil
 	}
 
-	// No version provided, use current git version
-	version, err := getVersion()
-	if err != nil {
-		return "", fmt.Errorf("no version specified and failed to get current version: %v", err)
+	if len(args) == 1 {
+		// One argument provided - check if it's a version or bump type
+		arg := args[0]
+		
+		// First check if it's a valid version
+		if err := version.Validate(arg); err == nil {
+			// It's a valid version
+			printDebug("Using provided version: %s", arg)
+			return arg, nil
+		}
+		
+		// Check if it's a valid bump type
+		if _, err := version.ParseBumpType(arg); err == nil {
+			// It's a valid bump type, so no version provided - use current git version
+			version, err := getVersion()
+			if err != nil {
+				return "", fmt.Errorf("no version specified and failed to get current version: %v", err)
+			}
+			printDebug("Using current git version with bump type: %s", arg)
+			return version, nil
+		}
+		
+		// Neither a valid version nor bump type
+		return "", fmt.Errorf("invalid argument '%s': must be a valid version or bump type", arg)
 	}
 
-	printDebug("Using current git version: %s", version)
-	return version, nil
+	// Two or more arguments - first should be version
+	versionStr := args[0]
+	if err := version.Validate(versionStr); err != nil {
+		return "", fmt.Errorf("invalid version '%s': %v", versionStr, err)
+	}
+	
+	printDebug("Using provided version: %s", versionStr)
+	return versionStr, nil
 }
 
 // getBumpType gets the bump type (from argument or default to smart)
 func getBumpType(args []string) string {
-	if len(args) > 1 {
-		// Bump type provided as argument
-		return args[1]
+	if len(args) == 0 {
+		// No arguments provided, default to smart bump
+		printDebug("No bump type specified, using smart bump")
+		return "smart"
 	}
 
-	// Default to smart bump
-	printDebug("No bump type specified, using smart bump")
-	return "smart"
+	if len(args) == 1 {
+		// One argument provided - check if it's a bump type
+		arg := args[0]
+		
+		// Check if it's a valid bump type
+		if _, err := version.ParseBumpType(arg); err == nil {
+			// It's a valid bump type
+			printDebug("Using provided bump type: %s", arg)
+			return arg
+		}
+		
+		// It's a version, default to smart bump
+		printDebug("Version provided, using smart bump")
+		return "smart"
+	}
+
+	// Two or more arguments - second should be bump type
+	printDebug("Using provided bump type: %s", args[1])
+	return args[1]
 }
 
 // validateBumpArgs validates the bump command arguments
@@ -64,19 +112,38 @@ func validateBumpArgs(args []string) error {
 		return fmt.Errorf("too many arguments - usage: bump [version] [type]")
 	}
 
-	// If version is provided, validate it
-	if len(args) > 0 {
-		if err := version.Validate(args[0]); err != nil {
-			return fmt.Errorf("invalid version '%s': %v", args[0], err)
-		}
+	if len(args) == 0 {
+		// No arguments - both version and bump type will use defaults
+		return nil
 	}
 
-	// If bump type is provided, validate it
-	if len(args) > 1 {
-		_, err := version.ParseBumpType(args[1])
-		if err != nil {
-			return fmt.Errorf("invalid bump type '%s': %v", args[1], err)
+	if len(args) == 1 {
+		// One argument - could be version or bump type
+		arg := args[0]
+		
+		// Check if it's a valid version
+		if err := version.Validate(arg); err == nil {
+			// It's a valid version
+			return nil
 		}
+		
+		// Check if it's a valid bump type
+		if _, err := version.ParseBumpType(arg); err == nil {
+			// It's a valid bump type
+			return nil
+		}
+		
+		// Neither valid version nor bump type
+		return fmt.Errorf("invalid argument '%s': must be a valid version or bump type", arg)
+	}
+
+	// Two arguments - first should be version, second should be bump type
+	if err := version.Validate(args[0]); err != nil {
+		return fmt.Errorf("invalid version '%s': %v", args[0], err)
+	}
+
+	if _, err := version.ParseBumpType(args[1]); err != nil {
+		return fmt.Errorf("invalid bump type '%s': %v", args[1], err)
 	}
 
 	return nil

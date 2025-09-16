@@ -27,6 +27,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Maintained full backward compatibility and functionality
 
 ### Fixed
+- **Bump Command Argument Parsing**: Fixed bump command argument parsing logic
+  - Now correctly handles single argument as either version or bump type
+  - `version bump patch` now works correctly (uses current git version with patch bump)
+  - `version bump 1.2.3` now works correctly (uses provided version with smart bump)
+  - `version bump 1.2.3 patch` now works correctly (uses provided version with patch bump)
+  - Improved argument validation to accept valid versions or bump types as single argument
+  - Enhanced error messages to clearly indicate whether argument should be version or bump type
 - **Version Status Script**: Fixed version comparison logic in `scripts/check-version-status`
   - Now correctly normalizes version strings by removing 'v' prefix before comparison
   - Prevents false positive "ready for changes" when VERSION file matches current git tag
