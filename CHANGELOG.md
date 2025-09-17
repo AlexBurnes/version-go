@@ -5,10 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2025-09-16
+## [0.8.22] - 2025-09-17
 
 ### Added
-- **GitHub Actions CI/CD Pipeline (v0.8.14-v0.8.17)**: Comprehensive continuous integration and deployment workflow
+- **DRY Refactoring for Build Scripts**: Extracted common functionality into reusable scripts
+  - **GoReleaser Binary Backup Script**: `buildtools/create-goreleaser-backup.sh` for consistent binary backup
+  - **GoReleaser Archive Creation Script**: `buildtools/create-goreleaser-archives.sh` for platform-specific archives
+  - **GitHub Actions Integration**: Updated release workflow to use new scripts instead of inline code
+  - **Build Script Integration**: Updated `build-and-package.sh` to use new scripts for consistency
+  - **Error Handling**: Improved error handling with graceful fallbacks for missing binaries
+  - **Version Detection**: Automatic version detection with fallback to VERSION file or git describe
+  - **Cross-Platform Support**: Proper handling of Windows .exe extensions and Unix binary naming
+
+### Changed
+- **GitHub Actions Workflow**: Simplified release workflow by replacing inline steps with script calls
+- **Build Process**: Streamlined build process by eliminating code duplication between GitHub Actions and build scripts
+- **Script Organization**: Better separation of concerns with dedicated scripts for specific build tasks
+
+## [0.8.21] - 2025-09-17
+
+### Added
+- **GitHub Actions CI/CD Pipeline (v0.8.14-v0.8.21)**: Comprehensive continuous integration and deployment workflow
   - **CI Workflow**: Organized into three phases: build → test → package
   - **Build Phase**: Pre-builds `bin/version` for testing, uses Conan for golang package management
   - **Test Phase**: Runs Go tests with race detection and linting, no Conan setup required

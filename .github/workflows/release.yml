@@ -106,75 +106,11 @@ jobs:
 
       - name: Create GoReleaser binary backup
         run: |
-          # Get version for naming
-          VERSION=$(bin/version version 2>/dev/null || echo "v0.0.0")
-          
-          # Create backup directory for binaries
-          mkdir -p .goreleaser-binaries
-          
-          # Copy binaries with GoReleaser naming convention to backup location
-          cp bin/version-linux-amd64 ".goreleaser-binaries/version_${VERSION}_linux_amd64" 2>/dev/null || true
-          cp bin/version-linux-arm64 ".goreleaser-binaries/version_${VERSION}_linux_arm64" 2>/dev/null || true
-          cp bin/version-darwin-amd64 ".goreleaser-binaries/version_${VERSION}_darwin_amd64" 2>/dev/null || true
-          cp bin/version-darwin-arm64 ".goreleaser-binaries/version_${VERSION}_darwin_arm64" 2>/dev/null || true
-          cp bin/version-windows-amd64.exe ".goreleaser-binaries/version_${VERSION}_windows_amd64.exe" 2>/dev/null || true
+          ./buildtools/create-goreleaser-backup.sh
 
       - name: Create archives in GoReleaser format
         run: |
-          # Get version for archive naming
-          VERSION=$(bin/version version 2>/dev/null || echo "v0.0.0")
-          
-          # Ensure dist directory exists
-          mkdir -p dist/
-          
-          # Create temporary directories for each platform
-          TEMP_DIRS=()
-          
-          # Linux amd64
-          LINUX_AMD64_DIR=$(mktemp -d)
-          TEMP_DIRS+=("$LINUX_AMD64_DIR")
-          cp bin/version-linux-amd64 "$LINUX_AMD64_DIR/version" 2>/dev/null || true
-          cp LICENSE "$LINUX_AMD64_DIR/" 2>/dev/null || true
-          cp README.md "$LINUX_AMD64_DIR/" 2>/dev/null || true
-          tar -czf "dist/version_${VERSION}_linux_amd64.tar.gz" -C "$LINUX_AMD64_DIR" . 2>/dev/null || true
-          
-          # Linux arm64
-          LINUX_ARM64_DIR=$(mktemp -d)
-          TEMP_DIRS+=("$LINUX_ARM64_DIR")
-          cp bin/version-linux-arm64 "$LINUX_ARM64_DIR/version" 2>/dev/null || true
-          cp LICENSE "$LINUX_ARM64_DIR/" 2>/dev/null || true
-          cp README.md "$LINUX_ARM64_DIR/" 2>/dev/null || true
-          tar -czf "dist/version_${VERSION}_linux_arm64.tar.gz" -C "$LINUX_ARM64_DIR" . 2>/dev/null || true
-          
-          # Darwin amd64
-          DARWIN_AMD64_DIR=$(mktemp -d)
-          TEMP_DIRS+=("$DARWIN_AMD64_DIR")
-          cp bin/version-darwin-amd64 "$DARWIN_AMD64_DIR/version" 2>/dev/null || true
-          cp LICENSE "$DARWIN_AMD64_DIR/" 2>/dev/null || true
-          cp README.md "$DARWIN_AMD64_DIR/" 2>/dev/null || true
-          tar -czf "dist/version_${VERSION}_darwin_amd64.tar.gz" -C "$DARWIN_AMD64_DIR" . 2>/dev/null || true
-          
-          # Darwin arm64
-          DARWIN_ARM64_DIR=$(mktemp -d)
-          TEMP_DIRS+=("$DARWIN_ARM64_DIR")
-          cp bin/version-darwin-arm64 "$DARWIN_ARM64_DIR/version" 2>/dev/null || true
-          cp LICENSE "$DARWIN_ARM64_DIR/" 2>/dev/null || true
-          cp README.md "$DARWIN_ARM64_DIR/" 2>/dev/null || true
-          tar -czf "dist/version_${VERSION}_darwin_arm64.tar.gz" -C "$DARWIN_ARM64_DIR" . 2>/dev/null || true
-          
-          # Windows amd64
-          WINDOWS_AMD64_DIR=$(mktemp -d)
-          TEMP_DIRS+=("$WINDOWS_AMD64_DIR")
-          cp bin/version-windows-amd64.exe "$WINDOWS_AMD64_DIR/version.exe" 2>/dev/null || true
-          cp LICENSE "$WINDOWS_AMD64_DIR/" 2>/dev/null || true
-          cp README.md "$WINDOWS_AMD64_DIR/" 2>/dev/null || true
-          DIST_PATH=$(realpath dist)
-          (cd "$WINDOWS_AMD64_DIR" && zip -r "$DIST_PATH/version_${VERSION}_windows_amd64.zip" .) 2>/dev/null || true
-          
-          # Clean up temporary directories
-          for dir in "${TEMP_DIRS[@]}"; do
-            rm -rf "$dir"
-          done
+          ./buildtools/create-goreleaser-archives.sh
 
       - name: Create install scripts
         run: |

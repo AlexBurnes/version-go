@@ -212,79 +212,13 @@ build_binaries() {
     
     # Store binaries in a backup location for GoReleaser hooks
     log_info "Storing binaries for GoReleaser hooks..."
-    local version=$(get_version)
-    local clean_version=$(echo "$version" | sed 's/^v//' | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//' | sed 's/-dirty$//')
-    
-    # Create backup directory for binaries
-    mkdir -p .goreleaser-binaries
-    
-    # Copy binaries with GoReleaser naming convention to backup location
-    cp bin/version-linux-amd64 ".goreleaser-binaries/version_${clean_version}_linux_amd64"
-    cp bin/version-linux-arm64 ".goreleaser-binaries/version_${clean_version}_linux_arm64"
-    cp bin/version-darwin-amd64 ".goreleaser-binaries/version_${clean_version}_darwin_amd64"
-    cp bin/version-darwin-arm64 ".goreleaser-binaries/version_${clean_version}_darwin_arm64"
-    cp bin/version-windows-amd64.exe ".goreleaser-binaries/version_${clean_version}_windows_amd64.exe"
+    ./buildtools/create-goreleaser-backup.sh
     
     log_success "Binaries stored for GoReleaser hooks"
     
     # Create archives in GoReleaser format for install scripts
     log_info "Creating archives in GoReleaser format..."
-    
-    # Ensure dist directory exists
-    mkdir -p dist/
-    
-    # Get version for archive naming
-    local version=$(get_version)
-    local clean_version=$(echo "$version" | sed 's/^v//' | sed 's/-SNAPSHOT-[a-f0-9]*$//' | sed 's/-[a-f0-9]\{7,8\}$//' | sed 's/-dirty$//')
-    
-    # Create temporary directories for each platform
-    local temp_dirs=()
-    
-    # Linux amd64
-    local linux_amd64_dir=$(mktemp -d)
-    temp_dirs+=("$linux_amd64_dir")
-    cp bin/version-linux-amd64 "$linux_amd64_dir/version"
-    cp LICENSE "$linux_amd64_dir/"
-    cp README.md "$linux_amd64_dir/"
-    tar -czf "dist/version_${clean_version}_linux_amd64.tar.gz" -C "$linux_amd64_dir" .
-    
-    # Linux arm64
-    local linux_arm64_dir=$(mktemp -d)
-    temp_dirs+=("$linux_arm64_dir")
-    cp bin/version-linux-arm64 "$linux_arm64_dir/version"
-    cp LICENSE "$linux_arm64_dir/"
-    cp README.md "$linux_arm64_dir/"
-    tar -czf "dist/version_${clean_version}_linux_arm64.tar.gz" -C "$linux_arm64_dir" .
-    
-    # Darwin amd64
-    local darwin_amd64_dir=$(mktemp -d)
-    temp_dirs+=("$darwin_amd64_dir")
-    cp bin/version-darwin-amd64 "$darwin_amd64_dir/version"
-    cp LICENSE "$darwin_amd64_dir/"
-    cp README.md "$darwin_amd64_dir/"
-    tar -czf "dist/version_${clean_version}_darwin_amd64.tar.gz" -C "$darwin_amd64_dir" .
-    
-    # Darwin arm64
-    local darwin_arm64_dir=$(mktemp -d)
-    temp_dirs+=("$darwin_arm64_dir")
-    cp bin/version-darwin-arm64 "$darwin_arm64_dir/version"
-    cp LICENSE "$darwin_arm64_dir/"
-    cp README.md "$darwin_arm64_dir/"
-    tar -czf "dist/version_${clean_version}_darwin_arm64.tar.gz" -C "$darwin_arm64_dir" .
-    
-    # Windows amd64
-    local windows_amd64_dir=$(mktemp -d)
-    temp_dirs+=("$windows_amd64_dir")
-    cp bin/version-windows-amd64.exe "$windows_amd64_dir/version.exe"
-    cp LICENSE "$windows_amd64_dir/"
-    cp README.md "$windows_amd64_dir/"
-    local dist_path=$(realpath dist)
-    (cd "$windows_amd64_dir" && zip -r "$dist_path/version_${clean_version}_windows_amd64.zip" .)
-    
-    # Clean up temporary directories
-    for dir in "${temp_dirs[@]}"; do
-        rm -rf "$dir"
-    done
+    ./buildtools/create-goreleaser-archives.sh
     
     log_success "Archives created in dist/ directory"
 }
