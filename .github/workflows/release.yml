@@ -77,6 +77,9 @@ jobs:
           # Install dependencies
           conan install . --build=missing
 
+          # Configure cmake preset
+          cmake --preset conan-release
+
       - name: Download dependencies
         run: go mod download
 

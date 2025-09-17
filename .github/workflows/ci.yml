@@ -83,6 +83,9 @@ jobs:
         # Install dependencies
         conan install . --build=missing
 
+        # Configure cmake preset
+        cmake --preset conan-release
+
     - name: Build for current platform
       run: |
         # Build for current platform using CMake + Conan
