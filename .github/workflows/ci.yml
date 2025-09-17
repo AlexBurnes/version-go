@@ -92,11 +92,8 @@ jobs:
         which go
         go version
         
-        # Debug: Check if cmd/version directory exists
-        ls -la cmd/version/
-        
-        # Configure CMake preset with debug output
-        cmake --preset conan-release --debug-output
+        # Configure CMake preset
+        cmake --preset conan-release
 
     - name: Build for current platform
       run: |
