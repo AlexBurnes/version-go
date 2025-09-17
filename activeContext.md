@@ -5,16 +5,19 @@
 
 ## Recent Changes
 - **NEW (v0.8.12)**: GitHub Actions CI/CD Pipeline Implementation
-  - **COMPLETED**: Created comprehensive CI workflow (`.github/workflows/ci.yml`) with multi-platform testing
-  - **COMPLETED**: Updated release workflow (`.github/workflows/release.yml`) with Conan integration
+  - **COMPLETED**: Created comprehensive CI workflow (`.github/workflows/ci.yml`) with three-phase organization
+  - **COMPLETED**: Build Phase: Pre-builds `bin/version` for testing, uses Conan for golang package management
+  - **COMPLETED**: Test Phase: Runs Go tests with race detection and linting, no Conan setup required
+  - **COMPLETED**: Package Phase: Builds all platforms, creates installer scripts, runs GoReleaser dry-run
+  - **COMPLETED**: Updated release workflow (`.github/workflows/release.yml`) to use `buildtools/build-and-package.sh release`
   - **COMPLETED**: Implemented local golang Conan recipe (`conanfile-golang.py`) for Go 1.23.0
   - **COMPLETED**: Created golang package check script (`scripts/check-golang-conan`)
   - **COMPLETED**: Updated build scripts to include automatic golang package creation
+  - **COMPLETED**: Added Go module caching across all phases for improved performance
   - **COMPLETED**: Added comprehensive CI/CD documentation (`docs/CI_CD.md`)
   - **COMPLETED**: Integrated Conan 2.0 package management for Go toolchain dependencies
-  - **COMPLETED**: Automated testing with race detection and linting across all platforms
+  - **COMPLETED**: Automated testing with race detection and linting
   - **COMPLETED**: Build artifact generation and package testing with GoReleaser dry-run
-  - **COMPLETED**: Cross-platform support for Ubuntu, Windows, and macOS
   - **COMPLETED**: Updated CHANGELOG.md with comprehensive CI/CD improvements
   - **COMPLETED**: Ready for v0.8.12 release
 - **NEW (v0.8.11)**: Auto-Download Version Utility Implementation
