@@ -95,8 +95,8 @@ jobs:
         # Debug: Check if cmd/version directory exists
         ls -la cmd/version/
         
-        # Configure CMake preset with verbose output
-        cmake --preset conan-release --verbose
+        # Configure CMake preset with debug output
+        cmake --preset conan-release --debug-output
 
     - name: Build for current platform
       run: |
