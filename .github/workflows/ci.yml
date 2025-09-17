@@ -91,7 +91,8 @@ jobs:
 
     - name: Build for current platform
       run: |
-        # Build for current platform using CMake + Conan
+        # Activate Conan environment and build for current platform
+        source build/Release/generators/conanbuild.sh
         cmake --build --preset conan-release --target version
         
         # On Linux, the version target creates bin/version-linux-amd64-static
@@ -257,8 +258,8 @@ jobs:
 
     - name: Build for all platforms
       run: |
-        # Build for all platforms using CMake + Conan
-        # The bin/version from build job is already available for bootstrap
+        # Activate Conan environment and build for all platforms
+        source build/Release/generators/conanbuild.sh
         cmake --build --preset conan-release --target version-all
 
     - name: Create GoReleaser binary backup

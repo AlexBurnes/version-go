@@ -88,7 +88,8 @@ jobs:
 
       - name: Build for all platforms
         run: |
-          # Build for all platforms using CMake + Conan
+          # Activate Conan environment and build for all platforms
+          source build/Release/generators/conanbuild.sh
           cmake --build --preset conan-release --target version-all
 
       - name: Create GoReleaser binary backup
