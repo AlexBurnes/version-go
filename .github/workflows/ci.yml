@@ -150,30 +150,11 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: version-bin
-        path: ./
-
-    - name: Setup version binary
-      run: |
-        # Create bin directory if it doesn't exist
-        mkdir -p bin/
+        path: bin
         
-        # Move the version binary to bin/version
-        if [ -f "version" ]; then
-          echo "Moving version binary to bin/version"
-          mv version bin/version
-          chmod +x bin/version
-        else
-          echo "ERROR: version binary not found after download"
-          exit 1
-        fi
-        
-        # Verify the binary is in the correct location
-        echo "=== Verifying bin/version ==="
-        ls -la bin/version
-        file bin/version
-
     - name: Check bin/version
       run: |
+        chmod +x bin/version
         bin/version --version
         bin/version full
 
@@ -274,27 +255,13 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: version-bin
-        path: ./
+        path: bin
 
-    - name: Setup version binary
+    - name: Check bin/version
       run: |
-        # Create bin directory if it doesn't exist
-        mkdir -p bin/
-        
-        # Move the version binary to bin/version
-        if [ -f "version" ]; then
-          echo "Moving version binary to bin/version"
-          mv version bin/version
-          chmod +x bin/version
-        else
-          echo "ERROR: version binary not found after download"
-          exit 1
-        fi
-        
-        # Verify the binary is in the correct location
-        echo "=== Verifying bin/version ==="
-        ls -la bin/version
-        file bin/version
+        chmod +x bin/version
+        bin/version --version
+        bin/version full
 
     - name: Build for all platforms
       run: |
