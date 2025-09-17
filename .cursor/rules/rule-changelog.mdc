@@ -13,6 +13,7 @@ rule_type: Always
 - **When making ANY code changes**: CHANGELOG.md MUST be updated
 - **When changing project rules or specifications**: CHANGELOG.md MUST be updated
 - **When updating memory bank files**: CHANGELOG.md MUST be updated
+- **When version is changed**: README.md must be updated
 
 ## Changelog Entry Requirements
 
