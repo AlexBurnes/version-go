@@ -122,16 +122,18 @@
 - **✅ Error Handling (v0.8.11)**: Graceful fallback to git describe if download fails
 - **✅ Zero-Setup Development (v0.8.11)**: New developers can build immediately without git tags or existing version utility
 - **✅ CI/CD Friendly (v0.8.11)**: Works in clean CI environments without pre-existing version utility
-- **✅ GitHub Actions CI/CD Pipeline (v0.8.12)**: Comprehensive continuous integration and deployment workflow
-- **✅ Multi-Platform Testing (v0.8.12)**: Automated testing on Ubuntu, Windows, and macOS with Go 1.23.x
-- **✅ Conan Package Management (v0.8.12)**: Local golang recipe creation and dependency management
-- **✅ Automated Build Artifacts (v0.8.12)**: Cross-platform build and package artifact generation
-- **✅ Release Automation (v0.8.12)**: Automated releases with GoReleaser integration
-- **✅ Build Script Integration (v0.8.12)**: Updated all build scripts to include golang package checks
-- **✅ CI/CD Documentation (v0.8.12)**: Complete workflow documentation in `docs/CI_CD.md`
+- **✅ GitHub Actions CI/CD Pipeline (v0.8.14-v0.8.17)**: Comprehensive continuous integration and deployment workflow
+- **✅ Multi-Platform Testing (v0.8.14-v0.8.17)**: Automated testing on Ubuntu, Windows, and macOS with Go 1.23.x
+- **✅ Conan Package Management (v0.8.14-v0.8.17)**: Local golang recipe creation and dependency management
+- **✅ Automated Build Artifacts (v0.8.14-v0.8.17)**: Cross-platform build and package artifact generation
+- **✅ Release Automation (v0.8.14-v0.8.17)**: Automated releases with GoReleaser integration
+- **✅ Build Script Integration (v0.8.14-v0.8.17)**: Updated all build scripts to include golang package checks
+- **✅ CI/CD Documentation (v0.8.14-v0.8.17)**: Complete workflow documentation in `docs/CI_CD.md`
+- **✅ Git Remote Priority Fix (v0.8.17)**: Fixed git remote priority to ensure consistent behavior across environments
+- **✅ Test Expectation Updates (v0.8.17)**: Updated test expectations to match origin remote behavior
 
 ## What's Left to Build
-- **RELEASE v0.8.12**: Publish v0.8.12 release with GitHub Actions CI/CD pipeline implementation
+- **RELEASE v0.8.17**: Publish v0.8.17 release with GitHub Actions CI/CD pipeline implementation and git remote priority fix
 - **MONITOR USAGE**: Monitor bump command usage and gather user feedback
 - **ENHANCEMENT IDEAS**: Consider additional bump features based on user feedback
 - **SELF-BUILDING IMPLEMENTATION (v0.7.0)**: ✅ COMPLETED - Complete self-building version utility system

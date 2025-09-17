@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2025-09-16
 
 ### Added
-- **GitHub Actions CI/CD Pipeline**: Comprehensive continuous integration and deployment workflow
+- **GitHub Actions CI/CD Pipeline (v0.8.14-v0.8.17)**: Comprehensive continuous integration and deployment workflow
   - **CI Workflow**: Organized into three phases: build → test → package
   - **Build Phase**: Pre-builds `bin/version` for testing, uses Conan for golang package management
   - **Test Phase**: Runs Go tests with race detection and linting, no Conan setup required
@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Automated Package Creation**: Creates golang package locally when not available in remote repositories
   - **Build Script Integration**: Updated all build scripts to include golang package checks
   - **Comprehensive Documentation**: Complete CI/CD workflow documentation in `docs/CI_CD.md`
+
 - **Auto-Download Version Utility**: Enhanced bootstrap process with automatic download of latest version utility from GitHub releases
   - **Priority Order**: Built utility → Auto-download → Git describe fallback
   - **Platform Detection**: Automatic detection of platform (linux/macos) and architecture (amd64/arm64)
@@ -37,6 +38,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Updated References**: All documentation and scripts now use direct version utility commands
   - **Simplified Workflow**: Cleaner, more straightforward approach to version bumping in build scripts
   - **Comprehensive Support**: Full support for all bump types (major, minor, patch, pre, alpha, beta, rc, fix, next, post, feat, smart)
+
+### Fixed
+- **Git Remote Priority (v0.8.17)**: Fixed git remote priority to ensure consistent behavior across environments
+  - **Origin Priority**: Modified `getProjectFromGit()` and `getModuleFromGit()` functions to prioritize `origin` remote
+  - **Two-Pass Logic**: First pass looks for `origin` remote, second pass falls back to any other remote
+  - **Consistent Behavior**: Ensures same git remote detection behavior in local and CI environments
+  - **Test Updates**: Updated test expectations to match origin remote behavior (`AlexBurnes-version-go`)
+  - **Cross-Platform**: Works consistently across different git remote configurations
 
 ### Removed
 - **Redundant Scripts (v0.8.10)**: Removed unnecessary wrapper scripts

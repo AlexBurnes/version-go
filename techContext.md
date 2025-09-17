@@ -12,11 +12,12 @@
 - **✅ tar.gz**: Linux distribution format (working)
 - **✅ ZIP**: Windows distribution format (working)
 - **✅ YAML**: Configuration file parsing (gopkg.in/yaml.v3)
-- **✅ GitHub Actions**: CI/CD pipeline automation (implemented)
+- **✅ GitHub Actions**: CI/CD pipeline automation with Conan package management (implemented)
 - **✅ Conan 2.0**: Advanced package management with local recipe support (implemented)
+- **✅ Local Golang Recipe**: Custom `conanfile-golang.py` for Go 1.23.0 (implemented)
 
 ## Development Setup
-- **Go Environment**: Managed via Conan (`conan install golang/<version>`)
+- **Go Environment**: Managed via Conan with local golang recipe (`conan install golang/1.23.0`)
 - **Build Directory**: All build outputs go to `bin/` directory only
 - **Source Structure**: 
   - Root - Go CLI source code (main.go, version.go, git.go, bump.go)
@@ -48,8 +49,23 @@
   - GoReleaser (via Conan or direct install) - ready
 - **Packaging Dependencies**:
   - ✅ Makeself (for Linux and macOS self-extracting archives) - implemented
+- **CI/CD Dependencies**:
+  - ✅ GitHub Actions (for automated testing and releases) - implemented
+  - ✅ Conan 2.0 (for package management in CI) - implemented
+  - ✅ Local golang recipe (for Go toolchain in CI) - implemented
+  - ✅ GoReleaser (for cross-platform builds and releases) - implemented
   - ✅ Scoop (for Windows package management) - implemented
   - ✅ Git (for bucket repository management) - working
+
+## CI/CD Pipeline
+- **✅ GitHub Actions Workflow**: Three-phase CI/CD pipeline (build → test → package)
+- **✅ Build Phase**: Pre-builds `bin/version` for testing using Conan package management
+- **✅ Test Phase**: Runs Go tests with race detection and linting
+- **✅ Package Phase**: Builds all platforms, creates installer scripts, runs GoReleaser dry-run
+- **✅ Release Workflow**: Automated releases using `buildtools/build-and-package.sh release`
+- **✅ Conan Integration**: Automatic golang package management with local creation
+- **✅ Go Module Caching**: Caching for Go modules across all phases
+- **✅ Multi-Platform Testing**: Ubuntu, Windows, and macOS with Go 1.23.x
 
 ## Tool Usage Patterns
 - **✅ Development**: `go build`, `go test`, `go mod` for standard Go development (working)
