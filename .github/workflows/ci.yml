@@ -85,22 +85,12 @@ jobs:
 
     - name: Configure CMake preset
       run: |
-        # Activate Conan environment and configure cmake preset
-        source build/Release/generators/conanbuild.sh
-        
-        # Verify Go is available
-        which go
-        go version
-        
-        # Configure CMake preset
         cmake --preset conan-release
 
     - name: Build for current platform
       run: |
-        # Activate Conan environment and build for current platform
-        source build/Release/generators/conanbuild.sh
         cmake --build --preset conan-release --target version
-        
+
         # On Linux, the version target creates bin/version-linux-amd64-static
         # We need to copy it to bin/version for artifact upload
         if [[ -f "bin/version-linux-amd64-static" ]]; then
@@ -249,14 +239,6 @@ jobs:
 
     - name: Configure CMake preset
       run: |
-        # Activate Conan environment and configure cmake preset
-        source build/Release/generators/conanbuild.sh
-        
-        # Verify Go is available
-        which go
-        go version
-        
-        # Configure CMake preset
         cmake --preset conan-release
 
     - name: Download dependencies
@@ -270,8 +252,6 @@ jobs:
 
     - name: Build for all platforms
       run: |
-        # Activate Conan environment and build for all platforms
-        source build/Release/generators/conanbuild.sh
         cmake --build --preset conan-release --target version-all
 
     - name: Create GoReleaser binary backup

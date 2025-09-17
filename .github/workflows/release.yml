@@ -79,14 +79,6 @@ jobs:
 
       - name: Configure CMake preset
         run: |
-          # Activate Conan environment and configure cmake preset
-          source build/Release/generators/conanbuild.sh
-          
-          # Verify Go is available
-          which go
-          go version
-          
-          # Configure CMake preset
           cmake --preset conan-release
 
       - name: Download dependencies
@@ -94,8 +86,6 @@ jobs:
 
       - name: Build for all platforms
         run: |
-          # Activate Conan environment and build for all platforms
-          source build/Release/generators/conanbuild.sh
           cmake --build --preset conan-release --target version-all
 
       - name: Create GoReleaser binary backup
