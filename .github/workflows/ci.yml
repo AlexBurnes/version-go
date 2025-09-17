@@ -149,7 +149,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: version-bin
-        path: bin/
+        path: ./
 
     - name: Run tests
       run: go test ./... -v -race
@@ -248,7 +248,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: version-bin
-        path: bin/
+        path: ./
 
     - name: Build for all platforms
       run: |
