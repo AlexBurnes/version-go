@@ -196,4 +196,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # If you create a PAT for cross-repository access:
-          # GORELEASER_GITHUB_TOKEN: ${{ secrets.PAT_FOR_RELEASES }}
+          GORELEASER_GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }}
