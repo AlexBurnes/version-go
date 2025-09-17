@@ -151,6 +151,11 @@ jobs:
         name: version-bin
         path: ./
 
+    - name: Check bin/version
+      run: |
+        bin/version --version
+        bin/version full
+
     - name: Run tests
       run: go test ./... -v -race
 
