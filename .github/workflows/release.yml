@@ -84,6 +84,16 @@ jobs:
       - name: Download dependencies
         run: go mod download
 
+      - name: Build for current platform
+        run: |
+          cmake --build --preset conan-release --target version
+
+          # On Linux, the version target creates bin/version-linux-amd64-static
+          # We need to copy it to bin/version for artifact upload
+          if [[ -f "bin/version-linux-amd64-static" ]]; then
+            cp bin/version-linux-amd64-static bin/version
+          fi
+
       - name: Build for all platforms
         run: |
           cmake --build --preset conan-release --target version-all
