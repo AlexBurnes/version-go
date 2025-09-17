@@ -19,7 +19,7 @@ func TestConfigCLIOptions(t *testing.T) {
 	defer os.Chdir(originalDir)
 	
 	// Change to project root
-	if err := os.Chdir(".."); err != nil {
+	if err := os.Chdir("../.."); err != nil {
 		t.Fatalf("Failed to change to project root: %v", err)
 	}
 	
@@ -33,7 +33,7 @@ func TestConfigCLIOptions(t *testing.T) {
 		{
 			name:           "default_behavior_with_project_yml",
 			args:           []string{"project"},
-			expectedOutput: "version-go",
+			expectedOutput: "buildfab-version",
 			expectedError:  false,
 			description:    "Should use .project.yml when present (default behavior)",
 		},
@@ -182,7 +182,7 @@ func TestConfigCLIOptionsWithDebug(t *testing.T) {
 	defer os.Chdir(originalDir)
 	
 	// Change to project root
-	if err := os.Chdir(".."); err != nil {
+	if err := os.Chdir("../.."); err != nil {
 		t.Fatalf("Failed to change to project root: %v", err)
 	}
 	
@@ -212,7 +212,7 @@ func TestConfigCLIOptionsWithDebug(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Run the binary with the specified arguments
 			cmd := exec.Command(binaryPath, tt.args...)
-			output, err := cmd.Output()
+			output, err := cmd.CombinedOutput()
 			
 			if err != nil {
 				t.Errorf("Unexpected error: %v. Output: %s", err, string(output))
@@ -237,7 +237,7 @@ func TestConfigFileValidation(t *testing.T) {
 	defer os.Chdir(originalDir)
 	
 	// Change to project root
-	if err := os.Chdir(".."); err != nil {
+	if err := os.Chdir("../.."); err != nil {
 		t.Fatalf("Failed to change to project root: %v", err)
 	}
 	

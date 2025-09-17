@@ -100,12 +100,7 @@ jobs:
     - name: Get version
       id: version
       run: |
-        if [[ -f "scripts/version" ]]; then
-          VERSION=$(scripts/version version 2>/dev/null || echo "")
-        fi
-        if [[ -z "$VERSION" ]]; then
-          VERSION=$(git describe --match "v[0-9]*" --abbrev=0 --tags 2>/dev/null || echo "v0.0.0")
-        fi
+        VERSION=$(scripts/version version 2>/dev/null || echo "")
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "Using version: $VERSION"
 
