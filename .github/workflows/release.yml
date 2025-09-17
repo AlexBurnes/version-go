@@ -77,7 +77,10 @@ jobs:
           # Install dependencies
           conan install . --build=missing
 
-          # Configure cmake preset
+      - name: Configure CMake preset
+        run: |
+          # Activate Conan environment and configure cmake preset
+          source build/Release/generators/conanbuild.sh
           cmake --preset conan-release
 
       - name: Download dependencies
