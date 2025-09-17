@@ -87,6 +87,12 @@ jobs:
       run: |
         # Activate Conan environment and configure cmake preset
         source build/Release/generators/conanbuild.sh
+        
+        # Verify Go is available
+        which go
+        go version
+        
+        # Configure CMake preset
         cmake --preset conan-release
 
     - name: Build for current platform
@@ -245,6 +251,12 @@ jobs:
       run: |
         # Activate Conan environment and configure cmake preset
         source build/Release/generators/conanbuild.sh
+        
+        # Verify Go is available
+        which go
+        go version
+        
+        # Configure CMake preset
         cmake --preset conan-release
 
     - name: Download dependencies
