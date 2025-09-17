@@ -156,13 +156,13 @@ jobs:
     - name: Run tests
       run: go test ./... -v -race
 
-    #- name: Run linting
-    #  run: |
-    #    # Install golangci-lint if not available
-    #    if ! command -v golangci-lint &> /dev/null; then
-    #      curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
-    #    fi
-    #    golangci-lint run
+    - name: Run linting
+      run: |
+        # Install golangci-lint if not available
+        if ! command -v golangci-lint &> /dev/null; then
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
+        fi
+        golangci-lint run
 
   package:
     name: Package and Test Distribution
