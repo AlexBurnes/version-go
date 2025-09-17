@@ -149,7 +149,14 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: version-bin
-        path: ./
+        path: bin
+
+    - name: Setup version binary
+      run: |
+        # Verify the binary is in the correct location
+        echo "=== Verifying bin/version ==="
+        ls -la bin/version
+        file bin/version
 
     - name: Check bin/version
       run: |
@@ -253,7 +260,14 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: version-bin
-        path: ./
+        path: bin
+
+    - name: Setup version binary
+      run: |
+        # Verify the binary is in the correct location
+        echo "=== Verifying bin/version ==="
+        ls -la bin/version
+        file bin/version
 
     - name: Build for all platforms
       run: |
