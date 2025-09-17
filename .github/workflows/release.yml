@@ -191,9 +191,11 @@ jobs:
           # Install GoReleaser
           go install github.com/goreleaser/goreleaser@latest
           
+          # Set the token explicitly for GoReleaser
+          export GITHUB_TOKEN="$GORELEASER_GITHUB_TOKEN"
+          
           # Run release
           goreleaser release --clean
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # If you create a PAT for cross-repository access:
+          # Use PAT for cross-repository access to scoop-bucket and homebrew-tap
           GORELEASER_GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }}
