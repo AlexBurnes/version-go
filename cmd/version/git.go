@@ -181,6 +181,43 @@ func getProjectFromGit() (string, error) {
     }
     
     lines := strings.Split(output, "\n")
+    
+    // First pass: look for origin remote
+    for _, line := range lines {
+        if strings.Contains(line, "fetch") && strings.HasPrefix(strings.TrimSpace(line), "origin") {
+            parts := strings.Fields(line)
+            if len(parts) < 2 {
+                continue
+            }
+            remote := parts[1]
+            remote = strings.TrimSuffix(remote, ".git")
+            
+            // Handle SSH URLs (git@github.com:user/repo)
+            if strings.Contains(remote, ":") {
+                remote = strings.Split(remote, ":")[1]
+            } else {
+                // Handle HTTPS URLs (https://github.com/user/repo)
+                if strings.Contains(remote, "//") {
+                    remote = strings.Split(remote, "//")[1]
+                }
+                parts := strings.SplitN(remote, "/", 2)
+                if len(parts) > 1 {
+                    remote = parts[1]
+                }
+            }
+            
+            // Convert slashes to dashes
+            remote = strings.ReplaceAll(remote, "/", "-")
+            
+            // Remove any prefix matching --[^-]+-
+            re := regexp.MustCompile(`^--[^-]+-`)
+            remote = re.ReplaceAllString(remote, "")
+            
+            return remote, nil
+        }
+    }
+    
+    // Second pass: look for any other remote if origin not found
     for _, line := range lines {
         if strings.Contains(line, "fetch") {
             parts := strings.Fields(line)
@@ -282,6 +319,40 @@ func getModuleFromGit() (string, error) {
     }
     
     lines := strings.Split(output, "\n")
+    
+    // First pass: look for origin remote
+    for _, line := range lines {
+        if strings.Contains(line, "fetch") && strings.HasPrefix(strings.TrimSpace(line), "origin") {
+            parts := strings.Fields(line)
+            if len(parts) < 2 {
+                continue
+            }
+            remote := parts[1]
+            remote = strings.TrimSuffix(remote, ".git")
+            
+            // Handle SSH URLs (git@github.com:user/repo)
+            if strings.Contains(remote, ":") {
+                remote = strings.Split(remote, ":")[1]
+            } else {
+                // Handle HTTPS URLs (https://github.com/user/repo)
+                if strings.Contains(remote, "//") {
+                    remote = strings.Split(remote, "//")[1]
+                }
+                parts := strings.SplitN(remote, "/", 2)
+                if len(parts) > 1 {
+                    remote = parts[1]
+                }
+            }
+            
+            // Get the last component of the path
+            parts = strings.Split(remote, "/")
+            if len(parts) > 0 {
+                return parts[len(parts)-1], nil
+            }
+        }
+    }
+    
+    // Second pass: look for any other remote if origin not found
     for _, line := range lines {
         if strings.Contains(line, "fetch") {
             parts := strings.Fields(line)

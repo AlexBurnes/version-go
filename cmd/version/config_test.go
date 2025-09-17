@@ -47,7 +47,7 @@ func TestConfigCLIOptions(t *testing.T) {
 		{
 			name:           "git_flag_force_git_detection",
 			args:           []string{"--git", "project"},
-			expectedOutput: "common-build-scripts-version-go",
+			expectedOutput: "AlexBurnes-version-go",
 			expectedError:  false,
 			description:    "Should force git detection when --git flag is used",
 		},
