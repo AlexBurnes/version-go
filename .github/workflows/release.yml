@@ -195,5 +195,5 @@ jobs:
           goreleaser release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # If your Scoop bucket is private/different repository:
-          # GORELEASER_GITHUB_TOKEN: ${{ secrets.PAT_SCOOP }}
+          # If you create a PAT for cross-repository access:
+          # GORELEASER_GITHUB_TOKEN: ${{ secrets.PAT_FOR_RELEASES }}
