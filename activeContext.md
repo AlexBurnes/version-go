@@ -1,7 +1,7 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**GITHUB ACTIONS CI/CD PIPELINE IMPLEMENTATION** - Successfully implemented comprehensive GitHub Actions CI/CD pipeline with Conan package management integration. The system now includes automated testing, building, and releasing across multiple platforms (Ubuntu, Windows, macOS) with Go 1.23.x. Conan integration automatically manages golang package dependencies with local creation when not available in remote repositories. The pipeline includes comprehensive testing with race detection, linting, build artifacts, and automated releases with GoReleaser. All build scripts have been updated to include golang package checks. Complete documentation has been created in `docs/CI_CD.md`. Fixed git remote priority issue to ensure consistent behavior across environments. Ready for v0.8.17 release.
+**GITHUB ACTIONS CI/CD PIPELINE IMPLEMENTATION** - Successfully implemented comprehensive GitHub Actions CI/CD pipeline with Conan package management integration. The system now includes automated testing, building, and releasing across multiple platforms (Ubuntu, Windows, macOS) with Go 1.23.x. Conan integration automatically manages golang package dependencies with local creation when not available in remote repositories. The pipeline includes comprehensive testing with race detection, linting, build artifacts, and automated releases with GoReleaser. All build scripts have been updated to include golang package checks. Complete documentation has been created in `docs/Deploy.md`. Fixed git remote priority issue to ensure consistent behavior across environments. Ready for v0.8.17 release.
 
 ## Recent Changes
 - **NEW (v0.8.14-v0.8.17)**: GitHub Actions CI/CD Pipeline Implementation
@@ -14,7 +14,7 @@
   - **COMPLETED**: Created golang package check script (`scripts/check-golang-conan`)
   - **COMPLETED**: Updated build scripts to include automatic golang package creation
   - **COMPLETED**: Added Go module caching across all phases for improved performance
-  - **COMPLETED**: Added comprehensive CI/CD documentation (`docs/CI_CD.md`)
+  - **COMPLETED**: Added comprehensive CI/CD documentation (`docs/Deploy.md`)
   - **COMPLETED**: Integrated Conan 2.0 package management for Go toolchain dependencies
   - **COMPLETED**: Automated testing with race detection and linting
   - **COMPLETED**: Build artifact generation and package testing with GoReleaser dry-run
@@ -128,12 +128,12 @@
 - **NEW (v0.6.0)**: Script Rename and Documentation Updates
   - **COMPLETED**: Renamed `build-with-conan.sh` to `build-and-package.sh` for better semantic clarity
   - **COMPLETED**: Updated all documentation references to use new script name
-  - **COMPLETED**: Enhanced BUILD.md with main build script section
+  - **COMPLETED**: Enhanced Build.md with main build script section
   - **COMPLETED**: Updated developer workflow documentation with new script name
-  - **COMPLETED**: Updated project.md main build scripts list
+  - **COMPLETED**: Updated docs/Project-specification.md main build scripts list
 - **NEW (v0.6.1)**: License and BNF Grammar Documentation Fixes
   - **COMPLETED**: Fixed license inconsistencies - updated all documentation to reference Apache 2.0 License
-  - **COMPLETED**: Created comprehensive BNF grammar specification document (docs/BNF_GRAMMAR.md)
+  - **COMPLETED**: Created comprehensive BNF grammar specification document (docs/BNF-grammar.md)
   - **COMPLETED**: Updated project documentation to reference BNF grammar specification
   - **COMPLETED**: Fixed license mentions in README.md, packaging docs, and library docs
 - **COMPLETED**: Full Go implementation with custom regex-based version parser
@@ -160,7 +160,7 @@
   - **FIXED**: Version validation only applies to tags being pushed, not all existing tags
 - **NEW**: Refactored core functionality into reusable library package (pkg/version)
 - **NEW**: Created comprehensive library API with exported types and functions
-- **NEW**: Added library documentation (docs/LIBRARY.md) with usage examples
+- **NEW**: Added library documentation (docs/Library.md) with usage examples
 - **NEW**: Created minimal example demonstrating library usage (examples/basic/)
 - **NEW**: Updated CLI to use library package while maintaining full compatibility
 - **FIXED (v0.5.1)**: Conan build script critical issues resolved for reliable local builds
@@ -250,7 +250,7 @@
 - **Simplified Download**: Use `wget -O - url | INSTALL_DIR=./scripts sh` pipe approach for streamlined installation
 - **Latest Release URLs**: Use `/releases/latest/download/` URLs without version numbers for consistent downloads
 - **Language Choice**: Go is already decided and specified in project requirements
-- **Build System**: CMake + Conan + bash scripts as specified in project.md
+- **Build System**: CMake + Conan + bash scripts as specified in docs/Project-specification.md
 - **Distribution**: GoReleaser for cross-platform builds and distribution
 - **Linux Packaging**: Makeself for self-extracting archives with professional installation experience ✅ IMPLEMENTED
 - **Windows Packaging**: Scoop package manager for easy installation and updates ✅ IMPLEMENTED
@@ -273,7 +273,7 @@
 - **API Design**: Clean, well-documented public API with comprehensive examples
 
 ## Learnings and Project Insights
-- Project has clear, well-defined requirements in project.md
+- Project has clear, well-defined requirements in docs/Project-specification.md
 - Existing bash scripts provide a reference implementation to maintain compatibility
 - Custom grammar requirements mean standard SemVer libraries cannot be used directly
 - Build system complexity requires careful setup with CMake, Conan, and GoReleaser integration

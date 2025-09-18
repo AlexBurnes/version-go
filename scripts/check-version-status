@@ -114,7 +114,7 @@ if [[ "$CURRENT_TAG_NORMALIZED" == "$VERSION_FILE_NORMALIZED" ]]; then
     echo -e "   ${BLUE}scripts/version bump minor${NC}    # for new features" 
     echo -e "   ${BLUE}scripts/version bump major${NC}    # for breaking changes"
     echo ""
-    echo -e "${YELLOW}Then make your changes and follow the workflow in DEVELOPER_WORKFLOW.md${NC}"
+    echo -e "${YELLOW}Then make your changes and follow the workflow in docs/Developer-workflow.md${NC}"
     exit 1
 else
     echo -e "${GREEN}✅ Version status OK${NC}"

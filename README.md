@@ -6,7 +6,7 @@ A cross-platform command-line utility written in Go that provides semantic versi
 
 ## Features
 
-- **Semantic Version Parsing**: Custom BNF grammar engine supporting extended version formats beyond SemVer 2.0 (see [BNF Grammar](docs/BNF_GRAMMAR.md))
+- **Semantic Version Parsing**: Custom BNF grammar engine supporting extended version formats beyond SemVer 2.0 (see [BNF Grammar](docs/BNF-grammar.md))
 - **Version Validation**: Validate version strings with detailed error reporting
 - **Version Sorting**: Sort version lists according to defined precedence rules
 - **Version Bumping**: Intelligent version incrementing with smart mode and specific bump types
@@ -18,7 +18,7 @@ A cross-platform command-line utility written in Go that provides semantic versi
 
 ## Supported Version Formats
 
-The tool supports an extended grammar beyond SemVer 2.0 as defined in the [BNF Grammar Specification](docs/BNF_GRAMMAR.md):
+The tool supports an extended grammar beyond SemVer 2.0 as defined in the [BNF Grammar Specification](docs/BNF-grammar.md):
 
 ### Release Versions
 - `1.2.3` - Standard semantic version
@@ -409,7 +409,7 @@ func main() {
 }
 ```
 
-See [Library Documentation](docs/LIBRARY.md) for complete API reference and examples.
+See [Library Documentation](docs/Library.md) for complete API reference and examples.
 
 ## Examples
 
@@ -464,7 +464,7 @@ git push origin master && git push origin $(cat VERSION)
 - **Helper scripts**: `version-bump` and `version-check`
 - **Complete workflow**: From planning to publication
 
-See [DEVELOPER_WORKFLOW.md](DEVELOPER_WORKFLOW.md) for detailed instructions.
+See [docs/Developer-workflow.md](docs/Developer-workflow.md) for detailed instructions.
 
 ## Contributing
 

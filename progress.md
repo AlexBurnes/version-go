@@ -128,7 +128,7 @@
 - **✅ Automated Build Artifacts (v0.8.14-v0.8.17)**: Cross-platform build and package artifact generation
 - **✅ Release Automation (v0.8.14-v0.8.17)**: Automated releases with GoReleaser integration
 - **✅ Build Script Integration (v0.8.14-v0.8.17)**: Updated all build scripts to include golang package checks
-- **✅ CI/CD Documentation (v0.8.14-v0.8.17)**: Complete workflow documentation in `docs/CI_CD.md`
+- **✅ CI/CD Documentation (v0.8.14-v0.8.17)**: Complete workflow documentation in `docs/Deploy.md`
 - **✅ Git Remote Priority Fix (v0.8.17)**: Fixed git remote priority to ensure consistent behavior across environments
 - **✅ Test Expectation Updates (v0.8.17)**: Updated test expectations to match origin remote behavior
 
@@ -164,7 +164,7 @@
 - **✅ RESOLVED (v0.5.1)**: Conan build script critical issues fixed for reliable local builds
 
 ## Evolution of Project Decisions
-- **✅ COMPLETED**: Project requirements fully implemented from `project.md`
+- **✅ COMPLETED**: Project requirements fully implemented from `docs/Project-specification.md`
 - **✅ COMPLETED**: Memory Bank system established and maintained throughout development
 - **✅ COMPLETED**: Modular CLI architecture implemented with clean separation of concerns
 - **✅ COMPLETED**: Go + CMake + Conan + GoReleaser technology stack confirmed and working

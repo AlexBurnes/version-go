@@ -12,7 +12,7 @@ rule_type: Always
 - **VERSION file**: Single source of truth for version numbers.
 - **Pre-push validation**: Automated version checking before git push.
 - **Version increment**: Always increment version before making changes.
-- **Workflow enforcement**: Follow DEVELOPER_WORKFLOW.md process.
+- **Workflow enforcement**: Follow docs/Developer-workflow.md process.
 
 ### Version Change Requirements
 - **Before ANY changes**: Check if VERSION file version matches current git tag.
@@ -33,7 +33,7 @@ if [[ "$CURRENT_TAG" == "$VERSION_FILE" ]]; then
     echo "   ./scripts/version-bump minor    # for new features" 
     echo "   ./scripts/version-bump major    # for breaking changes"
     echo ""
-    echo "Then make your changes and follow the workflow in DEVELOPER_WORKFLOW.md"
+    echo "Then make your changes and follow the workflow in docs/Developer-workflow.md"
 fi
 ```
 
@@ -77,7 +77,7 @@ fi
 - **Tag validation**: Prevents duplicate or invalid tags
 
 ## Documentation Requirements
-- **DEVELOPER_WORKFLOW.md**: Complete workflow documentation
+- **docs/Developer-workflow.md**: Complete workflow documentation
 - **VERSION file**: Current planned version
 - **CHANGELOG.md**: Updated with each release
 - **Memory bank**: Updated with version changes

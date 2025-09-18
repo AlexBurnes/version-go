@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Documentation
+- **Documentation Reorganization**: Reorganized project documentation structure
+  - **File Naming Convention**: Applied lowercase-first-word-with-dash naming convention to documentation files
+  - **Directory Structure**: Moved all documentation files (except README and CHANGELOG) to docs/ directory
+  - **Moved Files**:
+    - `DEVELOPER_WORKFLOW.md` → `docs/Developer-workflow.md`
+    - `IMPLEMENTATION_SUMMARY.md` → `docs/Implementation-summary.md`
+    - `project.md` → `docs/Project-specification.md`
+  - **Renamed Files in docs/ directory**:
+    - `CI_CD.md` → `Deploy.md` (more descriptive name)
+    - `LIBRARY.md` → `Library.md`
+    - `NEW_FEATURES_SPECIFICATION.md` → `New-features-specification.md`
+    - `BNF_GRAMMAR.md` → `BNF-grammar.md` (kept BNF uppercase as abbreviation)
+    - `BUILD.md` → `Build.md`
+    - `GORELEASER_HOOKS.md` → `Goreleaser-hooks.md`
+  - **Reference Updates**: Updated all references throughout codebase to point to new file locations and names
+  - **Memory Bank Files**: Kept memory bank documents in root directory as they are referenced by MCP server
+  - **Consistency**: Ensured all documentation follows consistent naming and location patterns
+  - **Documentation Rules**: Created comprehensive `rule-documents.mdc` with naming conventions and directory structure requirements
+
 ## [0.8.22] - 2025-09-17
 
 ### Added

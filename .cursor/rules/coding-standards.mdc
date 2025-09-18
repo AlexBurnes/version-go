@@ -155,7 +155,7 @@ alwaysApply: true
 
 * **Every exported symbol** has a GoDoc comment.
 * `README.md` includes: purpose, quickstart, install (Scoop/Linux), examples, exit codes.
-* Keep `project.md` as the **single source of truth** for spec; update when behavior changes.
+* Keep `docs/Project-specification.md` as the **single source of truth** for spec; update when behavior changes.
 * Maintain CHANGELOG with Conventional Commits categories.
 
 ## 19) Git, Commits, PRs
@@ -224,7 +224,7 @@ if err := run(ctx, os.Args[1:]); err != nil {
 * Lint + tests (with `-race`) pass in CI.
 * CLI help accurate; exit codes correct.
 * Cross-platform path/FS logic verified.
-* Docs updated (`README`, `project.md`, ADR if needed).
+* Docs updated (`README`, `docs/Project-specification.md`, ADR if needed).
 * MPC updated when behavior/rules change.
 * GoReleaser dry-run OK.
 

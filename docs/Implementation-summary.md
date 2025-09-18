@@ -33,7 +33,7 @@ The Version CLI Utility has been successfully implemented as a complete Go-based
 version/
 ├── README.md                    # User documentation
 ├── CHANGELOG.md                 # Version history
-├── IMPLEMENTATION_SUMMARY.md    # This file
+├── docs/Implementation-summary.md    # This file
 ├── src/                         # Go source code
 │   ├── main.go                 # CLI interface and command routing
 │   ├── version.go              # Version parsing and sorting logic
