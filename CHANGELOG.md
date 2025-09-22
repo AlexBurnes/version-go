@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2025-01-27
+
+### Documentation
+- **Version Management Rules Enhancement**: Enhanced version management rules to ensure proper packaging updates
+  - **VERSION File Updates**: Made VERSION file updates mandatory when bumping version
+  - **Packaging Configuration**: Added requirements to update Windows Scoop and macOS Homebrew configurations
+  - **Automated Workflow**: Updated `scripts/version-bump-with-file` to automatically update packaging files
+  - **Rule Updates**: Enhanced `rule-versioning.mdc` and `rule-complete-changes.mdc` with packaging requirements
+  - **Files Updated**:
+    - `.cursor/rules/rule-versioning.mdc` - Added mandatory packaging updates section
+    - `.cursor/rules/rule-complete-changes.mdc` - Added packaging files information to workflow
+  - **Packaging Files**: When version changes, these files must be updated:
+    - `VERSION` file with new version number
+    - `packaging/windows/scoop-bucket/version.json` with new version and URLs
+    - `packaging/macos/version.rb` with new URLs
+
+### Documentation
+- **Version Management Rules**: Enhanced version management rules to ensure proper packaging updates
+  - **VERSION File Updates**: Made VERSION file updates mandatory when bumping version
+  - **Packaging Configuration**: Added requirements to update Windows Scoop and macOS Homebrew configurations
+  - **Automated Workflow**: Updated `scripts/version-bump-with-file` to automatically update packaging files
+  - **Rule Updates**: Enhanced `rule-versioning.mdc` and `rule-complete-changes.mdc` with packaging requirements
+  - **Files Updated**:
+    - `.cursor/rules/rule-versioning.mdc` - Added mandatory packaging updates section
+    - `.cursor/rules/rule-complete-changes.mdc` - Added packaging files information to workflow
+  - **Packaging Files**: When version changes, these files must be updated:
+    - `VERSION` file with new version number
+    - `packaging/windows/scoop-bucket/version.json` with new version and URLs
+    - `packaging/macos/version.rb` with new URLs
+
 ### Documentation
 - **Documentation Reorganization**: Reorganized project documentation structure
   - **File Naming Convention**: Applied lowercase-first-word-with-dash naming convention to documentation files

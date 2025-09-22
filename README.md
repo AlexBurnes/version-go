@@ -2,7 +2,7 @@
 
 A cross-platform command-line utility written in Go that provides semantic version parsing, validation, and ordering. This tool replaces legacy bash scripts (`version`, `version-check`, `describe`) currently used in build pipelines and supports Linux, Windows, and macOS with a reproducible build/distribution process.
 
-**Version 0.8.22** - Complete release with developer workflow and automated version management!
+**Version 1.0.1** - Complete release with enhanced version management rules and automated packaging updates!
 
 ## Features
 
