@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-01-27
+
+### Added
+- **Platform Detection Commands**: Added new CLI commands for platform detection
+  - `platform` - Returns current platform (GOOS value): `linux`
+  - `arch` - Returns current architecture (GOARCH value): `amd64`
+  - `os` - Returns current operating system (distribution name): `ubuntu`
+  - `os_version` - Returns current OS version: `24.04`
+  - `cpu` - Returns number of logical CPUs: `8`
+- **Platform Detection Library API**: Enhanced `pkg/version` package with platform detection functions
+  - `GetPlatform()` - Returns current platform name
+  - `GetArch()` - Returns current architecture name
+  - `GetOS()` - Returns current operating system name (distribution-specific on Linux)
+  - `GetOSVersion()` - Returns current OS version
+  - `GetNumCPU()` - Returns number of logical CPUs
+  - `GetPlatformInfo()` - Returns comprehensive platform information struct
+- **Cross-Platform Testing Infrastructure**: Comprehensive testing framework for platform detection
+  - Docker-based testing for Ubuntu, Debian, and Windows (Wine)
+  - Cross-compilation testing for all target platforms
+  - GitHub Actions integration for automated testing
+  - Test scripts for Linux, Windows, and macOS platforms
+  - Comprehensive documentation and troubleshooting guides
+
+### Changed
+- **Platform Detection Logic**: Enhanced Linux OS detection to return actual distribution names
+  - Linux platforms now return distribution name (e.g., `ubuntu`, `debian`) instead of generic `linux`
+  - OS version detection improved to return actual version numbers (e.g., `24.04`, `12`)
+  - Darwin platform detection keeps `darwin` naming (not converted to `macos`)
+- **PlatformInfo Struct**: Added `NumCPU` field for CPU count information
+- **CLI Help Text**: Updated help text to include new platform detection commands
+
+### Technical Details
+- **Library Functions**: All platform detection functions use Go's built-in runtime capabilities
+- **Linux Detection**: Reads `/etc/os-release` to detect distribution name and version
+- **Cross-Platform Support**: Works on Linux (amd64/arm64), Windows (amd64/arm64), macOS (amd64/arm64)
+- **Testing Coverage**: Comprehensive testing across multiple Linux distributions and simulated Windows environment
+- **Documentation**: Added detailed testing guides and cross-platform validation procedures
+
 ## [1.0.1] - 2025-01-27
 
 ### Documentation

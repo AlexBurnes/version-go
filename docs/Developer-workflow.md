@@ -57,6 +57,12 @@ go test ./pkg/version/... -v
 
 # Run performance tests
 go test ./cmd/version/... -run TestPerformance -v
+
+# Run cross-platform tests
+./test/cross-platform/simple-cross-platform-test.sh
+
+# Run comprehensive Docker-based cross-platform tests (requires Docker)
+./test/cross-platform/run-cross-platform-tests.sh
 ```
 
 **Update documentation:**

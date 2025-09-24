@@ -1,12 +1,12 @@
 class Version < Formula
   desc "Cross-platform semantic version parsing, validation, and ordering CLI utility"
   homepage "https://github.com/AlexBurnes/version-go"
-  url "https://github.com/AlexBurnes/version-go/releases/download/v1.0.1/version-0.5.9-darwin-amd64.tar.gz"
+  url "https://github.com/AlexBurnes/version-go/releases/download/v1.1.0/version-0.5.9-darwin-amd64.tar.gz"
   sha256 "PLACEHOLDER_SHA256"
   license "Apache-2.0"
   
   if Hardware::CPU.arm?
-    url "https://github.com/AlexBurnes/version-go/releases/download/v1.0.1/version-0.5.9-darwin-arm64.tar.gz"
+    url "https://github.com/AlexBurnes/version-go/releases/download/v1.1.0/version-0.5.9-darwin-arm64.tar.gz"
     sha256 "PLACEHOLDER_SHA256_ARM64"
   end
 
