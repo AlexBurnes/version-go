@@ -44,7 +44,11 @@ scripts/version-bump-with-file major  # for breaking changes (updates VERSION fi
    - `README.md` - Update version badge and release info
    - `CHANGELOG.md` - Add new version entry with changes
 
-5. **Git operations**
+5. **Build binary with new version**
+   - Run buildfab install-binary to build binary with new version
+   - This ensures the binary reflects the version change for pre-push hooks
+
+6. **Git operations**
    - Stage all changes: `git add .`
    - Commit with proper format: `git commit -m "type(scope): vX.Y.Z, description" -m "and write change description on new line"`
    - Create tag: `git tag vX.Y.Z`
