@@ -4,6 +4,16 @@ A cross-platform command-line utility written in Go that provides semantic versi
 
 **Version 1.0.1** - Complete release with enhanced version management rules and automated packaging updates!
 
+## Buildfab Ecosystem
+
+This project is part of the **buildfab utilities and libraries** ecosystem, providing unified build management and development tools:
+
+- **[buildfab](https://github.com/AlexBurnes/buildfab)** - Unified build management utility
+- **[pre-push](https://github.com/AlexBurnes/pre-push)** - Git pre-push hook utility for project validation
+- **version** (this project) - Semantic version parsing and validation utility
+
+The buildfab ecosystem provides a complete development workflow with build orchestration, project validation, and cross-platform testing capabilities.
+
 ## Features
 
 - **Semantic Version Parsing**: Custom BNF grammar engine supporting extended version formats beyond SemVer 2.0 (see [BNF Grammar](docs/BNF-grammar.md))
@@ -297,6 +307,75 @@ version project
 - Go 1.22 or later
 - CMake 3.16 or later
 - Git (for version extraction)
+- **Buildfab** (for unified build management)
+
+### Installing Buildfab
+
+The project uses [buildfab](https://github.com/AlexBurnes/buildfab) for unified build management. Install buildfab before building the project:
+
+#### System Installation (Recommended)
+```bash
+# Install buildfab system-wide
+wget -O - https://github.com/AlexBurnes/buildfab/releases/latest/download/buildfab-linux-amd64-install.sh | sudo sh
+```
+
+#### Local Installation (Development)
+```bash
+# Install buildfab locally to ./scripts directory
+wget -O - https://github.com/AlexBurnes/buildfab/releases/latest/download/buildfab-linux-amd64-install.sh | INSTALL_DIR=./scripts sh
+```
+
+### Buildfab Configuration
+
+The project uses `.project.yml` for buildfab configuration with the following stages and actions:
+
+- **Stages**: `pre-push`, `build`, `test`, `release`
+- **Actions**: Conan dependency management, CMake configuration, cross-platform testing, GoReleaser integration
+- **Parallel Execution**: Cross-platform tests run simultaneously using Docker
+
+See [Developer Workflow](docs/Developer-workflow.md) for complete buildfab usage documentation.
+
+### Pre-Push Hook Setup (Recommended for Developers)
+
+For the best development experience, set up the pre-push hook to automatically run project checks before pushing commits:
+
+#### Install Pre-Push Utility
+
+```bash
+# Install pre-push utility (same process as buildfab)
+wget -O - https://github.com/AlexBurnes/pre-push/releases/latest/download/pre-push-linux-amd64-install.sh | sudo sh
+
+# Or install locally
+wget -O - https://github.com/AlexBurnes/pre-push/releases/latest/download/pre-push-linux-amd64-install.sh | INSTALL_DIR=./scripts sh
+```
+
+#### Setup Git Hook
+
+```bash
+# In project root, run pre-push to setup git hook
+pre-push
+
+# This will:
+# - Install git pre-push hook
+# - Configure project settings
+# - Run pre-push stage checks automatically before each push
+```
+
+#### Usage
+
+```bash
+# Test pre-push checks without pushing
+pre-push test
+
+# Run with verbose output to see what's happening
+export PRE_PUSH_VERBOSE=1
+pre-push test
+
+# Normal git push (will automatically run checks)
+git push origin master
+```
+
+The pre-push hook will automatically run the project's `pre-push` stage (version checks, git status validation, etc.) before each push, keeping the project clean and preventing broken commits from being pushed.
 
 ### Building
 
@@ -305,17 +384,21 @@ version project
 git clone https://github.com/burnes/go-version.git
 cd go-version
 
-# Build with CMake
+# Build using buildfab (recommended)
+buildfab build       # Full build with Conan, CMake, GoReleaser
+buildfab test        # Cross-platform testing with Docker
+
+# Or build individual stages
+buildfab pre-push    # Version checks and validation
+buildfab build       # Conan dependencies, CMake build, GoReleaser dry-run
+buildfab test        # Cross-platform testing
+buildfab release     # Complete release process
+
+# Legacy CMake build (still available)
 mkdir build && cd build
 cmake .. && make version
-
-# Run tests
 make test
-
-# Run tests with coverage
 make test-coverage
-
-# Format code
 make format
 
 # Lint code

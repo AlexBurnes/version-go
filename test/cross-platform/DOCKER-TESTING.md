@@ -27,7 +27,7 @@ This document explains how to run comprehensive cross-platform tests using Docke
 ### Option 1: Run All Tests
 ```bash
 cd test/cross-platform
-./run-cross-platform-tests.sh
+buildfab test
 ```
 
 ### Option 2: Run Individual Platform Tests
@@ -35,13 +35,13 @@ cd test/cross-platform
 cd test/cross-platform
 
 # Test Ubuntu 24.04
-./run-cross-platform-tests.sh ubuntu
+buildfab test-linux-ubuntu
 
 # Test Debian 12  
-./run-cross-platform-tests.sh debian
+buildfab test-linux-debian
 
 # Test Windows (using Wine)
-./run-cross-platform-tests.sh windows
+buildfab test-windows
 ```
 
 ### Option 3: Manual Docker Commands

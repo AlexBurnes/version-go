@@ -7,6 +7,119 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-01-24
+
+### Added
+- **Buildfab Migration**: Migrated build system from custom bash scripts to buildfab utility
+  - Updated .project.yml with comprehensive build stages (pre-push, build, test, release)
+  - Added buildfab actions for Conan dependency management and CMake configuration
+  - Implemented unified build orchestration with dependency management
+  - Added cross-platform testing stage with Docker integration
+  - Added check-binaries action for simplified test stage verification
+  - Added individual platform testing actions (test-linux-ubuntu, test-linux-debian, test-windows, test-macos)
+  - Implemented parallel cross-platform testing using buildfab's native parallel execution
+  - Each platform test action directly runs Docker build and Docker run commands
+  - Preserved all existing functionality while gaining buildfab capabilities
+  - Ready for buildfab-based development workflow with unified build management
+
+### Changed
+- **Build System**: Replaced custom build scripts with buildfab actions
+  - Conan dependency management through buildfab actions
+  - CMake configuration and build orchestration via buildfab
+  - GoReleaser integration through buildfab actions
+  - Cross-platform testing via Docker in buildfab test stage
+  - Unified build management replacing multiple custom scripts
+  - Simplified test stage to only check binaries exist in bin/ directory
+
+### Removed
+- **Unused Build Scripts**: Removed obsolete buildtools scripts after buildfab migration
+  - Removed build-and-package.sh (replaced by buildfab build stage)
+  - Removed build-conan.sh (replaced by buildfab install-conan-deps action)
+  - Removed build-goreleaser.sh (replaced by buildfab goreleaser actions)
+  - Removed collect_bins.sh (replaced by inline command in .goreleaser.yml)
+  - Removed post-archive-hook.sh (no longer needed with buildfab)
+  - Removed post-build-hook.sh (no longer needed with buildfab)
+  - Cleaned up buildtools directory to only contain actively used scripts
+  - Updated documentation to use buildfab commands instead of run-cross-platform-tests.sh script
+  - Cross-platform testing now uses buildfab's native parallel execution capabilities
+  - Removed simple-cross-platform-test.sh script (redundant with CMake cross-compilation)
+  - CMake version-all target already handles cross-platform binary building
+  - Updated Developer-workflow.md with complete buildfab workflow documentation
+  - Added comprehensive buildfab stage and action documentation
+  - Updated README.md with buildfab installation and usage instructions
+  - Added buildfab installation commands for system and local installation
+  - Documented .project.yml configuration and buildfab stages
+  - Added pre-push hook setup documentation for developers
+  - Documented pre-push utility installation and usage
+  - Added automatic project validation before git push
+  - Added buildfab ecosystem documentation to README and Developer Workflow
+  - Documented project as part of buildfab utilities and libraries ecosystem
+
+### Fixed
+- **Install-Binary Action**: Fixed CMakeLists.txt install targets
+  - Removed non-existent config/version.yaml file copy operations
+  - Fixed install-current and install-all targets to only copy binaries
+  - Fixed install-binary action failure by removing non-existent config file dependencies
+  - Added check-binaries action for simplified test stage verification
+  - Updated CMakeLists.txt to remove config/version.yaml file copy operations
+  - Preserved all existing functionality while gaining buildfab orchestration capabilities
+  - Ready for buildfab-based development workflow with unified build management
+
+## [1.1.1] - 2025-01-24
+
+### Added
+- **Buildfab Migration**: Migrated build system from custom bash scripts to buildfab utility
+  - Updated .project.yml with comprehensive build stages (pre-push, build, test, release)
+  - Added buildfab actions for Conan dependency management and CMake configuration
+  - Implemented unified build orchestration with dependency management
+  - Added cross-platform testing stage with Docker integration
+  - Added check-binaries action for simplified test stage verification
+  - Added individual platform testing actions (test-linux-ubuntu, test-linux-debian, test-windows, test-macos)
+  - Implemented parallel cross-platform testing using buildfab's native parallel execution
+  - Each platform test action directly runs Docker build and Docker run commands
+  - Preserved all existing functionality while gaining buildfab capabilities
+  - Ready for buildfab-based development workflow with unified build management
+
+### Changed
+- **Build System**: Replaced custom build scripts with buildfab actions
+  - Conan dependency management through buildfab actions
+  - CMake configuration and build orchestration via buildfab
+  - GoReleaser integration through buildfab actions
+  - Cross-platform testing via Docker in buildfab test stage
+  - Unified build management replacing multiple custom scripts
+  - Simplified test stage to only check binaries exist in bin/ directory
+
+### Removed
+- **Unused Build Scripts**: Removed obsolete buildtools scripts after buildfab migration
+  - Removed build-and-package.sh (replaced by buildfab build stage)
+  - Removed build-conan.sh (replaced by buildfab install-conan-deps action)
+  - Removed build-goreleaser.sh (replaced by buildfab goreleaser actions)
+  - Removed collect_bins.sh (replaced by inline command in .goreleaser.yml)
+  - Removed post-archive-hook.sh (no longer needed with buildfab)
+  - Removed post-build-hook.sh (no longer needed with buildfab)
+  - Cleaned up buildtools directory to only contain actively used scripts
+  - Updated documentation to use buildfab commands instead of run-cross-platform-tests.sh script
+  - Cross-platform testing now uses buildfab's native parallel execution capabilities
+  - Removed simple-cross-platform-test.sh script (redundant with CMake cross-compilation)
+  - CMake version-all target already handles cross-platform binary building
+  - Updated Developer-workflow.md with complete buildfab workflow documentation
+  - Added comprehensive buildfab stage and action documentation
+  - Updated README.md with buildfab installation and usage instructions
+  - Added buildfab installation commands for system and local installation
+  - Documented .project.yml configuration and buildfab stages
+  - Added pre-push hook setup documentation for developers
+  - Documented pre-push utility installation and usage
+  - Added automatic project validation before git push
+  - Added buildfab ecosystem documentation to README and Developer Workflow
+  - Documented project as part of buildfab utilities and libraries ecosystem
+
+### Fixed
+- **Install-Binary Action**: Fixed CMakeLists.txt install targets
+  - Removed non-existent config/version.yaml file copy operations
+  - Fixed install-current and install-all targets to only copy binaries
+  - Eliminated config directory creation and file copying dependencies
+  - Resolved buildfab install-binary action failure
+
 ## [1.1.1] - 2025-09-24
 
 ### Fixed

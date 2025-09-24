@@ -1,7 +1,7 @@
 # System Patterns: Version CLI Utility
 
 ## System Architecture
-**✅ IMPLEMENTED WITH LIBRARY SUPPORT, SELF-BUILDING, AUTO-DOWNLOAD, AND CI/CD** - The system follows a modular CLI architecture with clear separation of concerns, reusable library package, self-building capabilities, automatic download functionality, and comprehensive GitHub Actions CI/CD pipeline:
+**✅ IMPLEMENTED WITH LIBRARY SUPPORT, SELF-BUILDING, AUTO-DOWNLOAD, CI/CD, AND BUILDFAB** - The system follows a modular CLI architecture with clear separation of concerns, reusable library package, self-building capabilities, automatic download functionality, comprehensive GitHub Actions CI/CD pipeline, and buildfab unified build management:
 
 ```
 CLI Interface Layer ✅
@@ -51,15 +51,17 @@ Utility Layer ✅
 └── Platform Abstractions ✅
 
 Build System Layer ✅
-├── Main Entry: build-and-package.sh (orchestrates complete build flow) ✅
-├── Local Development: Conan + CMake + bash scripts ✅
+├── Buildfab Orchestration: Unified build management with .project.yml configuration ✅
+├── Build Stages: pre-push, build, test, release with dependency management ✅
+├── Local Development: Conan + CMake + buildfab actions ✅
 ├── Packaging: GoReleaser + Conan hooks ✅
 ├── Cross-Platform: Automated builds for Linux/Windows/macOS ✅
 ├── Environment Setup: Automatic Go PATH configuration ✅
 ├── Environment Loading: .env file support for tokens and variables ✅
 ├── Self-Building: Version utility uses its own built binary for version detection ✅
 ├── Auto-Download: Automatic download of latest version utility from GitHub releases ✅
-└── CI/CD Pipeline: GitHub Actions with Conan package management and automated testing ✅
+├── CI/CD Pipeline: GitHub Actions with Conan package management and automated testing ✅
+└── Cross-Platform Testing: Docker-based testing for comprehensive validation ✅
 
 Packaging Layer ✅
 ├── Linux: Makeself Self-Extracting Archives ✅
@@ -69,6 +71,8 @@ Packaging Layer ✅
 ```
 
 ## Key Technical Decisions
+- **✅ Buildfab Migration**: Migrated from custom bash scripts to buildfab utility for unified build management
+- **✅ Build Stages**: Implemented pre-push, build, test, and release stages with dependency management
 - **✅ Configuration File Support**: .project.yml file for project name and module configuration with git fallback
 - **✅ CLI Options**: --config FILE for custom config files, --git for forcing git detection
 - **✅ YAML Parsing**: gopkg.in/yaml.v3 library for configuration file parsing

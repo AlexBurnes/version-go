@@ -2,7 +2,67 @@
 
 ## Release Workflow
 
-This document outlines the complete workflow for planning, developing, and releasing new versions of the Version CLI utility.
+This document outlines the complete workflow for planning, developing, and releasing new versions of the Version CLI utility using buildfab for unified build management.
+
+## Buildfab Ecosystem
+
+This project is part of the **buildfab utilities and libraries** ecosystem, providing unified build management and development tools:
+
+- **[buildfab](https://github.com/AlexBurnes/buildfab)** - Unified build management utility
+- **[pre-push](https://github.com/AlexBurnes/pre-push)** - Git pre-push hook utility for project validation  
+- **version** (this project) - Semantic version parsing and validation utility
+
+The buildfab ecosystem provides a complete development workflow with build orchestration, project validation, and cross-platform testing capabilities.
+
+## Buildfab Workflow
+
+The project now uses **buildfab** for unified build management with the following stages:
+
+### Available Buildfab Stages
+
+```bash
+# Pre-push validation (version checks, git status)
+buildfab pre-push
+
+# Full build (Conan, CMake, GoReleaser dry-run)
+buildfab build
+
+# Cross-platform testing (Docker-based)
+buildfab test
+
+# Complete release (build + test + GoReleaser release)
+buildfab release
+```
+
+### Individual Actions
+
+```bash
+# Version and validation
+buildfab version-check
+buildfab version-greatest
+buildfab version-module
+
+# Build actions
+buildfab check-conan
+buildfab check-cmake
+buildfab check-goreleaser
+buildfab install-conan-deps
+buildfab configure-cmake
+buildfab build-binaries
+buildfab install-binary
+
+# Testing actions
+buildfab check-binaries
+buildfab test-linux-ubuntu
+buildfab test-linux-debian
+buildfab test-windows
+buildfab test-macos
+
+# Release actions
+buildfab create-installers
+buildfab goreleaser-dry-run
+buildfab goreleaser-release
+```
 
 ### Prerequisites
 
@@ -11,6 +71,50 @@ This document outlines the complete workflow for planning, developing, and relea
 - GitHub token in `.env` file
 - Conan and CMake for builds
 - GoReleaser for releases
+- **Buildfab** for unified build management
+- **Pre-Push Utility** (recommended for developers)
+
+### Pre-Push Hook Setup (Recommended)
+
+For the best development experience, set up the pre-push hook to automatically run project checks:
+
+#### Install Pre-Push Utility
+
+```bash
+# Install pre-push utility (same process as buildfab)
+wget -O - https://github.com/AlexBurnes/pre-push/releases/latest/download/pre-push-linux-amd64-install.sh | sudo sh
+
+# Or install locally
+wget -O - https://github.com/AlexBurnes/pre-push/releases/latest/download/pre-push-linux-amd64-install.sh | INSTALL_DIR=./scripts sh
+```
+
+#### Setup Git Hook
+
+```bash
+# In project root, run pre-push to setup git hook
+pre-push
+
+# This will:
+# - Install git pre-push hook
+# - Configure project settings using .project.yml
+# - Run pre-push stage checks automatically before each push
+```
+
+#### Usage
+
+```bash
+# Test pre-push checks without pushing
+pre-push test
+
+# Run with verbose output to see what's happening
+export PRE_PUSH_VERBOSE=1
+pre-push test
+
+# Normal git push (will automatically run checks)
+git push origin master
+```
+
+The pre-push hook will automatically run the project's `pre-push` stage (version checks, git status validation, etc.) before each push, keeping the project clean and preventing broken commits from being pushed.
 
 ### Phase 1: Planning & Development
 
@@ -48,21 +152,18 @@ echo "v0.5.8" > VERSION
 
 **Run tests:**
 ```bash
-# Run all tests
-go test ./... -v
+# Run all tests using buildfab (recommended)
+buildfab test
 
-# Run specific test suites
+# Run individual buildfab stages
+buildfab pre-push    # Version checks and basic validation
+buildfab build       # Full build with Conan, CMake, GoReleaser
+buildfab test        # Cross-platform testing with Docker
+
+# Run specific test suites manually
 go test ./cmd/version/... -v
 go test ./pkg/version/... -v
-
-# Run performance tests
 go test ./cmd/version/... -run TestPerformance -v
-
-# Run cross-platform tests
-./test/cross-platform/simple-cross-platform-test.sh
-
-# Run comprehensive Docker-based cross-platform tests (requires Docker)
-./test/cross-platform/run-cross-platform-tests.sh
 ```
 
 **Update documentation:**
@@ -76,12 +177,18 @@ go test ./cmd/version/... -run TestPerformance -v
 
 **Clean build artifacts:**
 ```bash
-./buildtools/build-and-package.sh clean
+# Clean using buildfab
+buildfab build  # This will clean and rebuild everything
+
+# Or clean manually
+rm -rf build/ bin/ dist/
 ```
 
 **Run build and package dry run:**
 ```bash
-./buildtools/build-and-package.sh dry-run
+# Use buildfab for comprehensive build testing
+buildfab build       # Full build with Conan, CMake, GoReleaser
+buildfab test        # Cross-platform testing
 ```
 
 **Verify outputs:**
@@ -129,8 +236,16 @@ git push origin $VERSION
 #### 7. Run Build and Package Release
 
 ```bash
-# Run full release
-./buildtools/build-and-package.sh release
+# Run full release using buildfab
+buildfab release
+
+# This will:
+# - Run Conan dependency management
+# - Configure and build with CMake
+# - Build all platform binaries
+# - Run cross-platform tests
+# - Create installers
+# - Run GoReleaser release
 ```
 
 ### Phase 4: Post-Release Verification

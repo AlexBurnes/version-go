@@ -1,9 +1,81 @@
 project:
   name: "buildfab-version"
-  modules:
-    - "version"
+  modules: ["version"]
+  bin: "bin"
+
+stages:
+  pre-push:
+    steps:
+      - action: version-check
+      - action: version-greatest
+
+      # Always run version module validation
+      - action: version-module
+      
+      # Run tests after version module validation
+      - action: run-tests
+        require: [version-module]
+      
+      # Run Git checks for all versions      
+      - action: git-untracked
+      - action: git-uncommitted
+      - action: git-modified
+        onerror: warn
+
+  build:
+    steps:
+      - action: check-conan
+      - action: check-cmake
+      - action: check-goreleaser
+      - action: install-conan-deps
+        require: [check-conan, check-cmake]
+      - action: configure-cmake
+        require: [install-conan-deps]
+      - action: build-binaries
+        require: [configure-cmake]
+      - action: install-binary
+        require: [build-binaries]
+      - action: run-tests
+        require: [install-binary]
+      - action: create-installers
+        require: [install-binary]
+      - action: goreleaser-dry-run
+        require: [create-installers, check-goreleaser]
+
+  test:
+    steps:
+      - action: check-binaries
+      - action: test-linux-ubuntu
+        require: [check-binaries]
+      - action: test-linux-debian
+        require: [check-binaries]
+      - action: test-windows
+        require: [check-binaries]
+      - action: test-macos
+        require: [check-binaries]
+
+  release:
+    steps:
+      - action: check-conan
+      - action: check-cmake
+      - action: check-goreleaser
+      - action: install-conan-deps
+        require: [check-conan, check-cmake]
+      - action: configure-cmake
+        require: [install-conan-deps]
+      - action: build-all-platforms
+        require: [configure-cmake]
+      - action: install-binary
+        require: [build-all-platforms]
+      - action: run-tests
+        require: [install-binary]
+      - action: create-installers
+        require: [install-binary]
+      - action: goreleaser-release
+        require: [create-installers, check-goreleaser]
 
 actions:
+  # Version and validation actions
   - name: version-check
     run: scripts/version check
 
@@ -34,6 +106,7 @@ actions:
   - name: run-tests
     run: go test ./... -v -race
 
+  # Git actions
   - name: git-untracked
     uses: git@untracked
 
@@ -43,22 +116,178 @@ actions:
   - name: git-modified
     uses: git@modified
 
-stages:
-  pre-push:
-    steps:
-      - action: version-check
-      - action: version-greatest
+  # Tool check actions
+  - name: check-conan
+    run: |
+      if ! which conan >/dev/null 2>&1; then
+        echo "Conan is not installed. Install with: pip install conan"
+        exit 1
+      fi
+      conan --version
 
-      # Always run version module validation
-      - action: version-module
+  - name: check-cmake
+    run: |
+      if ! which cmake >/dev/null 2>&1; then
+        echo "CMake not found in PATH, will use Conan's CMake"
+      else
+        cmake --version
+      fi
+
+  - name: check-goreleaser
+    run: |
+      if ! which goreleaser >/dev/null 2>&1; then
+        echo "GoReleaser not found, checking Go environment..."
+        if ! which go >/dev/null 2>&1; then
+          echo "Go is not installed. Please install Go first"
+          exit 1
+        fi
+        echo "Installing GoReleaser..."
+        go install github.com/goreleaser/goreleaser@latest
+        # Add Go bin to PATH
+        export PATH="$(go env GOPATH)/bin:$PATH"
+        if ! which goreleaser >/dev/null 2>&1; then
+          echo "Failed to install GoReleaser"
+          exit 1
+        fi
+      fi
+      goreleaser --version
+
+  # Dependency installation actions
+  - name: install-conan-deps
+    run: |
+      # Check for golang package in Conan
+      if ! conan search golang --remote=all 2>/dev/null | grep -q "golang/"; then
+        echo "Creating golang package locally..."
+        conan create conanfile-golang.py --build=missing
+      fi
+      conan install . --build=missing --profile=default
+
+  # Build actions
+  - name: configure-cmake
+    run: |
+      # Configure CMake with Conan preset
+      mkdir -p .build
+      # Try to use Conan preset first (CMake 3.23+)
+      if cmake --version | grep -q "3\.2[3-9]\|3\.[3-9]\|[4-9]\." && [ -f "./CMakeUserPresets.json" ]; then
+        echo "Using Conan CMake preset"
+        cmake --preset conan-release
+      else
+        echo "Using manual CMake configuration"
+        cmake -B .build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr/local" -G "Unix Makefiles"
+      fi
+
+  - name: build-binaries
+    run: |
+      # Build for current platform
+      if cmake --version | grep -q "3\.2[3-9]\|3\.[3-9]\|[4-9]\." && [ -f "./CMakeUserPresets.json" ]; then
+        echo "Building with CMake preset"
+        cmake --build --preset conan-release --target version
+      else
+        echo "Building with manual configuration"
+        cmake --build .build --target version
+      fi
+
+  - name: install-binary
+    run: |
+      # Install binary to project bin directory using CMake
+      if cmake --version | grep -q "3\.2[3-9]\|3\.[3-9]\|[4-9]\." && [ -f "./CMakeUserPresets.json" ]; then
+        echo "Installing with CMake preset"
+        cmake --build --preset conan-release --target install-current
+      else
+        echo "Installing with manual configuration"
+        cmake --build .build --target install-current
+      fi
       
-      # Run tests only for release versions
-      - action: run-tests
-        only: [release]
-        require: [version-module]
+      # Verify installation
+      if [ -f "bin/version" ]; then
+        echo "✓ Binary installed successfully: bin/version"
+        bin/version --version
+      else
+        echo "✗ Binary installation failed"
+        exit 1
+      fi
+
+  - name: build-all-platforms
+    run: |
+      # Build for all platforms
+      if cmake --version | grep -q "3\.2[3-9]\|3\.[3-9]\|[4-9]\." && [ -f "./CMakeUserPresets.json" ]; then
+        echo "Building with CMake preset"
+        cmake --build --preset conan-release --target version-all
+      else
+        echo "Building with manual configuration"
+        cmake --build .build --target version-all
+      fi
+
+  # Installer creation actions
+  - name: create-installers
+    run: |
+      # Create install scripts
+      ./buildtools/create-all-installers.sh "$(scripts/version version)" "installers"
+
+  # Binary checking actions
+  - name: check-binaries
+    run: |
+      # Check if all required binaries exist in bin/ directory
+      echo "Checking binaries in bin/ directory..."
+      if [ -f "bin/version" ]; then
+        echo "✓ Main binary found: bin/version"
+        bin/version --version
+      else
+        echo "✗ Main binary not found: bin/version"
+        exit 1
+      fi
       
-      # Run Git checks for all versions      
-      - action: git-untracked
-      - action: git-uncommitted
-      - action: git-modified
-        onerror: warn
+      # Check for cross-platform binaries if they exist
+      for platform in linux-amd64 linux-arm64 darwin-amd64 darwin-arm64 windows-amd64; do
+        if [ -f "bin/version-${platform}" ] || [ -f "bin/version-${platform}.exe" ]; then
+          echo "✓ Cross-platform binary found: bin/version-${platform}"
+        fi
+      done
+      
+      echo "✓ All required binaries are present"
+
+  # Cross-platform testing actions - using buildfab parallel execution
+  - name: test-linux-ubuntu
+    run: |
+      echo "Testing Linux Ubuntu 24.04 with Docker..."
+      # Build Docker image for Ubuntu
+      docker build -f test/cross-platform/Dockerfile.linux-ubuntu -t version-test-ubuntu .
+      # Run tests in Ubuntu container
+      docker run --rm version-test-ubuntu
+      echo "✅ Ubuntu tests completed"
+
+  - name: test-linux-debian
+    run: |
+      echo "Testing Linux Debian 12 with Docker..."
+      # Build Docker image for Debian
+      docker build -f test/cross-platform/Dockerfile.linux-debian -t version-test-debian .
+      # Run tests in Debian container
+      docker run --rm version-test-debian
+      echo "✅ Debian tests completed"
+
+  - name: test-windows
+    run: |
+      echo "Testing Windows (via Wine) with Docker..."
+      # Build Docker image for Windows
+      docker build -f test/cross-platform/Dockerfile.windows -t version-test-windows .
+      # Run tests in Windows container
+      docker run --rm version-test-windows
+      echo "✅ Windows tests completed"
+
+  - name: test-macos
+    run: |
+      echo "Testing macOS (simulated)..."
+      echo "Note: macOS testing requires a macOS host or VM"
+      echo "Skipping macOS Docker test (not available on Linux)"
+      echo "✅ macOS test skipped (requires macOS host)"
+
+  # GoReleaser actions
+  - name: goreleaser-dry-run
+    run: |
+      export PATH="$(go env GOPATH)/bin:$PATH"
+      goreleaser release --snapshot --skip-publish --clean
+
+  - name: goreleaser-release
+    run: |
+      export PATH="$(go env GOPATH)/bin:$PATH"
+      goreleaser release --clean

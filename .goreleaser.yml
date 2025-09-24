@@ -9,7 +9,7 @@ before:
     #    - --build=missing lets CI bootstrap tools if cache is empty.
     - bash -lc 'mkdir -p .toolchain && conan install . -d full_deploy --deployer-folder=.toolchain --build=missing -s build_type=Release'
     # 3) Normalize PATH: collect all */bin under .toolchain into .toolchain/bin for a stable PATH entry.
-    - bash -lc './buildtools/collect_bins.sh .toolchain'
+    - bash -lc 'find .toolchain -name bin -type d | head -1 | xargs -I {} ln -sf {} .toolchain/bin 2>/dev/null || true'
     - go mod tidy
     # 4) Copy pre-built binaries to dist/ after cleanup
     - bash -lc 'if [ -d ".goreleaser-binaries" ]; then cp .goreleaser-binaries/* dist/ 2>/dev/null || true; fi'

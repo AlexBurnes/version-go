@@ -24,13 +24,17 @@ Uses Docker containers to test on different Linux distributions and simulate Win
 #### Running Tests
 
 ```bash
-# Run all platform tests
-./test/cross-platform/run-cross-platform-tests.sh
+# Run all platform tests using buildfab (recommended)
+buildfab test
 
-# Run specific platform tests
-./test/cross-platform/run-cross-platform-tests.sh ubuntu
-./test/cross-platform/run-cross-platform-tests.sh debian
-./test/cross-platform/run-cross-platform-tests.sh windows
+# Run individual platform tests using buildfab
+buildfab test-linux-ubuntu
+buildfab test-linux-debian
+buildfab test-windows
+buildfab test-macos
+
+# Legacy script-based testing (still available)
+./test/cross-platform/run-cross-platform-tests.sh
 ```
 
 #### Supported Platforms
