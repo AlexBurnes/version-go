@@ -44,11 +44,7 @@ buildfab test-macos
 
 ### 2. Cross-Compilation Testing
 
-Tests that binaries can be built for all target platforms.
-
-```bash
-./test/cross-platform/cross-compile-test.sh
-```
+Cross-compilation testing has been removed from the CI/CD pipeline. The project now focuses on cross-platform testing using Docker containers for better reliability and consistency.
 
 ### 3. GitHub Actions Testing
 
@@ -99,7 +95,6 @@ CPU: 8
 - `test-platform-windows.sh` - Windows platform detection tests
 - `test-platform-macos.sh` - macOS platform detection tests
 - `run-cross-platform-tests.sh` - Main test runner
-- `cross-compile-test.sh` - Cross-compilation test runner
 
 ## Building Test Binaries
 

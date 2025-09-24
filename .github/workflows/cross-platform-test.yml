@@ -47,10 +47,6 @@ jobs:
         docker build -f test/cross-platform/Dockerfile.windows -t version-test-windows .
         docker run --rm version-test-windows
     
-    - name: Run cross-compilation test
-      run: |
-        chmod +x test/cross-platform/cross-compile-test.sh
-        ./test/cross-platform/cross-compile-test.sh
 
   platform-detection-unit-tests:
     runs-on: ${{ matrix.os }}

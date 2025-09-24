@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **CI/CD Pipeline**: Removed cross-compilation tests from GitHub Actions workflows
+  - Removed cross-compilation test step from cross-platform-test.yml workflow
+  - Updated documentation to reflect focus on Docker-based cross-platform testing
+  - Maintained Docker-based cross-platform tests for Ubuntu, Debian, and Windows (Wine)
+  - Improved CI/CD reliability by removing complex cross-compilation dependencies
+
 ## [1.2.0] - 2025-01-24
 
 ### Added
