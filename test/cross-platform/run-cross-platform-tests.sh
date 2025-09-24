@@ -48,11 +48,11 @@ check_binaries() {
 test_linux_ubuntu() {
     echo "=== Testing Linux Ubuntu 24.04 ==="
     
-    cd "$SCRIPT_DIR"
+    cd "$PROJECT_ROOT"
     
     # Build Docker image
     echo "Building Ubuntu Docker image..."
-    docker build -f Dockerfile.linux-ubuntu -t version-test-ubuntu .
+    docker build -f test/cross-platform/Dockerfile.linux-ubuntu -t version-test-ubuntu .
     
     # Run tests
     echo "Running Ubuntu tests..."
@@ -66,11 +66,11 @@ test_linux_ubuntu() {
 test_linux_debian() {
     echo "=== Testing Linux Debian 12 ==="
     
-    cd "$SCRIPT_DIR"
+    cd "$PROJECT_ROOT"
     
     # Build Docker image
     echo "Building Debian Docker image..."
-    docker build -f Dockerfile.linux-debian -t version-test-debian .
+    docker build -f test/cross-platform/Dockerfile.linux-debian -t version-test-debian .
     
     # Run tests
     echo "Running Debian tests..."
@@ -84,11 +84,11 @@ test_linux_debian() {
 test_windows() {
     echo "=== Testing Windows (using Wine) ==="
     
-    cd "$SCRIPT_DIR"
+    cd "$PROJECT_ROOT"
     
     # Build Docker image
     echo "Building Windows Docker image..."
-    docker build -f Dockerfile.windows -t version-test-windows .
+    docker build -f test/cross-platform/Dockerfile.windows -t version-test-windows .
     
     # Run tests
     echo "Running Windows tests..."

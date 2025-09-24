@@ -25,29 +25,26 @@ jobs:
     
     - name: Build version utility
       run: |
-        go build -o bin/version-linux-amd64 cmd/version/*.go
-        GOOS=windows GOARCH=amd64 go build -o bin/version-windows-amd64.exe cmd/version/*.go
-        GOOS=darwin GOARCH=amd64 go build -o bin/version-darwin-amd64 cmd/version/*.go
+        go build -o bin/version-linux-amd64 ./cmd/version
+        GOOS=windows GOARCH=amd64 go build -o bin/version-windows-amd64.exe ./cmd/version
+        GOOS=darwin GOARCH=amd64 go build -o bin/version-darwin-amd64 ./cmd/version
     
     - name: Test Ubuntu 24.04
       if: matrix.platform == 'ubuntu-24.04'
       run: |
-        cd test/cross-platform
-        docker build -f Dockerfile.linux-ubuntu -t version-test-ubuntu .
+        docker build -f test/cross-platform/Dockerfile.linux-ubuntu -t version-test-ubuntu .
         docker run --rm version-test-ubuntu
     
     - name: Test Debian 12
       if: matrix.platform == 'debian-12'
       run: |
-        cd test/cross-platform
-        docker build -f Dockerfile.linux-debian -t version-test-debian .
+        docker build -f test/cross-platform/Dockerfile.linux-debian -t version-test-debian .
         docker run --rm version-test-debian
     
     - name: Test Windows (Wine)
       if: matrix.platform == 'windows-wine'
       run: |
-        cd test/cross-platform
-        docker build -f Dockerfile.windows -t version-test-windows .
+        docker build -f test/cross-platform/Dockerfile.windows -t version-test-windows .
         docker run --rm version-test-windows
     
     - name: Run cross-compilation test
@@ -72,7 +69,7 @@ jobs:
         go-version: ${{ matrix.go-version }}
     
     - name: Build version utility
-      run: go build -o bin/version cmd/version/*.go
+      run: go build -o bin/version ./cmd/version
     
     - name: Test platform detection
       run: |

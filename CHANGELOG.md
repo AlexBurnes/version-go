@@ -7,7 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.0] - 2025-01-27
+## [1.1.1] - 2025-09-24
+
+### Fixed
+- **GitHub Actions Platform Tests**: Fixed build command syntax in cross-platform test workflow
+  - Changed `go build -o bin/version cmd/version/*.go` to `go build -o bin/version ./cmd/version`
+  - Fixed malformed import path error with invalid `*` character in build commands
+  - Updated all cross-platform build commands to use proper Go build syntax
+  - Verified platform detection commands work correctly on all target platforms
+  - Cross-compilation tests now pass successfully for Linux, Windows, and macOS
+- **Cross-Platform Docker Tests**: Fixed Docker build context issues in cross-platform test suite
+  - Updated Docker build commands to run from project root with correct context
+  - Fixed Dockerfile paths to use proper relative paths from project root
+  - Updated all Dockerfiles (Ubuntu, Debian, Windows) to use correct file paths
+  - Rebuilt all platform binaries with latest platform detection code
+  - Verified all cross-platform tests pass successfully on Ubuntu, Debian, and Windows
+  - **GitHub Actions Workflow**: Updated cross-platform test workflow to match local script fixes
+  - Fixed GitHub Actions Docker build commands to run from project root instead of test directory
+  - Ensured GitHub Actions uses same Docker build context as local scripts
+
+## [1.1.0] - 2025-09-24
 
 ### Added
 - **Platform Detection Commands**: Added new CLI commands for platform detection
@@ -45,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Testing Coverage**: Comprehensive testing across multiple Linux distributions and simulated Windows environment
 - **Documentation**: Added detailed testing guides and cross-platform validation procedures
 
-## [1.0.1] - 2025-01-27
+## [1.0.1] - 2025-09-22
 
 ### Documentation
 - **Version Management Rules Enhancement**: Enhanced version management rules to ensure proper packaging updates
@@ -165,7 +184,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Documentation**: Updated all examples to use direct version utility commands
   - **Help Text**: Updated help text to reflect simplified workflow
 
-## [v0.8.9] - 2025-09-16
+## [0.8.9] - 2025-09-16
 
 ### Added
 - **Bump Command**: New `bump` command for intelligent version incrementing
@@ -226,7 +245,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Maintained darwin in GoReleaser goos field for compatibility while using macos in output names
   - This provides clearer platform identification for users
 
-## [0.8.6] - 2025-09-15
+## [0.8.6] - 2025-09-16
 
 ### Added
 - **Modules Command**: Added new `modules` command to list all modules from .project.yml configuration file

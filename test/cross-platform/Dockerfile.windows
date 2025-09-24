@@ -12,10 +12,10 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /test
 
 # Copy the Windows version utility binary
-COPY ../../bin/version-windows-amd64.exe /test/version.exe
+COPY bin/version-windows-amd64.exe /test/version.exe
 
 # Create test script
-COPY test-platform-windows.sh /test/test-platform-windows.sh
+COPY test/cross-platform/test-platform-windows.sh /test/test-platform-windows.sh
 RUN chmod +x /test/test-platform-windows.sh
 
 # Run tests

@@ -19,11 +19,11 @@ ENV GOPATH="/go"
 WORKDIR /test
 
 # Copy the version utility binary
-COPY ../../bin/version-linux-amd64 /test/version
+COPY bin/version-linux-amd64 /test/version
 RUN chmod +x /test/version
 
 # Create test script
-COPY test-platform.sh /test/test-platform.sh
+COPY test/cross-platform/test-platform.sh /test/test-platform.sh
 RUN chmod +x /test/test-platform.sh
 
 # Run tests
