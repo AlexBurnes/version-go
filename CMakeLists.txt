@@ -351,7 +351,7 @@ add_custom_target(clean-build
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_custom_target(install-current
         COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${BUILD_DIR}/${BINARY_NAME}-linux-amd64-static ${BUILD_DIR}/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${BUILD_DIR}/${BINARY_NAME}-linux-amd64-static ${BUILD_DIR}/${BINARY_NAME}
         DEPENDS ${BINARY_NAME}
         COMMENT "Installing current OS binary (static Linux) to project bin directory"
         VERBATIM
@@ -360,7 +360,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
         add_custom_target(install-current
             COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${BUILD_DIR}/${BINARY_NAME}-darwin-arm64 ${BUILD_DIR}/
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${BUILD_DIR}/${BINARY_NAME}-darwin-arm64 ${BUILD_DIR}/${BINARY_NAME}
             DEPENDS ${BINARY_NAME}
             COMMENT "Installing current OS binary (macOS ARM64) to project bin directory"
             VERBATIM
@@ -368,7 +368,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     else()
         add_custom_target(install-current
             COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${BUILD_DIR}/${BINARY_NAME}-darwin-amd64 ${BUILD_DIR}/
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${BUILD_DIR}/${BINARY_NAME}-darwin-amd64 ${BUILD_DIR}/${BINARY_NAME}
             DEPENDS ${BINARY_NAME}
             COMMENT "Installing current OS binary (macOS Intel) to project bin directory"
             VERBATIM
@@ -377,7 +377,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_custom_target(install-current
         COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${BUILD_DIR}/${BINARY_NAME}-windows-amd64.exe ${BUILD_DIR}/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${BUILD_DIR}/${BINARY_NAME}-windows-amd64.exe ${BUILD_DIR}/${BINARY_NAME}.exe
         DEPENDS ${BINARY_NAME}
         COMMENT "Installing current OS binary (Windows) to project bin directory"
         VERBATIM
@@ -385,7 +385,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 else()
     add_custom_target(install-current
         COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_DIR}
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${BUILD_DIR}/${BINARY_NAME} ${BUILD_DIR}/
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${BUILD_DIR}/${BINARY_NAME} ${BUILD_DIR}/${BINARY_NAME}
         DEPENDS ${BINARY_NAME}
         COMMENT "Installing current OS binary to project bin directory"
         VERBATIM
