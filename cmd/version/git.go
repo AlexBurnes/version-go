@@ -449,6 +449,31 @@ func getRelease() (string, error) {
     return "1", nil
 }
 
+// getPlatform returns the current platform (GOOS value)
+func getPlatform() (string, error) {
+    return version.GetPlatform(), nil
+}
+
+// getArch returns the current architecture (GOARCH value)
+func getArch() (string, error) {
+    return version.GetArch(), nil
+}
+
+// getOS returns the current operating system (user-friendly format)
+func getOS() (string, error) {
+    return version.GetOS(), nil
+}
+
+// getOSVersion returns the current operating system version
+func getOSVersion() (string, error) {
+    return version.GetOSVersion(), nil
+}
+
+// getCPU returns the number of logical CPUs
+func getCPU() (string, error) {
+    return fmt.Sprintf("%d", version.GetNumCPU()), nil
+}
+
 // getFull returns the full project name-version-release
 func getFull() (string, error) {
     version, err := getVersion()

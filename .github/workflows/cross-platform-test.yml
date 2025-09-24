@@ -1,0 +1,117 @@
+name: Cross-Platform Platform Detection Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  cross-platform-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [ubuntu-24.04, debian-12, windows-wine]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.23'
+    
+    - name: Build version utility
+      run: |
+        go build -o bin/version-linux-amd64 cmd/version/*.go
+        GOOS=windows GOARCH=amd64 go build -o bin/version-windows-amd64.exe cmd/version/*.go
+        GOOS=darwin GOARCH=amd64 go build -o bin/version-darwin-amd64 cmd/version/*.go
+    
+    - name: Test Ubuntu 24.04
+      if: matrix.platform == 'ubuntu-24.04'
+      run: |
+        cd test/cross-platform
+        docker build -f Dockerfile.linux-ubuntu -t version-test-ubuntu .
+        docker run --rm version-test-ubuntu
+    
+    - name: Test Debian 12
+      if: matrix.platform == 'debian-12'
+      run: |
+        cd test/cross-platform
+        docker build -f Dockerfile.linux-debian -t version-test-debian .
+        docker run --rm version-test-debian
+    
+    - name: Test Windows (Wine)
+      if: matrix.platform == 'windows-wine'
+      run: |
+        cd test/cross-platform
+        docker build -f Dockerfile.windows -t version-test-windows .
+        docker run --rm version-test-windows
+    
+    - name: Run cross-compilation test
+      run: |
+        chmod +x test/cross-platform/cross-compile-test.sh
+        ./test/cross-platform/cross-compile-test.sh
+
+  platform-detection-unit-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        go-version: ['1.23']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go-version }}
+    
+    - name: Build version utility
+      run: go build -o bin/version cmd/version/*.go
+    
+    - name: Test platform detection
+      run: |
+        echo "Testing platform detection on ${{ matrix.os }}"
+        ./bin/version platform
+        ./bin/version arch
+        ./bin/version os
+        ./bin/version os_version
+        ./bin/version cpu
+    
+    - name: Run platform detection unit tests
+      run: go test ./pkg/version -v -run "TestGet.*|TestPlatform.*"
+    
+    - name: Validate platform output
+      shell: bash
+      run: |
+        PLATFORM=$(./bin/version platform)
+        ARCH=$(./bin/version arch)
+        OS=$(./bin/version os)
+        OS_VERSION=$(./bin/version os_version)
+        CPU=$(./bin/version cpu)
+        
+        echo "Platform: $PLATFORM"
+        echo "Architecture: $ARCH"
+        echo "OS: $OS"
+        echo "OS Version: $OS_VERSION"
+        echo "CPU: $CPU"
+        
+        # Validate outputs are not empty
+        [ -n "$PLATFORM" ] || (echo "Platform is empty" && exit 1)
+        [ -n "$ARCH" ] || (echo "Architecture is empty" && exit 1)
+        [ -n "$OS" ] || (echo "OS is empty" && exit 1)
+        [ -n "$OS_VERSION" ] || (echo "OS Version is empty" && exit 1)
+        [ -n "$CPU" ] || (echo "CPU count is empty" && exit 1)
+        
+        # Validate CPU is a number
+        if ! [[ "$CPU" =~ ^[0-9]+$ ]]; then
+          echo "CPU count is not a number: $CPU"
+          exit 1
+        fi
+        
+        echo "✅ All platform detection outputs are valid"

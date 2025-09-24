@@ -141,6 +141,11 @@ Commands:
     build-type [version] print CMake build type (Release/Debug) based on version type
     bump [version] [type] bump version with specified type (smart, major, minor, patch, pre, alpha, beta, rc, fix, next, post, feat)
     sort              sort version strings from stdin
+    platform          print current platform (GOOS value)
+    arch              print current architecture (GOARCH value)
+    os                print current operating system (user-friendly format)
+    os_version        print current operating system version
+    cpu               print number of logical CPUs
 
 Examples:
     version check 1.2.3
@@ -148,6 +153,11 @@ Examples:
     version type 1.2.3-alpha.1
     version bump 1.2.3 major
     version bump 1.2.3 alpha
+    version platform
+    version arch
+    version os
+    version os_version
+    version cpu
     echo "1.2.3 1.2.4 1.2.3-alpha" | version sort
 `, appVersion)
 }
@@ -271,6 +281,16 @@ func main() {
         
         // Perform bump
         result, err = bumpVersion(versionToBump, bumpType)
+    case "platform":
+        result, err = getPlatform()
+    case "arch":
+        result, err = getArch()
+    case "os":
+        result, err = getOS()
+    case "os_version":
+        result, err = getOSVersion()
+    case "cpu":
+        result, err = getCPU()
     default:
         printError("unknown command: %s", command)
         printHelp()
