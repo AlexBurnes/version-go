@@ -1,5 +1,11 @@
 # build artifacts
 bin/
+version-darwin-amd64
+version-darwin-arm64
+version-linux-amd64
+version-linux-arm64
+version-windows-amd64.exe
+verrsion-windows-arm64.exe
 
 # build directory
 .build
@@ -14,8 +20,10 @@ scripts/version
 scripts/pre-push
 scripts/buildfab
 
+
 # environment and tockens
 .env
+.cursor/mcp.json
 
 # docs
 docs/bump-transition.ods

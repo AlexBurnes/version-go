@@ -9,6 +9,13 @@ import (
     "github.com/AlexBurnes/version-go/pkg/version"
 )
 
+// Simple color codes for terminal output
+const (
+    colorReset = "\033[0m"
+    colorRed   = "\033[31m"
+    colorBlue  = "\033[34m"
+)
+
 // Global configuration provider
 var configProvider = version.NewConfigProvider()
 
@@ -508,7 +515,29 @@ func getGitTags() ([]string, error) {
     return strings.Split(strings.TrimSpace(output), "\n"), nil
 }
 
-// checkGreatest checks if the given version is the greatest among all git tags
+// getGitTagsOnBranch returns version tags that are reachable from the current branch
+func getGitTagsOnBranch() ([]string, error) {
+    // Get current branch
+    branch, err := runGitCommand("branch", "--show-current")
+    if err != nil {
+        return nil, fmt.Errorf("failed to get current branch: %v", err)
+    }
+    branch = strings.TrimSpace(branch)
+    
+    // Get tags reachable from current branch
+    output, err := runGitCommand("tag", "-l", "v[0-9]*", "--merged", branch)
+    if err != nil {
+        return nil, err
+    }
+    
+    if output == "" {
+        return []string{}, nil
+    }
+    
+    return strings.Split(strings.TrimSpace(output), "\n"), nil
+}
+
+// checkGreatest checks if the given version is the greatest among tags on current branch
 func checkGreatest(versionStr string) (string, error) {
     // Parse current version using the library
     currentVer, err := version.Parse(versionStr)
@@ -516,23 +545,22 @@ func checkGreatest(versionStr string) (string, error) {
         return "", fmt.Errorf("invalid version format: %s", versionStr)
     }
 
-    // Get all git tags
-    tags, err := getGitTags()
+    // Get tags on current branch (not all tags)
+    tags, err := getGitTagsOnBranch()
     if err != nil {
-        return "", fmt.Errorf("failed to get git tags: %v", err)
+        return "", fmt.Errorf("failed to get git tags on current branch: %v", err)
     }
 
     if len(tags) == 0 {
-        return fmt.Sprintf("Version %s is the greatest (no other tags found)", versionStr), nil
+        return fmt.Sprintf("Version %s is the greatest (no other tags found on current branch)", versionStr), nil
     }
 
-    // Compare with all valid version tags
-    for _, tag := range tags {
-        // Skip if tag is the same as current version
-        if tag == versionStr || tag == "v"+versionStr {
-            continue
-        }
+    // Find all valid version tags and track the greatest ones
+    var validTags []string
+    var greatestTags []string
+    var greatestVer *version.Version
 
+    for _, tag := range tags {
         // Try to parse the tag (skip invalid ones)
         tagVer, err := version.Parse(tag)
         if err != nil {
@@ -540,11 +568,90 @@ func checkGreatest(versionStr string) (string, error) {
             continue
         }
 
-        // If we find a greater version, return false
-        if version.Compare(tagVer, currentVer) > 0 {
-            return "", fmt.Errorf("version %s is not the greatest among all tags", versionStr)
+        validTags = append(validTags, tag)
+        
+        // Skip current version when tracking greatest version
+        if tag == versionStr || tag == "v"+versionStr {
+            continue
+        }
+        
+        // Track the greatest version
+        if greatestVer == nil || version.Compare(tagVer, greatestVer) > 0 {
+            greatestVer = tagVer
+            greatestTags = []string{tag}
+        } else if version.Compare(tagVer, greatestVer) == 0 {
+            greatestTags = append(greatestTags, tag)
         }
     }
 
-    return fmt.Sprintf("Version %s is the greatest among all tags", versionStr), nil
+    // If we find a greater version, return detailed error with color-coded tags
+    if greatestVer != nil && version.Compare(greatestVer, currentVer) > 0 {
+        var errorMsg strings.Builder
+        errorMsg.WriteString(fmt.Sprintf("version %s is not the greatest among tags on current branch", versionStr))
+        errorMsg.WriteString(fmt.Sprintf("\nFound %d valid tags on current branch:", len(validTags)))
+        
+        // Sort tags for better display
+        sortedTags := make([]string, len(validTags))
+        copy(sortedTags, validTags)
+        
+        // Sort tags by version (we'll use a simple string sort for display)
+        for i := 0; i < len(sortedTags); i++ {
+            for j := i + 1; j < len(sortedTags); j++ {
+                tagI, errI := version.Parse(sortedTags[i])
+                tagJ, errJ := version.Parse(sortedTags[j])
+                if errI == nil && errJ == nil && version.Compare(tagI, tagJ) > 0 {
+                    sortedTags[i], sortedTags[j] = sortedTags[j], sortedTags[i]
+                }
+            }
+        }
+        
+        // Create concise color-coded tag list
+        var lowerTags []string
+        var currentTag string
+        var greaterTags []string
+        
+        for _, tag := range sortedTags {
+            tagVer, err := version.Parse(tag)
+            if err != nil {
+                continue
+            }
+            
+            if tag == versionStr || tag == "v"+versionStr {
+                // Current version - white/normal
+                currentTag = tag
+            } else if version.Compare(tagVer, currentVer) > 0 {
+                // Versions greater than current - red
+                greaterTags = append(greaterTags, fmt.Sprintf("%s%s%s", colorRed, tag, colorReset))
+            } else {
+                // Lower versions - blue
+                lowerTags = append(lowerTags, fmt.Sprintf("%s%s%s", colorBlue, tag, colorReset))
+            }
+        }
+        
+        // Build concise display
+        var displayTags []string
+        
+        // Add lower versions (show one example + ...)
+        if len(lowerTags) > 0 {
+            if len(lowerTags) == 1 {
+                displayTags = append(displayTags, lowerTags[0])
+            } else {
+                displayTags = append(displayTags, lowerTags[0], "...")
+            }
+        }
+        
+        // Add current version
+        if currentTag != "" {
+            displayTags = append(displayTags, currentTag)
+        }
+        
+        // Add greater versions
+        displayTags = append(displayTags, greaterTags...)
+        
+        errorMsg.WriteString(fmt.Sprintf("\nTags: %s", strings.Join(displayTags, ", ")))
+        errorMsg.WriteString(fmt.Sprintf("\nGreatest tag(s): %s", strings.Join(greatestTags, ", ")))
+        return "", fmt.Errorf(errorMsg.String())
+    }
+
+    return fmt.Sprintf("Version %s is the greatest among tags on current branch", versionStr), nil
 }
