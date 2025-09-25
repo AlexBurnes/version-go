@@ -83,7 +83,7 @@ Packaging Layer ✅
 - **✅ Bootstrap Process**: Initial build uses git describe, subsequent builds use built version utility
 - **✅ Circular Dependency Resolution**: Eliminate dependency on git describe by using built version utility
 - **✅ Auto-Download System**: Three-tier priority order for version detection: built utility → auto-download → git describe
-- **✅ Platform Detection**: Automatic detection of platform (linux/macos) and architecture (amd64/arm64) for downloads
+- **✅ Platform Detection**: Automatic detection of platform (linux/darwin) and architecture (amd64/arm64) for downloads
 - **✅ Simplified Download**: Use `wget -O - url | INSTALL_DIR=./scripts sh` pipe approach for streamlined installation
 - **✅ Latest Release URLs**: Use `/releases/latest/download/` URLs without version numbers for consistent downloads
 - **✅ CLI Framework**: Implemented using Go's `flag` package for command parsing
@@ -158,7 +158,7 @@ Packaging Layer ✅
 3. **Git Describe Fallback**: Use `git describe --tags` if download fails
 
 ### Platform and Architecture Detection
-- **Platform Detection**: `uname -s` → `linux`/`macos` (darwin mapped to macos)
+- **Platform Detection**: `uname -s` → `linux`/`darwin`
 - **Architecture Detection**: `uname -m` → `amd64`/`arm64` (x86_64→amd64, aarch64→arm64)
 - **Download URL**: `https://github.com/AlexBurnes/version-go/releases/latest/download/version-{platform}-{arch}.tar.gz`
 
@@ -206,11 +206,11 @@ Packaging Layer ✅
   - Enables consistent download URLs for latest release scripts
   - Updated installer creation scripts to use new naming convention
   - GoReleaser picks up installer scripts directly from installers/ directory
-- **Platform Naming**: Renamed darwin to macos in user-facing documentation
-  - GoReleaser goos field maintains "darwin" for compatibility
-  - Archive output names use "macos" for clearer platform identification
-  - Updated installer creation scripts to use macos platform name
-  - Updated README.md installation examples to reference macos artifacts
+- **Platform Naming**: Consistent darwin naming throughout the system
+  - GoReleaser goos field uses "darwin" for compatibility
+  - Archive output names use "darwin" for consistent platform identification
+  - Updated installer creation scripts to use darwin platform name
+  - Updated README.md installation examples to reference darwin artifacts
 - **GitHub Download URLs**: Updated all documentation with correct download URLs
   - Latest release scripts can use consistent URLs without version numbers
   - Updated README.md, packaging docs, and other documentation

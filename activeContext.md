@@ -4,7 +4,18 @@
 **CI/CD PIPELINE OPTIMIZATION COMPLETED** - Successfully removed cross-compilation tests from GitHub Actions workflows while preserving Docker-based cross-platform testing. Updated .github/workflows/cross-platform-test.yml to remove cross-compilation test step that was causing complexity and reliability issues. Maintained comprehensive Docker-based cross-platform testing for Ubuntu 24.04, Debian 12, and Windows (Wine) using containerized environments. Updated documentation in test/cross-platform/README.md to reflect focus on Docker-based testing approach. Enhanced CI/CD reliability by removing complex cross-compilation dependencies while preserving all essential cross-platform validation. Updated CHANGELOG.md with detailed documentation of CI/CD pipeline improvements. Version bumped to v1.2.2 to reflect the CI/CD optimization changes. Ready for streamlined CI/CD workflow with improved reliability and maintainability.
 
 ## Recent Changes
-- **NEW (Latest)**: CI/CD Pipeline Optimization - Removed Cross-Compilation Tests
+- **NEW (Latest)**: Darwin Platform Naming Consistency Fix
+  - **COMPLETED**: Fixed GoReleaser archive naming template to use darwin instead of macos
+  - **COMPLETED**: Updated installer script creation to use darwin instead of macos
+  - **COMPLETED**: Renamed installer files from version-macos-* to version-darwin-*
+  - **COMPLETED**: Updated packaging directory from macos/ to darwin/
+  - **COMPLETED**: Updated all documentation to use darwin consistently
+  - **COMPLETED**: Updated test files and Docker files to use darwin naming
+  - **COMPLETED**: Updated memory bank files to reflect darwin naming consistency
+  - **COMPLETED**: Version bumped to v1.2.3 for darwin naming consistency fix
+  - **COMPLETED**: Binary built successfully with new version
+  - **COMPLETED**: Ready for git commit, tag, and push
+- **NEW (Previous)**: CI/CD Pipeline Optimization - Removed Cross-Compilation Tests
   - **COMPLETED**: Removed cross-compilation test step from .github/workflows/cross-platform-test.yml
   - **COMPLETED**: Maintained Docker-based cross-platform testing for Ubuntu, Debian, and Windows
   - **COMPLETED**: Updated test/cross-platform/README.md to reflect Docker-focused approach
@@ -17,7 +28,7 @@
   - **COMPLETED**: Updated .project.yml with comprehensive build stages (pre-push, build, test, release)
   - **COMPLETED**: Added buildfab actions for Conan, CMake, GoReleaser, and cross-platform testing
   - **COMPLETED**: Implemented parallel cross-platform testing with individual platform actions
-  - **COMPLETED**: Each platform test (test-linux-ubuntu, test-linux-debian, test-windows, test-macos) runs Docker build/run directly
+  - **COMPLETED**: Each platform test (test-linux-ubuntu, test-linux-debian, test-windows, test-darwin) runs Docker build/run directly
   - **COMPLETED**: Leveraged buildfab's native parallel execution capabilities for simultaneous platform testing
   - **COMPLETED**: Updated documentation to use buildfab commands instead of run-cross-platform-tests.sh script
   - **COMPLETED**: Removed simple-cross-platform-test.sh script (redundant with CMake cross-compilation)
@@ -86,7 +97,7 @@
 - **NEW (v0.8.11)**: Auto-Download Version Utility Implementation
   - **COMPLETED**: Implemented automatic download functionality for version utility from GitHub releases
   - **COMPLETED**: Added three-tier priority order: built utility → auto-download → git describe fallback
-  - **COMPLETED**: Implemented platform and architecture detection (linux/macos, amd64/arm64)
+  - **COMPLETED**: Implemented platform and architecture detection (linux/darwin, amd64/arm64)
   - **COMPLETED**: Used latest release URLs without version numbers for consistent downloads
   - **COMPLETED**: Simplified download process using `wget -O - url | INSTALL_DIR=./scripts sh` pipe approach
   - **COMPLETED**: Updated all build scripts (build-and-package.sh, build-conan.sh, check-version-status, CMakeLists.txt)
@@ -129,9 +140,9 @@
   - **COMPLETED**: Updated .goreleaser.yml to remove version prefix from archive names
   - **COMPLETED**: Changed archive naming from `version-{version}-{os}-{arch}` to `version-{os}-{arch}` format
   - **COMPLETED**: Updated installer script naming from `version-{version}-{os}-{arch}-install.sh` to `version-{os}-{arch}-install.sh` format
-  - **COMPLETED**: Updated GoReleaser archive name template to use conditional logic for darwin→macos rename
-  - **COMPLETED**: Updated installer creation scripts to use macos instead of darwin platform name
-  - **COMPLETED**: Updated README.md installation examples to reference macos artifacts and correct GitHub URLs
+  - **COMPLETED**: Fixed GoReleaser archive name template to use consistent darwin naming (removed darwin→macos rename)
+  - **COMPLETED**: Updated installer creation scripts to use darwin instead of macos platform name
+  - **COMPLETED**: Updated README.md installation examples to reference darwin artifacts and correct GitHub URLs
   - **COMPLETED**: Updated all documentation with correct GitHub download URLs for latest release scripts
   - **COMPLETED**: Tested GoReleaser dry-run to verify artifact naming changes work correctly
   - **COMPLETED**: Updated CHANGELOG.md with comprehensive documentation of changes
@@ -307,7 +318,7 @@
 - **Circular Dependency Resolution**: Eliminate dependency on git describe by using built version utility
 - **Version Detection Strategy**: Use built version utility in scripts/ directory for all version operations
 - **Auto-Download System**: Three-tier priority order for version detection: built utility → auto-download → git describe
-- **Platform Detection**: Automatic detection of platform (linux/macos) and architecture (amd64/arm64) for downloads
+- **Platform Detection**: Automatic detection of platform (linux/darwin) and architecture (amd64/arm64) for downloads
 - **Simplified Download**: Use `wget -O - url | INSTALL_DIR=./scripts sh` pipe approach for streamlined installation
 - **Latest Release URLs**: Use `/releases/latest/download/` URLs without version numbers for consistent downloads
 - **Language Choice**: Go is already decided and specified in project requirements

@@ -193,7 +193,7 @@ func (p *PlatformInfo) FormatPlatformArch() string {
 	return fmt.Sprintf("%s-%s", p.Platform, p.Arch)
 }
 
-// FormatOSArch returns OS-arch format (e.g., "linux-amd64", "macos-arm64")
+// FormatOSArch returns OS-arch format (e.g., "linux-amd64", "darwin-arm64")
 func (p *PlatformInfo) FormatOSArch() string {
 	return fmt.Sprintf("%s-%s", p.OS, p.Arch)
 }

@@ -58,17 +58,17 @@ if [[ -f "packaging/windows/scoop-bucket/version.json" ]]; then
     echo "[SUCCESS] Updated Windows Scoop configuration to $VERSION_NUMBER"
 fi
 
-# Update macOS Homebrew formula
-if [[ -f "packaging/macos/version.rb" ]]; then
-    echo "[INFO] Updating macOS Homebrew formula..."
+# Update Darwin Homebrew formula
+if [[ -f "packaging/darwin/version.rb" ]]; then
+    echo "[INFO] Updating Darwin Homebrew formula..."
     # Extract version without 'v' prefix for URLs
     VERSION_NUMBER=$(echo "$NEW_VERSION" | sed 's/^v//')
     
     # Update URLs in Ruby file
-    sed -i "s|/v[0-9]\+\.[0-9]\+\.[0-9]\+/|/$NEW_VERSION/|g" packaging/macos/version.rb
-    sed -i "s|/[0-9]\+\.[0-9]\+\.[0-9]\+/|/$NEW_VERSION/|g" packaging/macos/version.rb
+    sed -i "s|/v[0-9]\+\.[0-9]\+\.[0-9]\+/|/$NEW_VERSION/|g" packaging/darwin/version.rb
+    sed -i "s|/[0-9]\+\.[0-9]\+\.[0-9]\+/|/$NEW_VERSION/|g" packaging/darwin/version.rb
     
-    echo "[SUCCESS] Updated macOS Homebrew formula to $VERSION_NUMBER"
+    echo "[SUCCESS] Updated Darwin Homebrew formula to $VERSION_NUMBER"
 fi
 
 echo "[SUCCESS] Version bump completed!"

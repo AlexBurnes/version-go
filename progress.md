@@ -93,7 +93,12 @@
 - **✅ GoReleaser Artifact Naming Changes (v0.8.7)**: Updated GoReleaser configuration to remove version prefixes from artifact names
 - **✅ Archive Naming Update (v0.8.7)**: Changed archive naming from `version-{version}-{os}-{arch}` to `version-{os}-{arch}` format
 - **✅ Installer Script Naming Update (v0.8.7)**: Changed installer script naming from `version-{version}-{os}-{arch}-install.sh` to `version-{os}-{arch}-install.sh` format
-- **✅ Platform Rename (v0.8.7)**: Renamed darwin platform references to macos in user-facing documentation
+- **✅ Platform Naming Consistency (v1.2.3)**: Fixed darwin platform naming consistency throughout the system
+  - Fixed GoReleaser archive naming template to use darwin instead of macos
+  - Updated installer script creation and file names to use darwin consistently
+  - Updated packaging directory structure and all documentation
+  - Updated test files, Docker files, and build scripts
+  - Version bumped to v1.2.3 for release
 - **✅ GoReleaser Configuration (v0.8.7)**: Updated .goreleaser.yml with conditional logic for darwin→macos rename
 - **✅ Installer Script Updates (v0.8.7)**: Updated installer creation scripts to use macos instead of darwin
 - **✅ Documentation Updates (v0.8.7)**: Updated README.md installation examples to reference macos artifacts and correct GitHub URLs
@@ -124,7 +129,7 @@
 - **✅ Documentation Updated (v0.8.10)**: Updated all documentation to reflect simplified workflow
 - **✅ Auto-Download Version Utility (v0.8.11)**: Implemented automatic download functionality for version utility from GitHub releases
 - **✅ Three-Tier Priority Order (v0.8.11)**: Built utility → auto-download → git describe fallback
-- **✅ Platform Detection (v0.8.11)**: Automatic detection of platform (linux/macos) and architecture (amd64/arm64)
+- **✅ Platform Detection (v0.8.11)**: Automatic detection of platform (linux/darwin) and architecture (amd64/arm64)
 - **✅ Latest Release URLs (v0.8.11)**: Uses `/releases/latest/download/` URLs without version numbers for consistent downloads
 - **✅ Simplified Download Process (v0.8.11)**: Uses `wget -O - url | INSTALL_DIR=./scripts sh` pipe approach
 - **✅ Build Script Integration (v0.8.11)**: Updated all build scripts (build-and-package.sh, build-conan.sh, check-version-status, CMakeLists.txt)

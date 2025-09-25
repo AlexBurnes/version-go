@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.3] - 2025-01-25
+
 ### Changed
+- **Darwin Platform Naming**: Fixed inconsistent platform naming throughout the system
+  - Fixed GoReleaser archive naming template to use darwin instead of macos
+  - Updated installer script creation to use darwin instead of macos platform name
+  - Renamed installer files from version-macos-* to version-darwin-*
+  - Updated packaging directory from macos/ to darwin/
+  - Updated all documentation to use darwin consistently
+  - Updated test files and Docker files to use darwin naming
+  - Updated build scripts and CMakeLists.txt to use darwin platform detection
+  - Ensures consistent platform identification across all components
 - **CI/CD Pipeline**: Removed cross-compilation tests from GitHub Actions workflows
   - Removed cross-compilation test step from cross-platform-test.yml workflow
   - Updated documentation to reflect focus on Docker-based cross-platform testing
@@ -358,12 +369,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enables reliable download scripts for latest releases across all platforms
 
 ### Added
-- **macOS Platform Rename**: Renamed darwin platform references to macos in user-facing documentation
-  - Updated GoReleaser archive naming to use "macos" instead of "darwin" in output files
-  - Updated README.md installation examples to reference macos artifacts
-  - Updated installer creation scripts to use macos platform name
-  - Maintained darwin in GoReleaser goos field for compatibility while using macos in output names
-  - This provides clearer platform identification for users
+- **Platform Naming Consistency**: Fixed inconsistent platform naming throughout the system
+  - Reverted GoReleaser archive naming to use "darwin" consistently with Go's platform naming
+  - Updated README.md installation examples to reference darwin artifacts
+  - Updated installer creation scripts to use darwin platform name consistently
+  - Maintained darwin naming throughout the system for consistency with Go's platform conventions
+  - This ensures consistent platform identification across all components
 
 ## [0.8.6] - 2025-09-16
 

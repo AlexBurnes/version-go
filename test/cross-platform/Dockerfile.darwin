@@ -23,8 +23,8 @@ COPY ../../bin/version-darwin-amd64 /test/version
 RUN chmod +x /test/version
 
 # Create test script
-COPY test-platform-macos.sh /test/test-platform-macos.sh
-RUN chmod +x /test/test-platform-macos.sh
+COPY test-platform-darwin.sh /test/test-platform-darwin.sh
+RUN chmod +x /test/test-platform-darwin.sh
 
 # Run tests
-CMD ["/test/test-platform-macos.sh"]
+CMD ["/test/test-platform-darwin.sh"]

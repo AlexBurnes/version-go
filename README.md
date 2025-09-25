@@ -134,10 +134,10 @@ If you prefer not to use Scoop:
 ```bash
 # Download and run the self-extracting installer to ~/.local/bin
 # For Intel Macs (x86_64/amd64):
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-amd64-install.sh | sh
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-darwin-amd64-install.sh | sh
 
 # For Apple Silicon Macs (ARM64):
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-arm64-install.sh | sh
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-darwin-arm64-install.sh | sh
 ```
 **Note**: Default installation directory is `/usr/local/bin` (system-wide). For user-only installation, the installer will use `~/.local/bin` if `/usr/local/bin` is not writable.
 
@@ -145,20 +145,20 @@ wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/vers
 ```bash
 # Install to /usr/local/bin (system-wide)
 # For Intel Macs (x86_64/amd64):
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-amd64-install.sh | sudo sh
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-darwin-amd64-install.sh | sudo sh
 
 # For Apple Silicon Macs (ARM64):
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-arm64-install.sh | sudo sh
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-darwin-arm64-install.sh | sudo sh
 ```
 
 #### Custom Directory Install
 ```bash
 # Install to custom directory (e.g., /opt/version)
 # For Intel Macs (x86_64/amd64):
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-amd64-install.sh | INSTALL_DIR=/opt/version sh
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-darwin-amd64-install.sh | INSTALL_DIR=/opt/version sh
 
 # For Apple Silicon Macs (ARM64):
-wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-macos-arm64-install.sh | INSTALL_DIR=/opt/version sh
+wget -O - https://github.com/AlexBurnes/version-go/releases/latest/download/version-darwin-arm64-install.sh | INSTALL_DIR=/opt/version sh
 
 # Add to PATH if needed
 echo 'export PATH="/opt/version:$PATH"' >> ~/.zshrc

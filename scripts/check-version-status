@@ -35,7 +35,7 @@ download_version_utility() {
     
     # Map platform names
     case "$platform" in
-        darwin) platform="macos" ;;
+        darwin) platform="darwin" ;;
         linux) platform="linux" ;;
         *) echo -e "${RED}Unsupported platform: $platform${NC}"; return 1 ;;
     esac

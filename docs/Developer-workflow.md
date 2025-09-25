@@ -56,7 +56,7 @@ buildfab check-binaries
 buildfab test-linux-ubuntu
 buildfab test-linux-debian
 buildfab test-windows
-buildfab test-macos
+buildfab test-darwin
 
 # Release actions
 buildfab create-installers

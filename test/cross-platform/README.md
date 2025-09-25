@@ -31,7 +31,7 @@ buildfab test
 buildfab test-linux-ubuntu
 buildfab test-linux-debian
 buildfab test-windows
-buildfab test-macos
+buildfab test-darwin
 
 # Legacy script-based testing (still available)
 ./test/cross-platform/run-cross-platform-tests.sh
@@ -88,12 +88,12 @@ CPU: 8
 - `Dockerfile.linux-ubuntu` - Ubuntu 24.04 test environment
 - `Dockerfile.linux-debian` - Debian 12 test environment
 - `Dockerfile.windows` - Windows test environment using Wine
-- `Dockerfile.macos` - macOS test environment (requires macOS host)
+- `Dockerfile.darwin` - Darwin test environment (requires macOS host)
 
 ### Test Scripts
 - `test-platform.sh` - Linux platform detection tests
 - `test-platform-windows.sh` - Windows platform detection tests
-- `test-platform-macos.sh` - macOS platform detection tests
+- `test-platform-darwin.sh` - Darwin platform detection tests
 - `run-cross-platform-tests.sh` - Main test runner
 
 ## Building Test Binaries
