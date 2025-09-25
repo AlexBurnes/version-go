@@ -6,7 +6,7 @@ import (
     "os"
 )
 
-var appVersion = "0.5.0" // Default version, can be overridden via ldflags
+var appVersion = "1.2.4" // Default version, can be overridden via ldflags
 
 var (
     debugFlag   bool
