@@ -2,6 +2,13 @@
 
 ## What Works
 - **✅ PROJECT COMPLETE WITH LIBRARY, SELF-BUILDING, AUTO-DOWNLOAD, CI/CD, AND BUILDFAB**: Full Go CLI utility implementation with reusable library package, self-building capabilities, automatic download functionality, comprehensive GitHub Actions CI/CD pipeline, and buildfab unified build management
+- **✅ GITHUB ISSUE #2 RESOLVED**: Fixed macOS version detection bug where getDarwinVersion() function was returning "darwin" instead of actual macOS version numbers
+  - **✅ macOS Version Detection**: Updated getDarwinVersion() to use `sw_vers -productVersion` command
+  - **✅ Error Handling**: Added proper error handling with fallback to MACOSX_DEPLOYMENT_TARGET environment variable
+  - **✅ Accurate Version Numbers**: Now returns actual macOS version (e.g., "14.0", "15.0") instead of generic "darwin" string
+  - **✅ Backward Compatibility**: Maintains compatibility with existing fallback mechanisms
+  - **✅ Test Coverage**: All tests pass successfully with the fix
+  - **✅ Documentation**: Updated CHANGELOG.md with comprehensive documentation of the bug fix
 - **✅ CI/CD PIPELINE OPTIMIZED**: Streamlined GitHub Actions workflows with improved reliability
   - **✅ Cross-Platform Testing**: Docker-based testing for Ubuntu, Debian, and Windows preserved
   - **✅ Cross-Compilation Removed**: Eliminated complex cross-compilation dependencies

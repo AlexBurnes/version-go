@@ -5,6 +5,7 @@ package version
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"runtime"
 	"strings"
 )
@@ -96,16 +97,23 @@ func getWindowsVersion() string {
 
 // getDarwinVersion attempts to detect Darwin version
 func getDarwinVersion() string {
-	// Use Go's built-in capabilities to detect Darwin version
-	// runtime.GOOS already gives us "darwin", but we can get more specific info
+	// Try to get macOS version using sw_vers -productVersion
+	cmd := exec.Command("sw_vers", "-productVersion")
+	output, err := cmd.Output()
+	if err != nil {
+		// Fallback to environment variable if sw_vers fails
+		if version := os.Getenv("MACOSX_DEPLOYMENT_TARGET"); version != "" {
+			return version
+		}
+		return "darwin"
+	}
 	
-	// Check for macOS version using environment variables
-	if version := os.Getenv("MACOSX_DEPLOYMENT_TARGET"); version != "" {
+	version := strings.TrimSpace(string(output))
+	if version != "" {
 		return version
 	}
 	
-	// For now, return generic darwin version
-	// In a full implementation, this could use syscalls to get actual version
+	// Final fallback
 	return "darwin"
 }
 

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.4] - 2025-01-25
+
+### Fixed
+- **macOS Version Detection**: Fixed getDarwinVersion() function to return actual macOS version numbers
+  - Updated getDarwinVersion() to use `sw_vers -productVersion` command instead of returning "darwin"
+  - Added proper error handling with fallback to MACOSX_DEPLOYMENT_TARGET environment variable
+  - Now returns actual macOS version (e.g., "14.0", "15.0") instead of generic "darwin" string
+  - Maintains backward compatibility with existing fallback mechanisms
+  - Resolves GitHub issue #2: macOS OS Version Detection Returns "darwin" Instead of Numeric Version
+
 ## [1.2.3] - 2025-01-25
 
 ### Changed

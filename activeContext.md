@@ -1,10 +1,20 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**CI/CD PIPELINE OPTIMIZATION COMPLETED** - Successfully removed cross-compilation tests from GitHub Actions workflows while preserving Docker-based cross-platform testing. Updated .github/workflows/cross-platform-test.yml to remove cross-compilation test step that was causing complexity and reliability issues. Maintained comprehensive Docker-based cross-platform testing for Ubuntu 24.04, Debian 12, and Windows (Wine) using containerized environments. Updated documentation in test/cross-platform/README.md to reflect focus on Docker-based testing approach. Enhanced CI/CD reliability by removing complex cross-compilation dependencies while preserving all essential cross-platform validation. Updated CHANGELOG.md with detailed documentation of CI/CD pipeline improvements. Version bumped to v1.2.2 to reflect the CI/CD optimization changes. Ready for streamlined CI/CD workflow with improved reliability and maintainability.
+**GITHUB ISSUE #2 FIXED** - Successfully resolved macOS version detection bug where getDarwinVersion() function was returning "darwin" instead of actual macOS version numbers. Updated getDarwinVersion() function in pkg/version/platform.go to use `sw_vers -productVersion` command for accurate macOS version detection. Added proper error handling with fallback to MACOSX_DEPLOYMENT_TARGET environment variable. Now returns actual macOS version numbers (e.g., "14.0", "15.0") instead of generic "darwin" string. Maintains backward compatibility with existing fallback mechanisms. All tests pass successfully. Updated CHANGELOG.md with comprehensive documentation of the bug fix. Ready for commit and push to resolve GitHub issue #2.
 
 ## Recent Changes
-- **NEW (Latest)**: Darwin Platform Naming Consistency Fix
+- **NEW (Latest)**: macOS Version Detection Bug Fix
+  - **COMPLETED**: Fixed getDarwinVersion() function to return actual macOS version numbers
+  - **COMPLETED**: Updated getDarwinVersion() to use `sw_vers -productVersion` command
+  - **COMPLETED**: Added proper error handling with fallback to MACOSX_DEPLOYMENT_TARGET
+  - **COMPLETED**: Now returns actual macOS version (e.g., "14.0", "15.0") instead of "darwin"
+  - **COMPLETED**: Maintains backward compatibility with existing fallback mechanisms
+  - **COMPLETED**: All tests pass successfully with the fix
+  - **COMPLETED**: Updated CHANGELOG.md with comprehensive documentation
+  - **COMPLETED**: Resolves GitHub issue #2: macOS OS Version Detection Returns "darwin" Instead of Numeric Version
+  - **COMPLETED**: Ready for commit and push to resolve the GitHub issue
+- **NEW (Previous)**: Darwin Platform Naming Consistency Fix
   - **COMPLETED**: Fixed GoReleaser archive naming template to use darwin instead of macos
   - **COMPLETED**: Updated installer script creation to use darwin instead of macos
   - **COMPLETED**: Renamed installer files from version-macos-* to version-darwin-*
