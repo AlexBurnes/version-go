@@ -34,7 +34,7 @@ func TestCLICommands(t *testing.T) {
         {
             name:     "version flag",
             args:     []string{"--version"},
-            expected: "0.5.0",
+            expected: "1.2.4",
             hasError: false,
         },
     }
@@ -207,7 +207,7 @@ func TestExitCodeCompliance(t *testing.T) {
         },
         {
             name:        "valid_version_check_greatest",
-            args:        []string{"check-greatest", "1.2.3"},
+            args:        []string{"check-greatest", "1.2.4"},
             expectedCode: 0,
             description: "Valid version check-greatest command should return exit code 0",
         },
