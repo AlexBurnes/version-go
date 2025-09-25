@@ -1,12 +1,23 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Get version with corrected priority order
+set(VERSION_FILE "${CMAKE_SOURCE_DIR}/VERSION")
 set(VERSION_UTILITY "${CMAKE_SOURCE_DIR}/scripts/version")
 set(GIT_VERSION "")
 set(PROJECT_VERSION "")
 
-# 1. Try to use built version utility first
-if(EXISTS ${VERSION_UTILITY})
+# 1. Try to use VERSION file first (highest priority)
+if(EXISTS ${VERSION_FILE})
+    file(READ ${VERSION_FILE} VERSION_FILE_CONTENT)
+    string(STRIP ${VERSION_FILE_CONTENT} VERSION_FILE_CONTENT)
+    if(VERSION_FILE_CONTENT)
+        set(GIT_VERSION ${VERSION_FILE_CONTENT})
+        message(STATUS "Using VERSION file: ${GIT_VERSION}")
+    endif()
+endif()
+
+# 2. Try to use built version utility if VERSION file not available
+if(NOT GIT_VERSION AND EXISTS ${VERSION_UTILITY})
     execute_process(
         COMMAND ${VERSION_UTILITY} version
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -23,7 +34,7 @@ if(EXISTS ${VERSION_UTILITY})
     endif()
 endif()
 
-# 2. NEW: Auto-download latest version utility
+# 3. NEW: Auto-download latest version utility
 if(NOT GIT_VERSION)
     message(STATUS "No version utility found, downloading latest from GitHub...")
     
@@ -80,7 +91,7 @@ if(NOT GIT_VERSION)
     endif()
 endif()
 
-# 3. Fallback to git describe if version utility not available or failed
+# 4. Fallback to git describe if version utility not available or failed
 if(NOT GIT_VERSION)
     execute_process(
         COMMAND git describe --match "v[0-9]*" --abbrev=0 --tags
