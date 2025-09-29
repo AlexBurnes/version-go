@@ -207,7 +207,7 @@ func TestExitCodeCompliance(t *testing.T) {
         },
         {
             name:        "valid_version_check_greatest",
-            args:        []string{"check-greatest", "1.2.5"},
+            args:        []string{"check-greatest", "1.2.6"},
             expectedCode: 0,
             description: "Valid version check-greatest command should return exit code 0",
         },
