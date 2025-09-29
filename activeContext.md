@@ -1,10 +1,19 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**GITHUB ISSUE #2 FIXED** - Successfully resolved macOS version detection bug where getDarwinVersion() function was returning "darwin" instead of actual macOS version numbers. Updated getDarwinVersion() function in pkg/version/platform.go to use `sw_vers -productVersion` command for accurate macOS version detection. Added proper error handling with fallback to MACOSX_DEPLOYMENT_TARGET environment variable. Now returns actual macOS version numbers (e.g., "14.0", "15.0") instead of generic "darwin" string. Maintains backward compatibility with existing fallback mechanisms. All tests pass successfully. Updated CHANGELOG.md with comprehensive documentation of the bug fix. Ready for commit and push to resolve GitHub issue #2.
+**STATIC BUILD FIX COMPLETED** - Successfully resolved static build configuration for Linux and Darwin platforms. Added CGO_ENABLED=0 environment variable to GoReleaser configuration to disable CGO and enable static builds. Added -extldflags "-static" to the ldflags to tell the linker to create static binaries. This ensures that the built binaries are completely static and don't depend on external libraries. Updated VERSION file to v1.2.6 and all packaging files (Windows Scoop config and macOS Homebrew formula) with new version. Ready for commit, tag, and push to release the static build fix.
 
 ## Recent Changes
-- **NEW (Latest)**: macOS Version Detection Bug Fix
+- **NEW (Latest)**: Static Build Configuration Fix
+  - **COMPLETED**: Added CGO_ENABLED=0 environment variable to GoReleaser configuration
+  - **COMPLETED**: Added -extldflags "-static" to ldflags for static binary creation
+  - **COMPLETED**: Ensures Linux and Darwin binaries are completely static
+  - **COMPLETED**: No external library dependencies in built binaries
+  - **COMPLETED**: Updated VERSION file to v1.2.6 for static build fix release
+  - **COMPLETED**: Updated Windows Scoop configuration with new version and URLs
+  - **COMPLETED**: Updated macOS Homebrew formula with new version URLs
+  - **COMPLETED**: Ready for commit, tag, and push to release static build fix
+- **NEW (Previous)**: macOS Version Detection Bug Fix
   - **COMPLETED**: Fixed getDarwinVersion() function to return actual macOS version numbers
   - **COMPLETED**: Updated getDarwinVersion() to use `sw_vers -productVersion` command
   - **COMPLETED**: Added proper error handling with fallback to MACOSX_DEPLOYMENT_TARGET
