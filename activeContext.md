@@ -1,10 +1,23 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**VERSION SORT ORDER BUG FIX COMPLETED (v1.2.7)** - Successfully fixed critical version sorting bug where prerelease versions were incorrectly considered greater than release versions. Corrected Type constant ordering in pkg/version/version.go to put TypePrerelease before TypeRelease. The correct order for versions with the same x.y.z is now: prerelease < release < postrelease < intermediate. Updated all tests and comprehensive documentation. Version v1.3.9 is now correctly identified as the greatest version among prereleases like v1.3.9-rc.9. Ready for commit, tag, and push to release v1.2.7.
+**GIT VERSION INTEGRATION FEATURE COMPLETED (v1.3.0)** - Successfully added GetVersion() function to library package for retrieving version from git. Implemented GetVersion() and GetVersionWithPrefix() functions with structured error handling using GitError type. Added comprehensive test coverage, documentation, and example code. Updated README.md and Library.md with usage examples. Version bumped to v1.3.0 for new feature release. Ready for commit, tag, and push to release v1.3.0.
 
 ## Recent Changes
-- **NEW (Latest)**: Version Sort Order Bug Fix (v1.2.7)
+- **NEW (Latest)**: Git Version Integration Feature (v1.3.0)
+  - **COMPLETED**: Added GetVersion() function to retrieve version from git tags without 'v' prefix
+  - **COMPLETED**: Added GetVersionWithPrefix() function to retrieve version with 'v' prefix preserved
+  - **COMPLETED**: Implemented GitError type with structured error handling
+  - **COMPLETED**: Added helper functions IsGitNotFound(), IsNotGitRepo(), and IsNoGitTags()
+  - **COMPLETED**: Created comprehensive test coverage in pkg/version/git_test.go
+  - **COMPLETED**: Updated docs/Library.md with git integration documentation and examples
+  - **COMPLETED**: Updated README.md with library usage examples demonstrating git integration
+  - **COMPLETED**: Created example implementation in examples/git-version/main.go
+  - **COMPLETED**: Updated CHANGELOG.md with detailed feature documentation
+  - **COMPLETED**: Version bumped to v1.3.0 with automatic packaging file updates
+  - **COMPLETED**: All tests pass with race detection enabled
+  - **COMPLETED**: Ready for release with complete git integration feature
+- **NEW (Previous)**: Version Sort Order Bug Fix (v1.2.7)
   - **COMPLETED**: Fixed Type constant ordering to put TypePrerelease before TypeRelease
   - **COMPLETED**: Corrected version precedence: prerelease < release < postrelease < intermediate
   - **COMPLETED**: Added comprehensive test TestSortReleaseVsPrerelease for the exact scenario

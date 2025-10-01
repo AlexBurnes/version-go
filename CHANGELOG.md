@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2025-10-01
+
+### Added
+- **Git Version Integration**: Added GetVersion() function to library package for retrieving version from git
+  - New function `version.GetVersion()` retrieves current version from git tags without 'v' prefix
+  - New function `version.GetVersionWithPrefix()` retrieves version with 'v' prefix preserved
+  - Added `GitError` type for structured error handling with type checking helpers
+  - Added helper functions `IsGitNotFound()`, `IsNotGitRepo()`, and `IsNoGitTags()` for error type detection
+  - Comprehensive test coverage in `pkg/version/git_test.go`
+  - Full documentation in `docs/Library.md` with usage examples
+  - Example implementation in `examples/git-version/main.go`
+  - Updated README.md with library usage examples demonstrating git integration
+  - Enables library consumers to programmatically retrieve version information from git repositories
+
 ## [1.2.7] - 2025-10-01
 
 ### Fixed

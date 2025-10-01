@@ -29,6 +29,18 @@ import (
 )
 
 func main() {
+    // Get version from git
+    gitVersion, err := version.GetVersion()
+    if err != nil {
+        if version.IsGitNotFound(err) {
+            fmt.Println("Git is not installed")
+        } else {
+            log.Fatal(err)
+        }
+    } else {
+        fmt.Printf("Git Version: %s\n", gitVersion)
+    }
+    
     // Parse a version
     v, err := version.Parse("1.2.3-alpha.1")
     if err != nil {
@@ -170,6 +182,69 @@ Converts git tag format from `x.y.z-(remainder)` to `x.y.z~(remainder)`.
 ```go
 converted := version.ConvertGitTag("1.2.3-alpha")
 fmt.Println(converted) // "1.2.3~alpha"
+```
+
+### Git Integration
+
+The library provides functions to retrieve version information directly from git repositories.
+
+#### `GetVersion() (string, error)`
+Returns the current project version from git tags. It retrieves the most recent version tag that matches the pattern `v[0-9]*` and returns it without the 'v' prefix.
+
+```go
+version, err := version.GetVersion()
+if err != nil {
+    if version.IsGitNotFound(err) {
+        fmt.Println("Git is not installed")
+    } else if version.IsNotGitRepo(err) {
+        fmt.Println("Not in a git repository")
+    } else if version.IsNoGitTags(err) {
+        fmt.Println("No version tags found")
+    } else {
+        log.Fatal(err)
+    }
+    return
+}
+fmt.Printf("Current version: %s\n", version) // e.g., "1.2.3"
+```
+
+#### `GetVersionWithPrefix() (string, error)`
+Same as `GetVersion()` but preserves the 'v' prefix in the version string.
+
+```go
+version, err := version.GetVersionWithPrefix()
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Printf("Current version: %s\n", version) // e.g., "v1.2.3"
+```
+
+#### Git Error Helper Functions
+
+```go
+// Check if error is git not found
+if version.IsGitNotFound(err) {
+    fmt.Println("Git is not installed")
+}
+
+// Check if error is not a git repository
+if version.IsNotGitRepo(err) {
+    fmt.Println("Not in a git repository")
+}
+
+// Check if error is no version tags found
+if version.IsNoGitTags(err) {
+    fmt.Println("No version tags found")
+}
+```
+
+#### Git Error Type
+
+```go
+type GitError struct {
+    Type    string // "not_found", "not_repo", "no_tags"
+    Message string
+}
 ```
 
 ### Type Methods

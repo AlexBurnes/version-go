@@ -2,7 +2,7 @@
 
 A cross-platform command-line utility written in Go that provides semantic version parsing, validation, and ordering. This tool replaces legacy bash scripts (`version`, `version-check`, `describe`) currently used in build pipelines and supports Linux, Windows, and macOS with a reproducible build/distribution process.
 
-**Version 1.0.1** - Complete release with enhanced version management rules and automated packaging updates!
+**Version 1.3.0** - New git integration feature with GetVersion() function for library consumers!
 
 ## Buildfab Ecosystem
 
@@ -468,10 +468,27 @@ package main
 
 import (
     "fmt"
+    "log"
     "github.com/AlexBurnes/version-go/pkg/version"
 )
 
 func main() {
+    // Get version from git repository
+    gitVersion, err := version.GetVersion()
+    if err != nil {
+        if version.IsGitNotFound(err) {
+            fmt.Println("Git is not installed")
+        } else if version.IsNotGitRepo(err) {
+            fmt.Println("Not in a git repository")
+        } else if version.IsNoGitTags(err) {
+            fmt.Println("No version tags found")
+        } else {
+            log.Fatal(err)
+        }
+    } else {
+        fmt.Printf("Git Version: %s\n", gitVersion)
+    }
+    
     // Parse a version
     v, err := version.Parse("1.2.3-alpha.1")
     if err != nil {
