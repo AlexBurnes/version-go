@@ -45,27 +45,27 @@ This document defines the Backus-Naur Form (BNF) grammar for the version parsing
 
 ## Version Types and Precedence
 
-The grammar defines four distinct version types with the following precedence order (highest to lowest):
+The grammar defines four distinct version types with the following precedence order (lowest to highest):
 
-1. **Release Versions** (`<version-core>`)
-   - Format: `major.minor.patch` or `v major.minor.patch`
-   - Examples: `1.2.3`, `v1.2.3`
-   - Precedence: Highest
-
-2. **Prerelease Versions** (`<prerelease-version>`)
+1. **Prerelease Versions** (`<prerelease-version>`)
    - Format: `major.minor.patch~type[suffix]` or `v major.minor.patch~type[suffix]`
    - Examples: `1.2.3~alpha`, `1.2.3~beta.1`, `1.2.3~rc.1_feature`
-   - Precedence: Second highest
+   - Precedence: Lowest (comes before release version)
+
+2. **Release Versions** (`<version-core>`)
+   - Format: `major.minor.patch` or `v major.minor.patch`
+   - Examples: `1.2.3`, `v1.2.3`
+   - Precedence: Second (greater than prerelease)
 
 3. **Postrelease Versions** (`<postrelease-version>`)
    - Format: `major.minor.patch.type[suffix]` or `v major.minor.patch.type[suffix]`
    - Examples: `1.2.3.fix`, `1.2.3.next.1`, `1.2.3.post.1_feature`
-   - Precedence: Third highest
+   - Precedence: Third (greater than release)
 
 4. **Intermediate Versions** (`<intermediate-version>`)
    - Format: `major.minor.patch_identifier[suffix]` or `v major.minor.patch_identifier[suffix]`
    - Examples: `1.2.3_feature`, `1.2.3_exp.1`, `1.2.3_dev.1_feature`
-   - Precedence: Lowest
+   - Precedence: Highest (greatest of all types)
 
 ## Implementation Details
 
@@ -120,13 +120,13 @@ Input versions:
 1.2.3~alpha.2
 
 Sorted output:
-1.2.3_feature    (intermediate - lowest precedence)
-1.2.3.fix        (postrelease)
-1.2.3~alpha      (prerelease)
+1.2.3~alpha      (prerelease - lowest precedence)
 1.2.3~alpha.2    (prerelease with suffix)
 1.2.3~beta.1     (prerelease with different type)
-1.2.3            (release - highest precedence)
-2.0.0            (release with higher version)
+1.2.3            (release - greater than prerelease)
+1.2.3.fix        (postrelease - greater than release)
+1.2.3_feature    (intermediate - highest precedence for same x.y.z)
+2.0.0            (release with higher core version)
 ```
 
 ## Validation Rules

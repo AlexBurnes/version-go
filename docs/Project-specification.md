@@ -38,9 +38,9 @@ The grammar follows a Backus–Naur Form (BNF) specification as defined in [BNF-
   - `<version core> "." <post-release>`
   - `<version core> "_" <intermediate-release>`
 
-Precedence order for version categories:
-1. release: `^v?[0-9]+\.[0-9]+\.[0-9]+$`
-2. prerelease: `^v?[0-9]+\.[0-9]+\.[0-9]+~(alpha|beta|pre|rc)(...)$`
+Precedence order for version categories (lowest to highest):
+1. prerelease: `^v?[0-9]+\.[0-9]+\.[0-9]+~(alpha|beta|pre|rc)(...)$`
+2. release: `^v?[0-9]+\.[0-9]+\.[0-9]+$`
 3. postrelease: `^v?[0-9]+\.[0-9]+\.[0-9]+\.(fix|next|post)(...)$`
 4. intermediate: `^v?[0-9]+\.[0-9]+\.[0-9]+_[a-zA-Z]+(...)$`
 

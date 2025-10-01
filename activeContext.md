@@ -1,10 +1,20 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**STATIC BUILD FIX COMPLETED** - Successfully resolved static build configuration for Linux and Darwin platforms. Added CGO_ENABLED=0 environment variable to GoReleaser configuration to disable CGO and enable static builds. Added -extldflags "-static" to the ldflags to tell the linker to create static binaries. This ensures that the built binaries are completely static and don't depend on external libraries. Updated VERSION file to v1.2.6 and all packaging files (Windows Scoop config and macOS Homebrew formula) with new version. Ready for commit, tag, and push to release the static build fix.
+**VERSION SORT ORDER BUG FIX COMPLETED (v1.2.7)** - Successfully fixed critical version sorting bug where prerelease versions were incorrectly considered greater than release versions. Corrected Type constant ordering in pkg/version/version.go to put TypePrerelease before TypeRelease. The correct order for versions with the same x.y.z is now: prerelease < release < postrelease < intermediate. Updated all tests and comprehensive documentation. Version v1.3.9 is now correctly identified as the greatest version among prereleases like v1.3.9-rc.9. Ready for commit, tag, and push to release v1.2.7.
 
 ## Recent Changes
-- **NEW (Latest)**: Static Build Configuration Fix
+- **NEW (Latest)**: Version Sort Order Bug Fix (v1.2.7)
+  - **COMPLETED**: Fixed Type constant ordering to put TypePrerelease before TypeRelease
+  - **COMPLETED**: Corrected version precedence: prerelease < release < postrelease < intermediate
+  - **COMPLETED**: Added comprehensive test TestSortReleaseVsPrerelease for the exact scenario
+  - **COMPLETED**: Updated all existing tests to reflect correct version precedence
+  - **COMPLETED**: Updated documentation (Library.md, Project-specification.md, BNF-grammar.md)
+  - **COMPLETED**: Updated CHANGELOG.md with detailed bug fix documentation
+  - **COMPLETED**: Version bumped to v1.2.7 with automatic packaging file updates
+  - **COMPLETED**: All tests pass with race detection enabled
+  - **COMPLETED**: Ready for release with complete bug fix
+- **NEW (Previous)**: Static Build Configuration Fix (v1.2.6)
   - **COMPLETED**: Added CGO_ENABLED=0 environment variable to GoReleaser configuration
   - **COMPLETED**: Added -extldflags "-static" to ldflags for static binary creation
   - **COMPLETED**: Ensures Linux and Darwin binaries are completely static

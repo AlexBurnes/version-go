@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.7] - 2025-10-01
+
+### Fixed
+- **Version Sort Order Bug**: Fixed incorrect version sorting where prerelease versions were considered greater than release versions
+  - Corrected Type constant ordering in pkg/version/version.go to put TypePrerelease before TypeRelease
+  - **Correct order** for versions with the same x.y.z is now: prerelease < release < postrelease < intermediate
+  - Previously, v1.3.9-rc.9 was incorrectly identified as greater than v1.3.9
+  - Now v1.3.9 is correctly identified as the greatest version among prereleases
+  - Updated all tests to reflect correct version precedence
+  - Updated documentation (Library.md, Project-specification.md, BNF-grammar.md) with correct precedence order
+  - This fix aligns with the project specification where release versions should be greater than prerelease versions
+
 ## [1.2.6] - 2025-01-25
 
 ### Fixed

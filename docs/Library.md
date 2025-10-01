@@ -283,7 +283,7 @@ Versions with intermediate identifiers using `_` delimiter.
 Versions are sorted according to the following precedence:
 
 1. **Core version** (major.minor.patch) - numerical comparison
-2. **Version type** - release < prerelease < postrelease < intermediate
+2. **Version type** - prerelease < release < postrelease < intermediate
 3. **Type-specific identifiers** - alphanumeric comparison with numeric precedence
 
 ### Examples

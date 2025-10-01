@@ -2,7 +2,13 @@
 
 ## What Works
 - **✅ PROJECT COMPLETE WITH LIBRARY, SELF-BUILDING, AUTO-DOWNLOAD, CI/CD, AND BUILDFAB**: Full Go CLI utility implementation with reusable library package, self-building capabilities, automatic download functionality, comprehensive GitHub Actions CI/CD pipeline, and buildfab unified build management
-- **✅ STATIC BUILD CONFIGURATION FIXED**: Resolved static build configuration for Linux and Darwin platforms
+- **✅ VERSION SORT ORDER BUG FIXED (v1.2.7)**: Fixed critical version sorting bug where prerelease versions were incorrectly considered greater than release versions
+  - **✅ Type Ordering Corrected**: Reordered Type constants to put TypePrerelease before TypeRelease
+  - **✅ Correct Precedence**: prerelease < release < postrelease < intermediate for same x.y.z
+  - **✅ Test Coverage**: Added comprehensive test for release vs prerelease sorting scenario
+  - **✅ Documentation Updated**: Library.md, Project-specification.md, BNF-grammar.md corrected
+  - **✅ All Tests Pass**: Complete test suite passes with race detection enabled
+- **✅ STATIC BUILD CONFIGURATION FIXED (v1.2.6)**: Resolved static build configuration for Linux and Darwin platforms
   - **✅ CGO Disabled**: Added CGO_ENABLED=0 environment variable to GoReleaser configuration
   - **✅ Static Linking**: Added -extldflags "-static" to ldflags for static binary creation
   - **✅ No External Dependencies**: Built binaries are completely static with no external library dependencies

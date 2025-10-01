@@ -15,8 +15,8 @@ import (
 type Type int
 
 const (
-	TypeRelease Type = iota
-	TypePrerelease
+	TypePrerelease Type = iota
+	TypeRelease
 	TypePostrelease
 	TypeIntermediate
 	TypeInvalid

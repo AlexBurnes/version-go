@@ -248,13 +248,13 @@ func TestCompare(t *testing.T) {
 			name: "release vs prerelease",
 			a:    &Version{Major: 1, Minor: 2, Patch: 3, Type: TypeRelease},
 			b:    &Version{Major: 1, Minor: 2, Patch: 3, Type: TypePrerelease, Prerelease: "~alpha"},
-			expected: -1,
+			expected: 1,
 		},
 		{
 			name: "prerelease vs postrelease",
 			a:    &Version{Major: 1, Minor: 2, Patch: 3, Type: TypePrerelease, Prerelease: "~alpha"},
 			b:    &Version{Major: 1, Minor: 2, Patch: 3, Type: TypePostrelease, Postrelease: ".fix"},
-			expected: -1,
+			expected: -2,
 		},
 		{
 			name: "postrelease vs intermediate",
@@ -348,10 +348,10 @@ func TestSort(t *testing.T) {
 	}
 
 	expected := []string{
-		"1.2.3",
 		"1.2.3~alpha",
 		"1.2.3~beta",
 		"1.2.3~rc.1",
+		"1.2.3",
 		"1.2.3.fix",
 		"1.2.3_feature",
 		"1.2.4",
@@ -366,6 +366,57 @@ func TestSort(t *testing.T) {
 		if v != expected[i] {
 			t.Errorf("Position %d: expected %s, got %s", i, expected[i], v)
 		}
+	}
+}
+
+func TestSortReleaseVsPrerelease(t *testing.T) {
+	// Test the specific scenario: v1.3.9 should be greater than v1.3.9-rc.9
+	versions := []string{
+		"v1.3.9",
+		"v1.3.9-pre.1",
+		"v1.3.9-pre.2",
+		"v1.3.9-rc.3",
+		"v1.3.9-rc.4",
+		"v1.3.9-rc.5",
+		"v1.3.9-rc.6",
+		"v1.3.9-rc.7",
+		"v1.3.9-rc.8",
+		"v1.3.9-rc.9",
+	}
+
+	result, err := Sort(versions)
+	if err != nil {
+		t.Fatalf("Sort failed: %v", err)
+	}
+
+	// Expected order: all prereleases first, then the release version
+	expected := []string{
+		"v1.3.9~pre.1",
+		"v1.3.9~pre.2",
+		"v1.3.9~rc.3",
+		"v1.3.9~rc.4",
+		"v1.3.9~rc.5",
+		"v1.3.9~rc.6",
+		"v1.3.9~rc.7",
+		"v1.3.9~rc.8",
+		"v1.3.9~rc.9",
+		"v1.3.9",
+	}
+
+	if len(result) != len(expected) {
+		t.Fatalf("Expected %d versions, got %d", len(expected), len(result))
+	}
+
+	for i, v := range result {
+		if v != expected[i] {
+			t.Errorf("Position %d: expected %s, got %s", i, expected[i], v)
+		}
+	}
+
+	// Verify that v1.3.9 is the greatest
+	greatest := result[len(result)-1]
+	if greatest != "v1.3.9" {
+		t.Errorf("Expected v1.3.9 to be the greatest version, got %s", greatest)
 	}
 }
 
