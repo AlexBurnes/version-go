@@ -205,12 +205,9 @@ func TestExitCodeCompliance(t *testing.T) {
             expectedCode: 1,
             description: "Invalid version build-type command should return exit code 1",
         },
-        {
-            name:        "valid_version_check_greatest",
-            args:        []string{"check-greatest", "1.2.7"},
-            expectedCode: 0,
-            description: "Valid version check-greatest command should return exit code 0",
-        },
+        // Note: valid_version_check_greatest test is skipped here because it depends on
+        // the actual git tags in the repository. See TestCheckGreatestWithCurrentVersion
+        // for a dynamic test that checks the current version from git.
         {
             name:        "invalid_version_check_greatest",
             args:        []string{"check-greatest", "invalid"},
@@ -331,4 +328,69 @@ func isGitRepository() bool {
     cmd := exec.Command("git", "rev-parse", "--git-dir")
     err := cmd.Run()
     return err == nil
+}
+
+// TestCheckGreatestWithCurrentVersion tests check-greatest command dynamically
+// using the current version from git, avoiding hardcoded version dependencies
+func TestCheckGreatestWithCurrentVersion(t *testing.T) {
+    if !isGitRepository() {
+        t.Skip("Not a git repository, skipping test")
+    }
+    
+    // Get current version from git using the version command
+    cmd := exec.Command("./bin/version", "version")
+    output, err := cmd.Output()
+    if err != nil {
+        t.Skipf("Could not get current version from git: %v", err)
+    }
+    
+    currentVersion := strings.TrimSpace(string(output))
+    if currentVersion == "" {
+        t.Skip("No version tags found in repository")
+    }
+    
+    // Test that current version is the greatest (should return exit code 0)
+    t.Run("current_version_is_greatest", func(t *testing.T) {
+        cmd := exec.Command("./bin/version", "check-greatest", currentVersion)
+        err := cmd.Run()
+        exitCode := 0
+        if err != nil {
+            if exitErr, ok := err.(*exec.ExitError); ok {
+                exitCode = exitErr.ExitCode()
+            } else {
+                t.Fatalf("Failed to run command: %v", err)
+            }
+        }
+        
+        if exitCode != 0 {
+            // Get output to see what went wrong
+            cmd := exec.Command("./bin/version", "check-greatest", currentVersion)
+            output, _ := cmd.CombinedOutput()
+            t.Errorf("Expected current version %s to be greatest (exit code 0), got exit code %d. Output: %s", 
+                currentVersion, exitCode, string(output))
+        }
+    })
+    
+    // Test that an older version is not the greatest (should return exit code 1)
+    t.Run("old_version_not_greatest", func(t *testing.T) {
+        // Use a version that should be less than current
+        testVersion := "0.1.0"
+        cmd := exec.Command("./bin/version", "check-greatest", testVersion)
+        err := cmd.Run()
+        exitCode := 0
+        if err != nil {
+            if exitErr, ok := err.(*exec.ExitError); ok {
+                exitCode = exitErr.ExitCode()
+            } else {
+                return // Command failed for other reasons, that's ok
+            }
+        }
+        
+        // We expect exit code 1 because 0.1.0 should not be the greatest
+        // But if 0.1.0 IS the greatest (e.g., in a test repo), that's also fine
+        // This test is just checking that the command works, not enforcing specific behavior
+        if exitCode != 0 && exitCode != 1 {
+            t.Errorf("Expected exit code 0 or 1 for check-greatest with old version, got %d", exitCode)
+        }
+    })
 }

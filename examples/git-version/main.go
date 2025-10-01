@@ -8,7 +8,8 @@ import (
 )
 
 func main() {
-    fmt.Println("=== Git Version Integration Example ===\n")
+    fmt.Println("=== Git Version Integration Example ===")
+    fmt.Println()
     
     // Get version from git repository
     gitVersion, err := version.GetVersion()
