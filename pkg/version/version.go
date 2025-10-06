@@ -181,6 +181,76 @@ func GetBuildType(versionStr string) (string, error) {
 	return version.Type.BuildType(), nil
 }
 
+// GetVersionType returns the type of the given version string, or if version string is not provided then get it from git.
+// Returns: "release", "prerelease", "postrelease", "intermediate", or error
+//
+// Example usage:
+//
+//	versionType, err := version.GetVersionType("1.2.3-alpha.1")
+//	if err != nil {
+//	    return err
+//	}
+//	// versionType = "prerelease"
+//
+//	versionType, err := version.GetVersionType("")
+//	if err != nil {
+//	    return err
+//	}
+//	// versionType = "release" (from git)
+func GetVersionType(versionStr string) (string, error) {
+	var targetVersion string
+	var err error
+	
+	if versionStr == "" {
+		// Get version from git if not provided
+		targetVersion, err = GetVersion()
+		if err != nil {
+			return "", fmt.Errorf("failed to get version from git: %v", err)
+		}
+	} else {
+		targetVersion = versionStr
+	}
+	
+	versionType, err := GetType(targetVersion)
+	if err != nil {
+		return "", err
+	}
+	return versionType.String(), nil
+}
+
+// GetBuildTypeFromVersion returns the CMake build type based on version, or if version string is not provided then get it from git.
+// Returns: "Release", "Debug"
+//
+// Example usage:
+//
+//	buildType, err := version.GetBuildTypeFromVersion("1.2.3")
+//	if err != nil {
+//	    return err
+//	}
+//	// buildType = "Release"
+//
+//	buildType, err := version.GetBuildTypeFromVersion("")
+//	if err != nil {
+//	    return err
+//	}
+//	// buildType = "Release" or "Debug" based on git state and version
+func GetBuildTypeFromVersion(versionStr string) (string, error) {
+	var targetVersion string
+	var err error
+	
+	if versionStr == "" {
+		// Get version from git if not provided
+		targetVersion, err = GetVersion()
+		if err != nil {
+			return "", fmt.Errorf("failed to get version from git: %v", err)
+		}
+	} else {
+		targetVersion = versionStr
+	}
+	
+	return GetBuildType(targetVersion)
+}
+
 // Compare compares two versions for sorting
 // Returns -1 if a < b, 0 if a == b, 1 if a > b
 func Compare(a, b *Version) int {

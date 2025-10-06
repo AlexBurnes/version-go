@@ -1,10 +1,19 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**GIT VERSION INTEGRATION FEATURE COMPLETED (v1.3.0)** - Successfully added GetVersion() function to library package for retrieving version from git. Implemented GetVersion() and GetVersionWithPrefix() functions with structured error handling using GitError type. Added comprehensive test coverage, documentation, and example code. Updated README.md and Library.md with usage examples. Version bumped to v1.3.0 for new feature release. Ready for commit, tag, and push to release v1.3.0.
+**NEW LIBRARY API METHODS COMPLETED (v1.4.0)** - Successfully added GetVersionType and GetBuildTypeFromVersion methods to library package. These methods provide version type and build type information with optional git fallback functionality. Both methods accept empty string to automatically retrieve version from git tags, enabling consistent API for pre-push project and other consumers. Added comprehensive test coverage, documentation, and API reference. Updated Library.md with usage examples and CHANGELOG.md with feature documentation. Version bumped to v1.4.0 for new feature release. Ready for commit, tag, and push to release v1.4.0.
 
 ## Recent Changes
-- **NEW (Latest)**: Git Version Integration Feature (v1.3.0)
+- **NEW (Latest)**: New Library API Methods
+  - **COMPLETED**: Added GetVersionType() function that returns version type with optional git fallback
+  - **COMPLETED**: Added GetBuildTypeFromVersion() function that returns build type with optional git fallback
+  - **COMPLETED**: Both methods accept empty string to automatically retrieve version from git tags
+  - **COMPLETED**: Added comprehensive test coverage with both version string and git integration testing
+  - **COMPLETED**: Updated Library.md with API documentation and usage examples
+  - **COMPLETED**: Updated CHANGELOG.md with detailed feature documentation
+  - **COMPLETED**: Enables library consumers to get version type and build type information programmatically
+  - **COMPLETED**: Provides consistent API for pre-push project and other consumers needing version type/build type data
+- **NEW (Previous)**: Git Version Integration Feature (v1.3.0)
   - **COMPLETED**: Added GetVersion() function to retrieve version from git tags without 'v' prefix
   - **COMPLETED**: Added GetVersionWithPrefix() function to retrieve version with 'v' prefix preserved
   - **COMPLETED**: Implemented GitError type with structured error handling

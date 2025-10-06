@@ -582,3 +582,127 @@ func TestSortSingleVersion(t *testing.T) {
 		t.Errorf("Expected [1.2.3], got %v", result)
 	}
 }
+
+func TestGetVersionType(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+		hasError bool
+	}{
+		// Test with version strings
+		{"1.2.3", "release", false},
+		{"1.2.3-alpha", "prerelease", false},
+		{"1.2.3~beta.1", "prerelease", false},
+		{"1.2.3.fix", "postrelease", false},
+		{"1.2.3_feature", "intermediate", false},
+		{"1.2", "", true},
+		{"invalid", "", true},
+	}
+
+	for _, test := range tests {
+		t.Run(test.input, func(t *testing.T) {
+			result, err := GetVersionType(test.input)
+			if test.hasError {
+				if err == nil {
+					t.Errorf("Expected error for input %s, but got none", test.input)
+				}
+				return
+			}
+			if err != nil {
+				t.Errorf("Unexpected error for input %s: %v", test.input, err)
+				return
+			}
+			if result != test.expected {
+				t.Errorf("GetVersionType(%s): expected %s, got %s", test.input, test.expected, result)
+			}
+		})
+	}
+}
+
+// TestGetVersionTypeWithGit tests the git integration functionality
+func TestGetVersionTypeWithGit(t *testing.T) {
+	// Test with empty string - should get version from git
+	result, err := GetVersionType("")
+	if err != nil {
+		// This is expected if we're not in a git repo or git is not available
+		t.Logf("GetVersionType with empty string failed as expected: %v", err)
+		return
+	}
+	
+	// If we get here, we successfully got a version from git
+	// Verify it's a valid version type
+	validTypes := []string{"release", "prerelease", "postrelease", "intermediate"}
+	found := false
+	for _, validType := range validTypes {
+		if result == validType {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("GetVersionType from git returned invalid type: %s", result)
+	}
+	t.Logf("GetVersionType from git returned: %s", result)
+}
+
+func TestGetBuildTypeFromVersion(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+		hasError bool
+	}{
+		// Test with version strings
+		{"1.2.3", "Release", false},
+		{"1.2.3-alpha", "Debug", false},
+		{"1.2.3~beta.1", "Debug", false},
+		{"1.2.3.fix", "Debug", false},
+		{"1.2.3_feature", "Debug", false},
+		{"1.2", "", true},
+		{"invalid", "", true},
+	}
+
+	for _, test := range tests {
+		t.Run(test.input, func(t *testing.T) {
+			result, err := GetBuildTypeFromVersion(test.input)
+			if test.hasError {
+				if err == nil {
+					t.Errorf("Expected error for input %s, but got none", test.input)
+				}
+				return
+			}
+			if err != nil {
+				t.Errorf("Unexpected error for input %s: %v", test.input, err)
+				return
+			}
+			if result != test.expected {
+				t.Errorf("GetBuildTypeFromVersion(%s): expected %s, got %s", test.input, test.expected, result)
+			}
+		})
+	}
+}
+
+// TestGetBuildTypeFromVersionWithGit tests the git integration functionality
+func TestGetBuildTypeFromVersionWithGit(t *testing.T) {
+	// Test with empty string - should get version from git
+	result, err := GetBuildTypeFromVersion("")
+	if err != nil {
+		// This is expected if we're not in a git repo or git is not available
+		t.Logf("GetBuildTypeFromVersion with empty string failed as expected: %v", err)
+		return
+	}
+	
+	// If we get here, we successfully got a version from git
+	// Verify it's a valid build type
+	validTypes := []string{"Release", "Debug"}
+	found := false
+	for _, validType := range validTypes {
+		if result == validType {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("GetBuildTypeFromVersion from git returned invalid type: %s", result)
+	}
+	t.Logf("GetBuildTypeFromVersion from git returned: %s", result)
+}

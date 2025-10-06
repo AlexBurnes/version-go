@@ -51,6 +51,19 @@ func main() {
     fmt.Printf("Type: %s\n", v.Type.String())
     fmt.Printf("Build Type: %s\n", v.Type.BuildType())
     
+    // Get version type and build type (with optional git fallback)
+    versionType, err := version.GetVersionType("1.2.3-alpha.1")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Version Type: %s\n", versionType)
+    
+    buildType, err := version.GetBuildTypeFromVersion("1.2.3-alpha.1")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Build Type: %s\n", buildType)
+    
     // Validate a version
     if version.IsValid("1.2.3") {
         fmt.Println("Valid version!")
@@ -153,6 +166,44 @@ if err != nil {
     log.Fatal(err)
 }
 fmt.Println(buildType) // "Release"
+```
+
+#### `GetVersionType(versionStr string) (string, error)`
+Returns the type of the given version string, or if version string is not provided then get it from git.
+
+```go
+// With version string
+versionType, err := version.GetVersionType("1.2.3-alpha.1")
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(versionType) // "prerelease"
+
+// Without version string (gets from git)
+versionType, err := version.GetVersionType("")
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(versionType) // "release" (from git)
+```
+
+#### `GetBuildTypeFromVersion(versionStr string) (string, error)`
+Returns the CMake build type based on version, or if version string is not provided then get it from git.
+
+```go
+// With version string
+buildType, err := version.GetBuildTypeFromVersion("1.2.3")
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(buildType) // "Release"
+
+// Without version string (gets from git)
+buildType, err := version.GetBuildTypeFromVersion("")
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(buildType) // "Release" or "Debug" based on git state and version
 ```
 
 #### `Compare(a, b *Version) int`

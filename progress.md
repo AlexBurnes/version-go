@@ -1,7 +1,7 @@
 # Progress: Version CLI Utility
 
 ## What Works
-- **✅ PROJECT COMPLETE WITH LIBRARY, SELF-BUILDING, AUTO-DOWNLOAD, CI/CD, AND BUILDFAB**: Full Go CLI utility implementation with reusable library package, self-building capabilities, automatic download functionality, comprehensive GitHub Actions CI/CD pipeline, and buildfab unified build management
+- **✅ PROJECT COMPLETE WITH LIBRARY, SELF-BUILDING, AUTO-DOWNLOAD, CI/CD, BUILDFAB, AND NEW API METHODS**: Full Go CLI utility implementation with reusable library package, self-building capabilities, automatic download functionality, comprehensive GitHub Actions CI/CD pipeline, buildfab unified build management, and new GetVersionType/GetBuildTypeFromVersion API methods
 - **✅ VERSION SORT ORDER BUG FIXED (v1.2.7)**: Fixed critical version sorting bug where prerelease versions were incorrectly considered greater than release versions
   - **✅ Type Ordering Corrected**: Reordered Type constants to put TypePrerelease before TypeRelease
   - **✅ Correct Precedence**: prerelease < release < postrelease < intermediate for same x.y.z
@@ -32,7 +32,7 @@
   - **✅ Local and CI/CD**: Both local scripts and GitHub Actions use consistent Docker build approach
 - **✅ Go Module Structure**: Proper Go module structure with clean architecture
 - **✅ CLI Framework**: Complete command parsing and routing system
-- **✅ Library Package**: Reusable `pkg/version` package with comprehensive API
+- **✅ Library Package**: Reusable `pkg/version` package with comprehensive API including new GetVersionType and GetBuildTypeFromVersion methods
 - **✅ Version Parser**: Custom regex-based BNF grammar engine supporting extended version formats
 - **✅ Version Validator**: Comprehensive input validation with detailed error reporting
 - **✅ Version Sorter**: Correct sorting algorithm with proper precedence rules
@@ -168,6 +168,14 @@
 - **✅ Build Stages Implementation**: Added pre-push, build, test, and release stages with comprehensive dependency management
 - **✅ Cross-Platform Testing Integration**: Implemented Docker-based cross-platform testing in buildfab test stage
 - **✅ Unified Build Orchestration**: Replaced custom build scripts with buildfab actions for Conan, CMake, and GoReleaser
+- **✅ NEW LIBRARY API METHODS**: Added GetVersionType and GetBuildTypeFromVersion methods to library package
+  - **✅ GetVersionType Method**: Returns version type with optional git fallback functionality
+  - **✅ GetBuildTypeFromVersion Method**: Returns build type with optional git fallback functionality
+  - **✅ Git Integration**: Both methods accept empty string to automatically retrieve version from git tags
+  - **✅ Test Coverage**: Comprehensive test coverage with both version string and git integration testing
+  - **✅ Documentation**: Updated Library.md with API documentation and usage examples
+  - **✅ Changelog**: Updated CHANGELOG.md with detailed feature documentation
+  - **✅ API Consistency**: Provides consistent API for pre-push project and other consumers
 
 ## What's Left to Build
 - **RELEASE v0.8.17**: Publish v0.8.17 release with GitHub Actions CI/CD pipeline implementation and git remote priority fix
@@ -193,7 +201,7 @@
 - **Distribution**: GoReleaser integration for automated releases (when ready)
 
 ## Current Status
-- **Version**: v1.1.0 (ready for release)
+- **Version**: v1.4.0 (ready for release)
 - **Build System**: Fully functional with Conan integration
 - **Testing**: Comprehensive test suite with race detection and cross-platform testing
 - **Documentation**: Complete and up-to-date with cross-platform testing guides

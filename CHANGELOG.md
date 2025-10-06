@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **New Library API Methods**: Added GetVersionType and GetBuildTypeFromVersion methods to library package
+  - New function `version.GetVersionType(versionStr string) (string, error)` returns version type with optional git fallback
+  - New function `version.GetBuildTypeFromVersion(versionStr string) (string, error)` returns build type with optional git fallback
+  - Both methods accept empty string to automatically retrieve version from git tags
+  - Comprehensive test coverage with both version string and git integration testing
+  - Full documentation in `docs/Library.md` with usage examples and API reference
+  - Enables library consumers to get version type and build type information programmatically
+  - Provides consistent API for pre-push project and other consumers needing version type/build type data
+
 ## [1.3.0] - 2025-10-01
 
 ### Added
