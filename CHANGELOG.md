@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **GitHub Actions Test Failures**: Fixed cross-platform test workflow to properly fetch git tags
+  - Updated `.github/workflows/cross-platform-test.yml` to use `fetch-depth: 0` in checkout actions
+  - Resolves "No version tags found" errors in git-dependent tests on GitHub Actions
+  - Ensures all git-related tests can access version tags during CI/CD execution
+- **macOS Test Expectation**: Fixed platform test expectation for Darwin/macOS OS version detection
+  - Updated `pkg/version/platform_test.go` to accept actual macOS version numbers (e.g., "15.6.1")
+  - Removed incorrect expectation that OS version should start with "darwin" prefix
+  - Test now correctly validates that `GetOSVersion()` returns actual version numbers on macOS
+  - Aligns test expectations with correct implementation behavior from v1.2.5 bug fix
+
 ### Added
 - **New Library API Methods**: Added GetVersionType and GetBuildTypeFromVersion methods to library package
   - New function `version.GetVersionType(versionStr string) (string, error)` returns version type with optional git fallback

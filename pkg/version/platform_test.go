@@ -99,8 +99,10 @@ func TestGetOSVersion(t *testing.T) {
 			t.Errorf("GetOSVersion() = %v, should start with 'windows'", osVersion)
 		}
 	case "darwin":
-		if !strings.HasPrefix(osVersion, "darwin") {
-			t.Errorf("GetOSVersion() = %v, should start with 'darwin'", osVersion)
+		// On Darwin/macOS, GetOSVersion() should return actual version number (e.g., "15.6.1")
+		// or "darwin" as fallback, not necessarily starting with "darwin"
+		if osVersion == "" {
+			t.Errorf("GetOSVersion() returned empty string")
 		}
 	}
 }

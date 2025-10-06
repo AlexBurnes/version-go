@@ -1,10 +1,20 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**NEW LIBRARY API METHODS COMPLETED (v1.4.0)** - Successfully added GetVersionType and GetBuildTypeFromVersion methods to library package. These methods provide version type and build type information with optional git fallback functionality. Both methods accept empty string to automatically retrieve version from git tags, enabling consistent API for pre-push project and other consumers. Added comprehensive test coverage, documentation, and API reference. Updated Library.md with usage examples and CHANGELOG.md with feature documentation. Version bumped to v1.4.0 for new feature release. Ready for commit, tag, and push to release v1.4.0.
+**GITHUB ACTIONS TEST FAILURES FIXED (v1.4.1)** - Successfully resolved GitHub Actions cross-platform test failures by fixing git tag access and macOS test expectations. Updated .github/workflows/cross-platform-test.yml to use fetch-depth: 0 for proper git tag access during CI/CD execution. Fixed pkg/version/platform_test.go to accept actual macOS version numbers instead of requiring "darwin" prefix, aligning with correct implementation behavior. All tests now pass locally and GitHub Actions should pass on all platforms. Version bumped to v1.4.1 with automatic packaging file updates. Ready for commit, tag, and push to release test fixes.
 
 ## Recent Changes
-- **NEW (Latest)**: New Library API Methods
+- **NEW (Latest)**: GitHub Actions Test Failures Fix (v1.4.1)
+  - **COMPLETED**: Fixed GitHub Actions cross-platform test workflow to properly fetch git tags
+  - **COMPLETED**: Updated .github/workflows/cross-platform-test.yml to use fetch-depth: 0 in checkout actions
+  - **COMPLETED**: Resolved "No version tags found" errors in git-dependent tests on GitHub Actions
+  - **COMPLETED**: Fixed macOS test expectation to accept actual version numbers instead of "darwin" prefix
+  - **COMPLETED**: Updated pkg/version/platform_test.go to align with correct implementation behavior
+  - **COMPLETED**: All tests now pass locally with proper git tag access and correct test expectations
+  - **COMPLETED**: Updated CHANGELOG.md with comprehensive documentation of both fixes
+  - **COMPLETED**: Version bumped to v1.4.1 with automatic packaging file updates
+  - **COMPLETED**: Ready for commit, tag, and push to release test fixes
+- **NEW (Previous)**: New Library API Methods
   - **COMPLETED**: Added GetVersionType() function that returns version type with optional git fallback
   - **COMPLETED**: Added GetBuildTypeFromVersion() function that returns build type with optional git fallback
   - **COMPLETED**: Both methods accept empty string to automatically retrieve version from git tags
