@@ -1,11 +1,15 @@
 # Progress: Version CLI Utility
 
 ## What Works
-- **✅ PROJECT COMPLETE WITH LIBRARY, SELF-BUILDING, AUTO-DOWNLOAD, CI/CD, BUILDFAB, NEW API METHODS, AND TEST FIXES**: Full Go CLI utility implementation with reusable library package, self-building capabilities, automatic download functionality, comprehensive GitHub Actions CI/CD pipeline, buildfab unified build management, new GetVersionType/GetBuildTypeFromVersion API methods, GetRawTag function, and resolved GitHub Actions test failures
+- **✅ PROJECT COMPLETE WITH LIBRARY, SELF-BUILDING, AUTO-DOWNLOAD, CI/CD, BUILDFAB, NEW API METHODS, AND TEST FIXES**: Full Go CLI utility implementation with reusable library package, self-building capabilities, automatic download functionality, comprehensive GitHub Actions CI/CD pipeline, buildfab unified build management, new GetVersionType/GetBuildTypeFromVersion API methods, GetRawTag function, GetRawVersion function, and resolved GitHub Actions test failures
+- **✅ LIBRARY GIT TAG API ENHANCEMENTS (v1.5.0)**: Added GetRawVersion() function for raw version retrieval
+  - **✅ GetRawVersion Function**: Returns version without 'v' prefix and without '-' to '~' conversion
+  - **✅ Four Clear Options**: GetVersion(), GetVersionWithPrefix(), GetRawTag(), GetRawVersion() for different use cases
+  - **✅ Test Coverage**: Comprehensive tests for all git tag/version retrieval functions
+  - **✅ Documentation**: Updated CHANGELOG.md and docs/Library.md with usage summary and examples
 - **✅ LIBRARY GIT TAG API ENHANCEMENTS (v1.4.2)**: Fixed GetVersionWithPrefix() conversion and added GetRawTag() function
   - **✅ GetVersionWithPrefix Fix**: Now properly converts git tag delimiter from `-` to `~` for prerelease versions
   - **✅ GetRawTag Function**: Returns exact git tag without any transformations
-  - **✅ Three Clear Options**: GetVersion(), GetVersionWithPrefix(), GetRawTag() for different use cases
   - **✅ Test Coverage**: Comprehensive tests for all git tag retrieval functions
   - **✅ Documentation**: Updated CHANGELOG.md with usage summary and examples
 - **✅ VERSION SORT ORDER BUG FIXED (v1.2.7)**: Fixed critical version sorting bug where prerelease versions were incorrectly considered greater than release versions
@@ -214,7 +218,7 @@
 - **Distribution**: GoReleaser integration for automated releases (when ready)
 
 ## Current Status
-- **Version**: v1.4.0 (ready for release)
+- **Version**: v1.5.0 (ready for release)
 - **Build System**: Fully functional with Conan integration
 - **Testing**: Comprehensive test suite with race detection and cross-platform testing
 - **Documentation**: Complete and up-to-date with cross-platform testing guides

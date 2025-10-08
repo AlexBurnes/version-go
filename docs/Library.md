@@ -260,15 +260,63 @@ fmt.Printf("Current version: %s\n", version) // e.g., "1.2.3"
 ```
 
 #### `GetVersionWithPrefix() (string, error)`
-Same as `GetVersion()` but preserves the 'v' prefix in the version string.
+Same as `GetVersion()` but preserves the 'v' prefix in the version string. Git tag format is converted from `x.y.z-(remainder)` to `x.y.z~(remainder)` for consistency.
 
 ```go
 version, err := version.GetVersionWithPrefix()
 if err != nil {
     log.Fatal(err)
 }
-fmt.Printf("Current version: %s\n", version) // e.g., "v1.2.3"
+fmt.Printf("Current version: %s\n", version) // e.g., "v1.2.3~alpha.1"
 ```
+
+#### `GetRawTag() (string, error)`
+Returns the current git tag without any transformations. This function returns the exact tag string as it appears in git, without removing the 'v' prefix or converting '-' to '~' delimiter.
+
+```go
+tag, err := version.GetRawTag()
+if err != nil {
+    if version.IsGitNotFound(err) {
+        fmt.Println("Git is not installed")
+    } else {
+        log.Fatal(err)
+    }
+    return
+}
+fmt.Printf("Current git tag: %s\n", tag) // e.g., "v1.2.3-alpha.1" (exactly as in git)
+```
+
+#### `GetRawVersion() (string, error)`
+Returns the current git tag without transformations and without the 'v' prefix. Unlike `GetVersion()`, it does NOT convert '-' to '~' delimiter. This is useful for applications that need the raw version format without any conversions.
+
+```go
+version, err := version.GetRawVersion()
+if err != nil {
+    if version.IsGitNotFound(err) {
+        fmt.Println("Git is not installed")
+    } else {
+        log.Fatal(err)
+    }
+    return
+}
+fmt.Printf("Current version: %s\n", version) // e.g., "1.2.3-alpha.1" (without 'v', no conversion)
+```
+
+#### Summary of Git Tag/Version Retrieval Options
+
+The library provides four clear options for retrieving version information from git:
+
+1. **`GetVersion()`** - Returns version without 'v' prefix, converts `-` to `~` (e.g., `1.2.3~alpha.1`)
+   - Best for: Library API consistency, internal version parsing
+   
+2. **`GetVersionWithPrefix()`** - Returns version with 'v' prefix, converts `-` to `~` (e.g., `v1.2.3~alpha.1`)
+   - Best for: Display purposes where 'v' prefix is desired with library format
+   
+3. **`GetRawTag()`** - Returns exact git tag without transformations (e.g., `v1.2.3-alpha.1`)
+   - Best for: External integrations requiring exact git tag format
+   
+4. **`GetRawVersion()`** - Returns version without 'v' prefix, no conversion (e.g., `1.2.3-alpha.1`)
+   - Best for: Applications needing raw version without 'v' prefix but preserving original delimiter format
 
 #### Git Error Helper Functions
 

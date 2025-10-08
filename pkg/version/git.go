@@ -215,3 +215,46 @@ func GetRawTag() (string, error) {
     return output, nil
 }
 
+// GetRawVersion returns the current git tag without transformations and without the 'v' prefix.
+// This function returns the version string as it appears in git, but with the 'v' prefix removed.
+// Unlike GetVersion(), it does NOT convert '-' to '~' delimiter.
+//
+// This is useful for applications that need the raw version format without any conversions.
+//
+// Returns an error if:
+//   - git is not available
+//   - not in a git repository
+//   - no version tags are found
+//   - git command execution fails
+//
+// Example usage:
+//
+//	version, err := version.GetRawVersion()
+//	if err != nil {
+//	    if version.IsGitNotFound(err) {
+//	        fmt.Println("Git is not installed")
+//	    } else if version.IsNotGitRepo(err) {
+//	        fmt.Println("Not in a git repository")
+//	    } else if version.IsNoGitTags(err) {
+//	        fmt.Println("No version tags found")
+//	    } else {
+//	        fmt.Printf("Error: %v\n", err)
+//	    }
+//	    return
+//	}
+//	fmt.Printf("Current version: %s\n", version) // e.g., "1.2.3-pre.1" (without 'v', no conversion)
+func GetRawVersion() (string, error) {
+    if err := checkGitTags(); err != nil {
+        return "", err
+    }
+
+    output, err := runGitCommand("describe", "--match", "v[0-9]*", "--abbrev=0", "--tags", "HEAD")
+    if err != nil {
+        return "", fmt.Errorf("failed to get version from git: %v", err)
+    }
+    
+    // Remove 'v' prefix but do NOT convert tag format
+    versionStr := strings.TrimPrefix(output, "v")
+    return versionStr, nil
+}
+

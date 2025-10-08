@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2025-10-08
+
+### Added
+- **GetRawVersion Function**: Added new library API method to retrieve version from git without transformations
+  - New function `version.GetRawVersion()` returns version string without 'v' prefix and without delimiter conversion
+  - Unlike `GetVersion()`, it does NOT convert `-` to `~` delimiter in prerelease tags
+  - Example: git tag `v1.2.3-alpha.1` returns `1.2.3-alpha.1` (not `1.2.3~alpha.1`)
+  - Useful for applications that need raw version format without any conversions
+  - Comprehensive test coverage in `pkg/version/git_test.go`
+  - Full documentation with usage examples
+  - Complements existing git tag retrieval functions
+
+### Summary
+The library now provides four clear options for git tag/version retrieval:
+1. **`GetVersion()`** - Returns version without 'v' prefix, converts `-` to `~` (e.g., `1.2.3~alpha.1`)
+2. **`GetVersionWithPrefix()`** - Returns version with 'v' prefix, converts `-` to `~` (e.g., `v1.2.3~alpha.1`)
+3. **`GetRawTag()`** - Returns exact git tag without transformations (e.g., `v1.2.3-alpha.1`)
+4. **`GetRawVersion()`** - Returns version without 'v' prefix, no conversion (e.g., `1.2.3-alpha.1`)
+
 ## [1.4.2] - 2025-10-08
 
 ### Fixed

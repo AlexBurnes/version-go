@@ -1,10 +1,19 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**LIBRARY API ENHANCEMENTS (v1.4.2)** - Fixed GetVersionWithPrefix() git tag conversion and added GetRawTag() function for raw git tag retrieval. Fixed bug where GetVersionWithPrefix() was not converting git tag delimiter from `-` to `~` for prerelease versions, ensuring consistency with GetVersion() behavior. Added new GetRawTag() function that returns the exact git tag without any transformations, providing three clear options for consumer applications. All tests pass with comprehensive test coverage. Version bumped to v1.4.2 with automatic packaging file updates. Ready for commit, tag, and push to release library improvements.
+**LIBRARY API ENHANCEMENTS (v1.5.0)** - Added GetRawVersion() function for raw version retrieval without transformations. New function returns version without 'v' prefix and without converting '-' to '~' delimiter, complementing existing git tag retrieval options. The library now provides four clear options: GetVersion() (no prefix, converts delimiter), GetVersionWithPrefix() (with prefix, converts delimiter), GetRawTag() (exact git tag), and GetRawVersion() (no prefix, no conversion). All tests pass with comprehensive test coverage. Version bumped to v1.5.0 with automatic packaging file updates. Ready for commit, tag, and push to release library improvements.
 
 ## Recent Changes
-- **NEW (Latest)**: Library API Enhancements (v1.4.2)
+- **NEW (Latest)**: Library API Enhancements (v1.5.0)
+  - **COMPLETED**: Added GetRawVersion() function to retrieve version without transformations
+  - **COMPLETED**: Returns version without 'v' prefix and without '-' to '~' conversion
+  - **COMPLETED**: Comprehensive test coverage for GetRawVersion() in pkg/version/git_test.go
+  - **COMPLETED**: Updated docs/Library.md with API documentation and usage examples
+  - **COMPLETED**: Updated CHANGELOG.md with detailed documentation of new function
+  - **COMPLETED**: Version bumped to v1.5.0 with automatic packaging file updates
+  - **COMPLETED**: All tests pass with race detection enabled
+  - **COMPLETED**: Ready for release with library API improvements
+- **NEW (Previous)**: Library API Enhancements (v1.4.2)
   - **COMPLETED**: Fixed GetVersionWithPrefix() to properly convert git tag format from `-` to `~`
   - **COMPLETED**: Added ConvertGitTag() call to GetVersionWithPrefix() for delimiter conversion
   - **COMPLETED**: Added new GetRawTag() function to retrieve raw git tag without transformations

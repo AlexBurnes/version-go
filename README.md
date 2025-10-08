@@ -474,6 +474,7 @@ import (
 
 func main() {
     // Get version from git repository
+    // Options: GetVersion(), GetVersionWithPrefix(), GetRawTag(), GetRawVersion()
     gitVersion, err := version.GetVersion()
     if err != nil {
         if version.IsGitNotFound(err) {
@@ -487,6 +488,12 @@ func main() {
         }
     } else {
         fmt.Printf("Git Version: %s\n", gitVersion)
+    }
+    
+    // Get raw version without transformations (no 'v' prefix, no '-' to '~' conversion)
+    rawVersion, err := version.GetRawVersion()
+    if err == nil {
+        fmt.Printf("Raw Version: %s\n", rawVersion)
     }
     
     // Parse a version

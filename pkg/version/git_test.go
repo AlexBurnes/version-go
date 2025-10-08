@@ -1,6 +1,7 @@
 package version
 
 import (
+    "strings"
     "testing"
 )
 
@@ -117,6 +118,50 @@ func TestGetRawTag(t *testing.T) {
     }
 
     t.Logf("Current git raw tag: %s", tag)
+}
+
+func TestGetRawVersion(t *testing.T) {
+    // This test assumes we're running in a git repository with version tags
+    version, err := GetRawVersion()
+    if err != nil {
+        if IsGitNotFound(err) {
+            t.Skipf("Git is not available: %v", err)
+            return
+        }
+        if IsNotGitRepo(err) {
+            t.Skipf("Not in a git repository: %v", err)
+            return
+        }
+        if IsNoGitTags(err) {
+            t.Skipf("No version tags found: %v", err)
+            return
+        }
+        t.Fatalf("GetRawVersion() failed: %v", err)
+    }
+
+    // Verify that the version is not empty
+    if version == "" {
+        t.Error("GetRawVersion() returned empty version")
+    }
+
+    // Verify that the version does NOT start with 'v'
+    if len(version) > 0 && version[0] == 'v' {
+        t.Errorf("GetRawVersion() should return version without 'v' prefix, got: %s", version)
+    }
+
+    // Get raw tag for comparison
+    rawTag, err := GetRawTag()
+    if err != nil {
+        t.Fatalf("GetRawTag() failed: %v", err)
+    }
+
+    // Verify that GetRawVersion() is GetRawTag() without 'v' prefix
+    expectedVersion := strings.TrimPrefix(rawTag, "v")
+    if version != expectedVersion {
+        t.Errorf("GetRawVersion() = %s, want %s (GetRawTag without 'v')", version, expectedVersion)
+    }
+
+    t.Logf("Current git raw version: %s", version)
 }
 
 func TestGitErrorTypes(t *testing.T) {
