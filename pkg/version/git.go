@@ -147,6 +147,7 @@ func GetVersion() (string, error) {
 
 // GetVersionWithPrefix returns the current project version from git tags with the 'v' prefix.
 // This is the same as GetVersion but preserves the 'v' prefix in the version string.
+// Git tag format is converted from x.y.z-(remainder) to x.y.z~(remainder) for consistency.
 //
 // Example usage:
 //
@@ -155,7 +156,7 @@ func GetVersion() (string, error) {
 //	    fmt.Printf("Error: %v\n", err)
 //	    return
 //	}
-//	fmt.Printf("Current version: %s\n", version) // e.g., "v1.2.3"
+//	fmt.Printf("Current version: %s\n", version) // e.g., "v1.2.3~pre.1"
 func GetVersionWithPrefix() (string, error) {
     if err := checkGitTags(); err != nil {
         return "", err
@@ -166,6 +167,51 @@ func GetVersionWithPrefix() (string, error) {
         return "", fmt.Errorf("failed to get version from git: %v", err)
     }
     
+    // Convert git tag format (e.g., v0.7.14-pre.1 -> v0.7.14~pre.1)
+    versionStr := ConvertGitTag(output)
+    return versionStr, nil
+}
+
+// GetRawTag returns the current git tag without any transformations.
+// This function returns the exact tag string as it appears in git, without:
+//   - Removing the 'v' prefix
+//   - Converting '-' to '~' delimiter
+//
+// This is useful for applications that need the original git tag format.
+//
+// Returns an error if:
+//   - git is not available
+//   - not in a git repository
+//   - no version tags are found
+//   - git command execution fails
+//
+// Example usage:
+//
+//	tag, err := version.GetRawTag()
+//	if err != nil {
+//	    if version.IsGitNotFound(err) {
+//	        fmt.Println("Git is not installed")
+//	    } else if version.IsNotGitRepo(err) {
+//	        fmt.Println("Not in a git repository")
+//	    } else if version.IsNoGitTags(err) {
+//	        fmt.Println("No version tags found")
+//	    } else {
+//	        fmt.Printf("Error: %v\n", err)
+//	    }
+//	    return
+//	}
+//	fmt.Printf("Current git tag: %s\n", tag) // e.g., "v1.2.3-pre.1" (exactly as in git)
+func GetRawTag() (string, error) {
+    if err := checkGitTags(); err != nil {
+        return "", err
+    }
+
+    output, err := runGitCommand("describe", "--match", "v[0-9]*", "--abbrev=0", "--tags", "HEAD")
+    if err != nil {
+        return "", fmt.Errorf("failed to get tag from git: %v", err)
+    }
+    
+    // Return raw tag without any transformations
     return output, nil
 }
 

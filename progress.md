@@ -1,7 +1,13 @@
 # Progress: Version CLI Utility
 
 ## What Works
-- **✅ PROJECT COMPLETE WITH LIBRARY, SELF-BUILDING, AUTO-DOWNLOAD, CI/CD, BUILDFAB, NEW API METHODS, AND TEST FIXES**: Full Go CLI utility implementation with reusable library package, self-building capabilities, automatic download functionality, comprehensive GitHub Actions CI/CD pipeline, buildfab unified build management, new GetVersionType/GetBuildTypeFromVersion API methods, and resolved GitHub Actions test failures
+- **✅ PROJECT COMPLETE WITH LIBRARY, SELF-BUILDING, AUTO-DOWNLOAD, CI/CD, BUILDFAB, NEW API METHODS, AND TEST FIXES**: Full Go CLI utility implementation with reusable library package, self-building capabilities, automatic download functionality, comprehensive GitHub Actions CI/CD pipeline, buildfab unified build management, new GetVersionType/GetBuildTypeFromVersion API methods, GetRawTag function, and resolved GitHub Actions test failures
+- **✅ LIBRARY GIT TAG API ENHANCEMENTS (v1.4.2)**: Fixed GetVersionWithPrefix() conversion and added GetRawTag() function
+  - **✅ GetVersionWithPrefix Fix**: Now properly converts git tag delimiter from `-` to `~` for prerelease versions
+  - **✅ GetRawTag Function**: Returns exact git tag without any transformations
+  - **✅ Three Clear Options**: GetVersion(), GetVersionWithPrefix(), GetRawTag() for different use cases
+  - **✅ Test Coverage**: Comprehensive tests for all git tag retrieval functions
+  - **✅ Documentation**: Updated CHANGELOG.md with usage summary and examples
 - **✅ VERSION SORT ORDER BUG FIXED (v1.2.7)**: Fixed critical version sorting bug where prerelease versions were incorrectly considered greater than release versions
   - **✅ Type Ordering Corrected**: Reordered Type constants to put TypePrerelease before TypeRelease
   - **✅ Correct Precedence**: prerelease < release < postrelease < intermediate for same x.y.z

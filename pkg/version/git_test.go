@@ -87,6 +87,38 @@ func TestGetVersionWithPrefix(t *testing.T) {
     t.Logf("Current git version with prefix: %s", version)
 }
 
+func TestGetRawTag(t *testing.T) {
+    // This test assumes we're running in a git repository with version tags
+    tag, err := GetRawTag()
+    if err != nil {
+        if IsGitNotFound(err) {
+            t.Skipf("Git is not available: %v", err)
+            return
+        }
+        if IsNotGitRepo(err) {
+            t.Skipf("Not in a git repository: %v", err)
+            return
+        }
+        if IsNoGitTags(err) {
+            t.Skipf("No version tags found: %v", err)
+            return
+        }
+        t.Fatalf("GetRawTag() failed: %v", err)
+    }
+
+    // Verify that the tag is not empty
+    if tag == "" {
+        t.Error("GetRawTag() returned empty tag")
+    }
+
+    // Verify that the tag starts with 'v'
+    if len(tag) == 0 || tag[0] != 'v' {
+        t.Errorf("GetRawTag() should return tag with 'v' prefix, got: %s", tag)
+    }
+
+    t.Logf("Current git raw tag: %s", tag)
+}
+
 func TestGitErrorTypes(t *testing.T) {
     tests := []struct {
         name     string

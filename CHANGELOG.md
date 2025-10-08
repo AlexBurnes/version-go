@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.2] - 2025-10-08
+
+### Fixed
+- **GetVersionWithPrefix Git Tag Conversion**: Fixed `GetVersionWithPrefix()` to properly convert git tag format
+  - Added `ConvertGitTag()` call to convert git tag delimiter from `-` to `~` for prerelease versions
+  - Example: git tag `v0.7.14-pre.1` now correctly returns `v0.7.14~pre.1` (was returning `v0.7.14-pre.1`)
+  - Ensures consistency with library version parsing expectations
+  - Aligns with `GetVersion()` behavior which already performed this conversion
+
+### Added
+- **GetRawTag Function**: Added new library API method to retrieve raw git tag without transformations
+  - New function `version.GetRawTag()` returns exact git tag as it appears in repository
+  - No 'v' prefix removal, no delimiter conversion from `-` to `~`
+  - Useful for applications that need the original git tag format for external integrations
+  - Comprehensive test coverage in `pkg/version/git_test.go`
+  - Full documentation with usage examples
+
+### Summary
+The library now provides three clear options for git tag retrieval:
+1. **`GetVersion()`** - Returns version without 'v' prefix, converts `-` to `~` (e.g., `0.7.14~pre.1`)
+2. **`GetVersionWithPrefix()`** - Returns version with 'v' prefix, converts `-` to `~` (e.g., `v0.7.14~pre.1`)
+3. **`GetRawTag()`** - Returns exact git tag without transformations (e.g., `v0.7.14-pre.1`)
+
+## [1.4.1] - 2025-10-08
+
 ### Fixed
 - **GitHub Actions Test Failures**: Fixed cross-platform test workflow to properly fetch git tags
   - Updated `.github/workflows/cross-platform-test.yml` to use `fetch-depth: 0` in checkout actions

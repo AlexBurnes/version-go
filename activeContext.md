@@ -1,10 +1,19 @@
 # Active Context: Version CLI Utility
 
 ## Current Work Focus
-**GITHUB ACTIONS TEST FAILURES FIXED (v1.4.1)** - Successfully resolved GitHub Actions cross-platform test failures by fixing git tag access and macOS test expectations. Updated .github/workflows/cross-platform-test.yml to use fetch-depth: 0 for proper git tag access during CI/CD execution. Fixed pkg/version/platform_test.go to accept actual macOS version numbers instead of requiring "darwin" prefix, aligning with correct implementation behavior. All tests now pass locally and GitHub Actions should pass on all platforms. Version bumped to v1.4.1 with automatic packaging file updates. Ready for commit, tag, and push to release test fixes.
+**LIBRARY API ENHANCEMENTS (v1.4.2)** - Fixed GetVersionWithPrefix() git tag conversion and added GetRawTag() function for raw git tag retrieval. Fixed bug where GetVersionWithPrefix() was not converting git tag delimiter from `-` to `~` for prerelease versions, ensuring consistency with GetVersion() behavior. Added new GetRawTag() function that returns the exact git tag without any transformations, providing three clear options for consumer applications. All tests pass with comprehensive test coverage. Version bumped to v1.4.2 with automatic packaging file updates. Ready for commit, tag, and push to release library improvements.
 
 ## Recent Changes
-- **NEW (Latest)**: GitHub Actions Test Failures Fix (v1.4.1)
+- **NEW (Latest)**: Library API Enhancements (v1.4.2)
+  - **COMPLETED**: Fixed GetVersionWithPrefix() to properly convert git tag format from `-` to `~`
+  - **COMPLETED**: Added ConvertGitTag() call to GetVersionWithPrefix() for delimiter conversion
+  - **COMPLETED**: Added new GetRawTag() function to retrieve raw git tag without transformations
+  - **COMPLETED**: Comprehensive test coverage for GetRawTag() in pkg/version/git_test.go
+  - **COMPLETED**: Updated CHANGELOG.md with detailed documentation of changes and usage summary
+  - **COMPLETED**: Version bumped to v1.4.2 with automatic packaging file updates
+  - **COMPLETED**: All tests pass with race detection enabled
+  - **COMPLETED**: Ready for release with library API improvements
+- **NEW (Previous)**: GitHub Actions Test Failures Fix (v1.4.1)
   - **COMPLETED**: Fixed GitHub Actions cross-platform test workflow to properly fetch git tags
   - **COMPLETED**: Updated .github/workflows/cross-platform-test.yml to use fetch-depth: 0 in checkout actions
   - **COMPLETED**: Resolved "No version tags found" errors in git-dependent tests on GitHub Actions
