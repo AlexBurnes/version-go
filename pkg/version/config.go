@@ -8,8 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"gopkg.in/yaml.v3"
+	yamlpkg "gopkg.in/yaml.v3"
 )
 
 // ProjectConfig represents the structure of .project.yml file
@@ -56,7 +55,7 @@ func (cp *ConfigProvider) LoadProjectConfig() (*ProjectConfig, error) {
 	}
 
 	var config ProjectConfig
-	if err := yaml.Unmarshal(data, &config); err != nil {
+	if err := yamlpkg.Unmarshal(data, &config); err != nil {
 		return nil, fmt.Errorf("failed to parse .project.yml: %v", err)
 	}
 
@@ -143,6 +142,28 @@ func (cp *ConfigProvider) validateConfig(config *ProjectConfig) error {
 	return nil
 }
 
+// loadConfigFrom searches for .project.yml starting from dir (empty = current directory)
+// walking upward toward the filesystem root. Returns nil if not found.
+// Uses findProjectConfigFile so the search strategy is defined in one place.
+func loadConfigFrom(dir string) (*ProjectConfig, error) {
+	configPath, err := findProjectConfigFile(dir)
+	if err != nil || configPath == "" {
+		return nil, err
+	}
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read .project.yml: %v", err)
+	}
+	var config ProjectConfig
+	if err := yamlpkg.Unmarshal(data, &config); err != nil {
+		return nil, fmt.Errorf("failed to parse .project.yml: %v", err)
+	}
+	if config.Project.Name == "" {
+		return nil, nil
+	}
+	return &config, nil
+}
+
 // GetProjectConfigFromFile loads configuration from a specific file path
 // This is useful for testing or when you know the exact path
 func GetProjectConfigFromFile(filePath string) (*ProjectConfig, error) {
@@ -152,7 +173,7 @@ func GetProjectConfigFromFile(filePath string) (*ProjectConfig, error) {
 	}
 
 	var config ProjectConfig
-	if err := yaml.Unmarshal(data, &config); err != nil {
+	if err := yamlpkg.Unmarshal(data, &config); err != nil {
 		return nil, fmt.Errorf("failed to parse config file: %v", err)
 	}
 

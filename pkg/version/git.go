@@ -4,12 +4,9 @@ package version
 
 import (
     "fmt"
-    "os"
     "os/exec"
     "regexp"
     "strings"
-
-    "gopkg.in/yaml.v3"
 )
 
 // GitError represents different types of git-related errors
@@ -265,27 +262,6 @@ func GetRawVersion(dir string) (string, error) {
     return versionStr, nil
 }
 
-// loadConfigFrom searches for .project.yml starting from dir (empty = current directory)
-// walking upward toward the filesystem root. Returns nil if not found.
-// Uses findProjectConfigFile so the search strategy is defined in one place.
-func loadConfigFrom(dir string) (*ProjectConfig, error) {
-    configPath, err := findProjectConfigFile(dir)
-    if err != nil || configPath == "" {
-        return nil, err
-    }
-    data, err := os.ReadFile(configPath)
-    if err != nil {
-        return nil, fmt.Errorf("failed to read .project.yml: %v", err)
-    }
-    var config ProjectConfig
-    if err := yaml.Unmarshal(data, &config); err != nil {
-        return nil, fmt.Errorf("failed to parse .project.yml: %v", err)
-    }
-    if config.Project.Name == "" {
-        return nil, nil
-    }
-    return &config, nil
-}
 
 // remoteURLPath returns the path component of the fetch URL for the best available
 // remote (origin preferred, any other remote as fallback).

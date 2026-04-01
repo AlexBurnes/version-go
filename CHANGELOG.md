@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-04-01
+
+### Fixed
+- **Lint: move loadConfigFrom to config.go** — relocated `loadConfigFrom` from `git.go`
+  to `config.go` where `os` and `gopkg.in/yaml.v3` are already imported, eliminating
+  a spurious `undefined: yaml` typecheck error reported by golangci-lint on new lines
+
 ## [1.6.0] - 2026-04-01
 
 ### Added
