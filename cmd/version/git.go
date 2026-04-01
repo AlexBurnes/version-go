@@ -1,657 +1,142 @@
 package main
 
 import (
-    "fmt"
-    "os/exec"
-    "regexp"
-    "strings"
-    
-    "github.com/AlexBurnes/version-go/pkg/version"
+	"fmt"
+	"strings"
+
+	"github.com/AlexBurnes/version-go/pkg/version"
 )
 
-// Simple color codes for terminal output
-const (
-    colorReset = "\033[0m"
-    colorRed   = "\033[31m"
-    colorBlue  = "\033[34m"
-)
-
-// Global configuration provider
-var configProvider = version.NewConfigProvider()
-
-// Custom error types for git-related issues
-type GitNotFoundError struct{}
-type NotGitRepoError struct{}
-type NoGitTagsError struct{}
-
-func (e *GitNotFoundError) Error() string {
-    return "git command is not available - please install git and ensure it's in your PATH"
-}
-
-func (e *NotGitRepoError) Error() string {
-    return "not a git repository - please run this command from within a git repository"
-}
-
-func (e *NoGitTagsError) Error() string {
-    return "no tag defined for project - please create a version tag (e.g., v1.0.0) before running this command"
-}
-
-// runCommand executes a command and returns its output
-func runCommand(name string, args ...string) (string, error) {
-    cmd := exec.Command(name, args...)
-    
-    if verboseFlag {
-        printInfo("+ %s %s", name, strings.Join(args, " "))
-    }
-    
-    output, err := cmd.Output()
-    if err != nil {
-        if exitErr, ok := err.(*exec.ExitError); ok && len(exitErr.Stderr) > 0 {
-            return "", fmt.Errorf("command failed: %s", strings.TrimSpace(string(exitErr.Stderr)))
-        }
-        return "", fmt.Errorf("command failed: %v", err)
-    }
-    return strings.TrimSpace(string(output)), nil
-}
-
-// checkGitAvailable verifies that git is installed and available
-func checkGitAvailable() error {
-    _, err := exec.LookPath("git")
-    if err != nil {
-        return &GitNotFoundError{}
-    }
-    if verboseFlag {
-        printInfo("+ which git")
-    }
-    return nil
-}
-
-// checkGitRepo verifies that the current directory is a git repository
-func checkGitRepo() error {
-    _, err := runCommand("git", "rev-parse", "--git-dir")
-    if err != nil {
-        return &NotGitRepoError{}
-    }
-    return nil
-}
-
-// checkGitTags verifies that the repository has at least one version tag
-func checkGitTags() error {
-    if err := checkGitAvailable(); err != nil {
-        return err
-    }
-    if err := checkGitRepo(); err != nil {
-        return err
-    }
-
-    output, err := runCommand("git", "tag", "-l", "v[0-9]*")
-    if err != nil {
-        return err
-    }
-    
-    if len(strings.TrimSpace(output)) == 0 {
-        return &NoGitTagsError{}
-    }
-    return nil
-}
-
-// runGitCommand executes a git command and returns its output
-func runGitCommand(args ...string) (string, error) {
-    if err := checkGitAvailable(); err != nil {
-        return "", err
-    }
-    if err := checkGitRepo(); err != nil {
-        return "", err
-    }
-    
-    return runCommand("git", args...)
-}
-
-// getVersion returns the current project version from git tags
+// getVersion returns the current project version from git tags.
 func getVersion() (string, error) {
-    if err := checkGitTags(); err != nil {
-        return "", err
-    }
-
-    output, err := runGitCommand("describe", "--match", "v[0-9]*", "--abbrev=0", "--tags", "HEAD")
-    if err != nil {
-        return "", err
-    }
-    
-    versionStr := strings.TrimPrefix(output, "v")
-    // Convert git tag format using the library
-    versionStr = version.ConvertGitTag(versionStr)
-    return versionStr, nil
+	return version.GetVersion("")
 }
 
-// getProject returns the project name from .project.yml or git remote
+// getProject returns the project name from .project.yml or git remote.
 func getProject() (string, error) {
-    // Check if --git flag is set (force git-based detection)
-    if gitFlag {
-        printDebug("--git flag set, forcing git-based detection")
-        return getProjectFromGit()
-    }
-    
-    // Check if --config flag is set (use custom config file)
-    if configFile != "" {
-        printDebug("--config flag set, using custom config file: %s", configFile)
-        return getProjectFromCustomConfig(configFile)
-    }
-    
-    // Default behavior: try .project.yml first, fallback to git
-    // Try to load .project.yml configuration first
-    config, err := configProvider.LoadProjectConfig()
-    if err != nil {
-        printDebug("Failed to load .project.yml: %v", err)
-    } else if config != nil {
-        projectName := configProvider.GetProjectName()
-        if projectName != "" {
-            printDebug("Using project name from .project.yml: %s", projectName)
-            return projectName, nil
-        }
-    }
-    
-    printDebug("No .project.yml found or invalid, falling back to git remote")
-    
-    // Fallback to git remote
-    return getProjectFromGit()
+	if gitFlag {
+		printDebug("--git flag set, forcing git-based detection")
+		return version.GetProjectFromGit("")
+	}
+	if configFile != "" {
+		printDebug("--config flag set, using custom config file: %s", configFile)
+		return getProjectFromCustomConfig(configFile)
+	}
+	return version.GetProject("")
 }
 
-// getProjectFromCustomConfig returns project name from custom configuration file
+// getProjectFromCustomConfig returns the project name from a specific config file.
 func getProjectFromCustomConfig(configPath string) (string, error) {
-    config, err := version.GetProjectConfigFromFile(configPath)
-    if err != nil {
-        return "", fmt.Errorf("failed to load config file %s: %v", configPath, err)
-    }
-    
-    // Create a temporary config provider to get project name
-    tempProvider := version.NewConfigProvider()
-    tempProvider.LoadProjectConfig() // This won't be used, we'll use the loaded config directly
-    
-    // Extract project name from the loaded config
-    if config.Project.Name == "" {
-        return "", fmt.Errorf("project name not specified in config file %s", configPath)
-    }
-    
-    printDebug("Using project name from config file %s: %s", configPath, config.Project.Name)
-    return config.Project.Name, nil
+	config, err := version.GetProjectConfigFromFile(configPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to load config file %s: %v", configPath, err)
+	}
+	if config.Project.Name == "" {
+		return "", fmt.Errorf("project name not specified in config file %s", configPath)
+	}
+	printDebug("Using project name from config file %s: %s", configPath, config.Project.Name)
+	return config.Project.Name, nil
 }
 
-// getProjectFromGit returns project name from git remote
-func getProjectFromGit() (string, error) {
-    printDebug("Using project name from git remote")
-    
-    // Fallback to git remote
-    output, err := runGitCommand("remote", "-v")
-    if err != nil {
-        return "", err
-    }
-    
-    lines := strings.Split(output, "\n")
-    
-    // First pass: look for origin remote
-    for _, line := range lines {
-        if strings.Contains(line, "fetch") && strings.HasPrefix(strings.TrimSpace(line), "origin") {
-            parts := strings.Fields(line)
-            if len(parts) < 2 {
-                continue
-            }
-            remote := parts[1]
-            remote = strings.TrimSuffix(remote, ".git")
-            
-            // Handle SSH URLs (git@github.com:user/repo)
-            if strings.Contains(remote, ":") {
-                remote = strings.Split(remote, ":")[1]
-            } else {
-                // Handle HTTPS URLs (https://github.com/user/repo)
-                if strings.Contains(remote, "//") {
-                    remote = strings.Split(remote, "//")[1]
-                }
-                parts := strings.SplitN(remote, "/", 2)
-                if len(parts) > 1 {
-                    remote = parts[1]
-                }
-            }
-            
-            // Convert slashes to dashes
-            remote = strings.ReplaceAll(remote, "/", "-")
-            
-            // Remove any prefix matching --[^-]+-
-            re := regexp.MustCompile(`^--[^-]+-`)
-            remote = re.ReplaceAllString(remote, "")
-            
-            return remote, nil
-        }
-    }
-    
-    // Second pass: look for any other remote if origin not found
-    for _, line := range lines {
-        if strings.Contains(line, "fetch") {
-            parts := strings.Fields(line)
-            if len(parts) < 2 {
-                continue
-            }
-            remote := parts[1]
-            remote = strings.TrimSuffix(remote, ".git")
-            
-            // Handle SSH URLs (git@github.com:user/repo)
-            if strings.Contains(remote, ":") {
-                remote = strings.Split(remote, ":")[1]
-            } else {
-                // Handle HTTPS URLs (https://github.com/user/repo)
-                if strings.Contains(remote, "//") {
-                    remote = strings.Split(remote, "//")[1]
-                }
-                parts := strings.SplitN(remote, "/", 2)
-                if len(parts) > 1 {
-                    remote = parts[1]
-                }
-            }
-            
-            // Convert slashes to dashes
-            remote = strings.ReplaceAll(remote, "/", "-")
-            
-            // Remove any prefix matching --[^-]+-
-            re := regexp.MustCompile(`^--[^-]+-`)
-            remote = re.ReplaceAllString(remote, "")
-            
-            return remote, nil
-        }
-    }
-    return "", fmt.Errorf("no git remote found - please add a remote to your repository")
-}
-
-// getModule returns the module name from .project.yml or git remote
+// getModule returns the module name from .project.yml or git remote.
 func getModule() (string, error) {
-    // Check if --git flag is set (force git-based detection)
-    if gitFlag {
-        printDebug("--git flag set, forcing git-based detection")
-        return getModuleFromGit()
-    }
-    
-    // Check if --config flag is set (use custom config file)
-    if configFile != "" {
-        printDebug("--config flag set, using custom config file: %s", configFile)
-        return getModuleFromCustomConfig(configFile)
-    }
-    
-    // Default behavior: try .project.yml first, fallback to git
-    // Try to load .project.yml configuration first
-    config, err := configProvider.LoadProjectConfig()
-    if err != nil {
-        printDebug("Failed to load .project.yml: %v", err)
-    } else if config != nil {
-        moduleName := configProvider.GetModuleName()
-        if moduleName != "" {
-            printDebug("Using module name from .project.yml: %s", moduleName)
-            return moduleName, nil
-        }
-    }
-    
-    printDebug("No .project.yml found or invalid, falling back to git remote")
-    
-    // Fallback to git remote
-    return getModuleFromGit()
+	if gitFlag {
+		printDebug("--git flag set, forcing git-based detection")
+		return version.GetModuleFromGit("")
+	}
+	if configFile != "" {
+		printDebug("--config flag set, using custom config file: %s", configFile)
+		return getModuleFromCustomConfig(configFile)
+	}
+	return version.GetModule("")
 }
 
-// getModuleFromCustomConfig returns module name from custom configuration file
+// getModuleFromCustomConfig returns the primary module name from a specific config file.
 func getModuleFromCustomConfig(configPath string) (string, error) {
-    config, err := version.GetProjectConfigFromFile(configPath)
-    if err != nil {
-        return "", fmt.Errorf("failed to load config file %s: %v", configPath, err)
-    }
-    
-    // Extract module name from the loaded config (first module is primary)
-    if len(config.Project.Modules) == 0 {
-        return "", fmt.Errorf("no modules specified in config file %s", configPath)
-    }
-    
-    moduleName := config.Project.Modules[0]
-    if moduleName == "" {
-        return "", fmt.Errorf("module name not specified in config file %s", configPath)
-    }
-    
-    printDebug("Using module name from config file %s: %s", configPath, moduleName)
-    return moduleName, nil
+	config, err := version.GetProjectConfigFromFile(configPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to load config file %s: %v", configPath, err)
+	}
+	if len(config.Project.Modules) == 0 {
+		return "", fmt.Errorf("no modules specified in config file %s", configPath)
+	}
+	printDebug("Using module name from config file %s: %s", configPath, config.Project.Modules[0])
+	return config.Project.Modules[0], nil
 }
 
-// getModuleFromGit returns module name from git remote
-func getModuleFromGit() (string, error) {
-    printDebug("Using module name from git remote")
-    
-    // Fallback to git remote
-    output, err := runGitCommand("remote", "-v")
-    if err != nil {
-        return "", err
-    }
-    
-    lines := strings.Split(output, "\n")
-    
-    // First pass: look for origin remote
-    for _, line := range lines {
-        if strings.Contains(line, "fetch") && strings.HasPrefix(strings.TrimSpace(line), "origin") {
-            parts := strings.Fields(line)
-            if len(parts) < 2 {
-                continue
-            }
-            remote := parts[1]
-            remote = strings.TrimSuffix(remote, ".git")
-            
-            // Handle SSH URLs (git@github.com:user/repo)
-            if strings.Contains(remote, ":") {
-                remote = strings.Split(remote, ":")[1]
-            } else {
-                // Handle HTTPS URLs (https://github.com/user/repo)
-                if strings.Contains(remote, "//") {
-                    remote = strings.Split(remote, "//")[1]
-                }
-                parts := strings.SplitN(remote, "/", 2)
-                if len(parts) > 1 {
-                    remote = parts[1]
-                }
-            }
-            
-            // Get the last component of the path
-            parts = strings.Split(remote, "/")
-            if len(parts) > 0 {
-                return parts[len(parts)-1], nil
-            }
-        }
-    }
-    
-    // Second pass: look for any other remote if origin not found
-    for _, line := range lines {
-        if strings.Contains(line, "fetch") {
-            parts := strings.Fields(line)
-            if len(parts) < 2 {
-                continue
-            }
-            remote := parts[1]
-            remote = strings.TrimSuffix(remote, ".git")
-            
-            // Handle SSH URLs (git@github.com:user/repo)
-            if strings.Contains(remote, ":") {
-                remote = strings.Split(remote, ":")[1]
-            } else {
-                // Handle HTTPS URLs (https://github.com/user/repo)
-                if strings.Contains(remote, "//") {
-                    remote = strings.Split(remote, "//")[1]
-                }
-                parts := strings.SplitN(remote, "/", 2)
-                if len(parts) > 1 {
-                    remote = parts[1]
-                }
-            }
-            
-            // Get the last component of the path
-            parts = strings.Split(remote, "/")
-            if len(parts) > 0 {
-                return parts[len(parts)-1], nil
-            }
-        }
-    }
-    return "", fmt.Errorf("no git remote found - please add a remote to your repository")
-}
-
-// getModules returns all module names from .project.yml or single git module name
+// getModules returns all module names from .project.yml or a single module from git remote.
 func getModules() (string, error) {
-    // Check if --git flag is set (force git-based detection)
-    if gitFlag {
-        printDebug("--git flag set, forcing git-based detection")
-        moduleName, err := getModuleFromGit()
-        if err != nil {
-            return "", err
-        }
-        return moduleName, nil
-    }
-    
-    // Check if --config flag is set (use custom config file)
-    if configFile != "" {
-        printDebug("--config flag set, using custom config file: %s", configFile)
-        return getModulesFromCustomConfig(configFile)
-    }
-    
-    // Default behavior: try .project.yml first, fallback to git
-    // Try to load .project.yml configuration first
-    config, err := configProvider.LoadProjectConfig()
-    if err != nil {
-        printDebug("Failed to load .project.yml: %v", err)
-    } else if config != nil {
-        modules := configProvider.GetAllModules()
-        if len(modules) > 0 {
-            printDebug("Using modules from .project.yml: %v", modules)
-            return strings.Join(modules, "\n"), nil
-        }
-    }
-    
-    printDebug("No .project.yml found or invalid, falling back to git remote")
-    
-    // Fallback to git remote (single module)
-    moduleName, err := getModuleFromGit()
-    if err != nil {
-        return "", err
-    }
-    return moduleName, nil
+	if gitFlag {
+		printDebug("--git flag set, forcing git-based detection")
+		mod, err := version.GetModuleFromGit("")
+		if err != nil {
+			return "", err
+		}
+		return mod, nil
+	}
+	if configFile != "" {
+		printDebug("--config flag set, using custom config file: %s", configFile)
+		return getModulesFromCustomConfig(configFile)
+	}
+	mods, err := version.GetModules("")
+	if err != nil {
+		return "", err
+	}
+	return strings.Join(mods, "\n"), nil
 }
 
-// getModulesFromCustomConfig returns all module names from custom configuration file
+// getModulesFromCustomConfig returns all module names from a specific config file.
 func getModulesFromCustomConfig(configPath string) (string, error) {
-    config, err := version.GetProjectConfigFromFile(configPath)
-    if err != nil {
-        return "", fmt.Errorf("failed to load config file %s: %v", configPath, err)
-    }
-    
-    // Extract all module names from the loaded config
-    if len(config.Project.Modules) == 0 {
-        return "", fmt.Errorf("no modules specified in config file %s", configPath)
-    }
-    
-    modules := config.Project.Modules
-    printDebug("Using modules from config file %s: %v", configPath, modules)
-    return strings.Join(modules, "\n"), nil
+	config, err := version.GetProjectConfigFromFile(configPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to load config file %s: %v", configPath, err)
+	}
+	if len(config.Project.Modules) == 0 {
+		return "", fmt.Errorf("no modules specified in config file %s", configPath)
+	}
+	printDebug("Using modules from config file %s: %v", configPath, config.Project.Modules)
+	return strings.Join(config.Project.Modules, "\n"), nil
 }
 
-// getRelease returns the release number (always 1 for now)
+// getRelease returns the release number.
 func getRelease() (string, error) {
-    return "1", nil
+	return version.GetRelease(), nil
 }
 
-// getPlatform returns the current platform (GOOS value)
-func getPlatform() (string, error) {
-    return version.GetPlatform(), nil
-}
-
-// getArch returns the current architecture (GOARCH value)
-func getArch() (string, error) {
-    return version.GetArch(), nil
-}
-
-// getOS returns the current operating system (user-friendly format)
-func getOS() (string, error) {
-    return version.GetOS(), nil
-}
-
-// getOSVersion returns the current operating system version
-func getOSVersion() (string, error) {
-    return version.GetOSVersion(), nil
-}
-
-// getCPU returns the number of logical CPUs
-func getCPU() (string, error) {
-    return fmt.Sprintf("%d", version.GetNumCPU()), nil
-}
-
-// getFull returns the full project name-version-release
+// getFull returns the full project name-version-release.
 func getFull() (string, error) {
-    version, err := getVersion()
-    if err != nil {
-        return "", err
-    }
-    
-    project, err := getProject()
-    if err != nil {
-        return "", err
-    }
-    
-    release, err := getRelease()
-    if err != nil {
-        return "", err
-    }
-    
-    return fmt.Sprintf("%s-%s-%s", project, version, release), nil
+	return version.GetFull("")
 }
 
-// getGitTags returns all version tags from git repository
-func getGitTags() ([]string, error) {
-    output, err := runGitCommand("tag", "-l", "v[0-9]*")
-    if err != nil {
-        return nil, err
-    }
-    
-    if output == "" {
-        return []string{}, nil
-    }
-    
-    return strings.Split(strings.TrimSpace(output), "\n"), nil
-}
-
-// getGitTagsOnBranch returns version tags that are reachable from the current branch
-func getGitTagsOnBranch() ([]string, error) {
-    // Get current branch
-    branch, err := runGitCommand("branch", "--show-current")
-    if err != nil {
-        return nil, fmt.Errorf("failed to get current branch: %v", err)
-    }
-    branch = strings.TrimSpace(branch)
-    
-    // Get tags reachable from current branch
-    output, err := runGitCommand("tag", "-l", "v[0-9]*", "--merged", branch)
-    if err != nil {
-        return nil, err
-    }
-    
-    if output == "" {
-        return []string{}, nil
-    }
-    
-    return strings.Split(strings.TrimSpace(output), "\n"), nil
-}
-
-// checkGreatest checks if the given version is the greatest among tags on current branch
+// checkGreatest checks if the given version is the greatest among tags on the current branch.
 func checkGreatest(versionStr string) (string, error) {
-    // Parse current version using the library
-    currentVer, err := version.Parse(versionStr)
-    if err != nil {
-        return "", fmt.Errorf("invalid version format: %s", versionStr)
-    }
+	if err := version.CheckGreatest(versionStr, ""); err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("Version %s is the greatest among tags on current branch", versionStr), nil
+}
 
-    // Get tags on current branch (not all tags)
-    tags, err := getGitTagsOnBranch()
-    if err != nil {
-        return "", fmt.Errorf("failed to get git tags on current branch: %v", err)
-    }
+// getPlatform returns the current platform (GOOS value).
+func getPlatform() (string, error) {
+	return version.GetPlatform(), nil
+}
 
-    if len(tags) == 0 {
-        return fmt.Sprintf("Version %s is the greatest (no other tags found on current branch)", versionStr), nil
-    }
+// getArch returns the current architecture (GOARCH value).
+func getArch() (string, error) {
+	return version.GetArch(), nil
+}
 
-    // Find all valid version tags and track the greatest ones
-    var validTags []string
-    var greatestTags []string
-    var greatestVer *version.Version
+// getOS returns the current operating system (user-friendly format).
+func getOS() (string, error) {
+	return version.GetOS(), nil
+}
 
-    for _, tag := range tags {
-        // Try to parse the tag (skip invalid ones)
-        tagVer, err := version.Parse(tag)
-        if err != nil {
-            printDebug("Skipping invalid tag: %s", tag)
-            continue
-        }
+// getOSVersion returns the current operating system version.
+func getOSVersion() (string, error) {
+	return version.GetOSVersion(), nil
+}
 
-        validTags = append(validTags, tag)
-        
-        // Skip current version when tracking greatest version
-        if tag == versionStr || tag == "v"+versionStr {
-            continue
-        }
-        
-        // Track the greatest version
-        if greatestVer == nil || version.Compare(tagVer, greatestVer) > 0 {
-            greatestVer = tagVer
-            greatestTags = []string{tag}
-        } else if version.Compare(tagVer, greatestVer) == 0 {
-            greatestTags = append(greatestTags, tag)
-        }
-    }
-
-    // If we find a greater version, return detailed error with color-coded tags
-    if greatestVer != nil && version.Compare(greatestVer, currentVer) > 0 {
-        var errorMsg strings.Builder
-        errorMsg.WriteString(fmt.Sprintf("version %s is not the greatest among tags on current branch", versionStr))
-        errorMsg.WriteString(fmt.Sprintf("\nFound %d valid tags on current branch:", len(validTags)))
-        
-        // Sort tags for better display
-        sortedTags := make([]string, len(validTags))
-        copy(sortedTags, validTags)
-        
-        // Sort tags by version (we'll use a simple string sort for display)
-        for i := 0; i < len(sortedTags); i++ {
-            for j := i + 1; j < len(sortedTags); j++ {
-                tagI, errI := version.Parse(sortedTags[i])
-                tagJ, errJ := version.Parse(sortedTags[j])
-                if errI == nil && errJ == nil && version.Compare(tagI, tagJ) > 0 {
-                    sortedTags[i], sortedTags[j] = sortedTags[j], sortedTags[i]
-                }
-            }
-        }
-        
-        // Create concise color-coded tag list
-        var lowerTags []string
-        var currentTag string
-        var greaterTags []string
-        
-        for _, tag := range sortedTags {
-            tagVer, err := version.Parse(tag)
-            if err != nil {
-                continue
-            }
-            
-            if tag == versionStr || tag == "v"+versionStr {
-                // Current version - white/normal
-                currentTag = tag
-            } else if version.Compare(tagVer, currentVer) > 0 {
-                // Versions greater than current - red
-                greaterTags = append(greaterTags, fmt.Sprintf("%s%s%s", colorRed, tag, colorReset))
-            } else {
-                // Lower versions - blue
-                lowerTags = append(lowerTags, fmt.Sprintf("%s%s%s", colorBlue, tag, colorReset))
-            }
-        }
-        
-        // Build concise display
-        var displayTags []string
-        
-        // Add lower versions (show one example + ...)
-        if len(lowerTags) > 0 {
-            if len(lowerTags) == 1 {
-                displayTags = append(displayTags, lowerTags[0])
-            } else {
-                displayTags = append(displayTags, lowerTags[0], "...")
-            }
-        }
-        
-        // Add current version
-        if currentTag != "" {
-            displayTags = append(displayTags, currentTag)
-        }
-        
-        // Add greater versions
-        displayTags = append(displayTags, greaterTags...)
-        
-        errorMsg.WriteString(fmt.Sprintf("\nTags: %s", strings.Join(displayTags, ", ")))
-        errorMsg.WriteString(fmt.Sprintf("\nGreatest tag(s): %s", strings.Join(greatestTags, ", ")))
-        return "", fmt.Errorf(errorMsg.String())
-    }
-
-    return fmt.Sprintf("Version %s is the greatest among tags on current branch", versionStr), nil
+// getCPU returns the number of logical CPUs.
+func getCPU() (string, error) {
+	return fmt.Sprintf("%d", version.GetNumCPU()), nil
 }

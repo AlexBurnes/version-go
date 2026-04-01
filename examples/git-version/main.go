@@ -12,7 +12,7 @@ func main() {
     fmt.Println()
     
     // Get version from git repository
-    gitVersion, err := version.GetVersion()
+    gitVersion, err := version.GetVersion("")
     if err != nil {
         // Handle different types of errors
         if version.IsGitNotFound(err) {
@@ -33,7 +33,7 @@ func main() {
     fmt.Printf("✓ Git Version (without prefix): %s\n", gitVersion)
     
     // Get version with prefix
-    gitVersionWithPrefix, err := version.GetVersionWithPrefix()
+    gitVersionWithPrefix, err := version.GetVersionWithPrefix("")
     if err != nil {
         log.Fatalf("Failed to get version with prefix: %v", err)
     }

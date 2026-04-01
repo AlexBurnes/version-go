@@ -16,7 +16,7 @@ func TestCheckGitAvailable(t *testing.T) {
 
 func TestCheckGitRepo(t *testing.T) {
     // This test assumes we're running in a git repository
-    err := checkGitRepo()
+    err := checkGitRepo("")
     if err != nil {
         // Skip test if not in a git repository
         t.Skipf("Not in a git repository: %v", err)
@@ -25,7 +25,7 @@ func TestCheckGitRepo(t *testing.T) {
 
 func TestGetVersion(t *testing.T) {
     // This test assumes we're running in a git repository with version tags
-    version, err := GetVersion()
+    version, err := GetVersion("")
     if err != nil {
         if IsGitNotFound(err) {
             t.Skipf("Git is not available: %v", err)
@@ -58,7 +58,7 @@ func TestGetVersion(t *testing.T) {
 
 func TestGetVersionWithPrefix(t *testing.T) {
     // This test assumes we're running in a git repository with version tags
-    version, err := GetVersionWithPrefix()
+    version, err := GetVersionWithPrefix("")
     if err != nil {
         if IsGitNotFound(err) {
             t.Skipf("Git is not available: %v", err)
@@ -90,7 +90,7 @@ func TestGetVersionWithPrefix(t *testing.T) {
 
 func TestGetRawTag(t *testing.T) {
     // This test assumes we're running in a git repository with version tags
-    tag, err := GetRawTag()
+    tag, err := GetRawTag("")
     if err != nil {
         if IsGitNotFound(err) {
             t.Skipf("Git is not available: %v", err)
@@ -122,7 +122,7 @@ func TestGetRawTag(t *testing.T) {
 
 func TestGetRawVersion(t *testing.T) {
     // This test assumes we're running in a git repository with version tags
-    version, err := GetRawVersion()
+    version, err := GetRawVersion("")
     if err != nil {
         if IsGitNotFound(err) {
             t.Skipf("Git is not available: %v", err)
@@ -150,7 +150,7 @@ func TestGetRawVersion(t *testing.T) {
     }
 
     // Get raw tag for comparison
-    rawTag, err := GetRawTag()
+    rawTag, err := GetRawTag("")
     if err != nil {
         t.Fatalf("GetRawTag() failed: %v", err)
     }
@@ -240,7 +240,7 @@ func TestGetVersionIntegration(t *testing.T) {
     }
 
     // Try to get version
-    version, err := GetVersion()
+    version, err := GetVersion("")
     if err != nil {
         if IsGitNotFound(err) {
             t.Skip("Git is not installed, skipping integration test")

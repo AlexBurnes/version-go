@@ -23,18 +23,24 @@ type ProjectConfig struct {
 // ConfigProvider provides project configuration information
 type ConfigProvider struct {
 	config *ProjectConfig
+	dir    string // starting directory for .project.yml search; empty = current directory
 }
 
-// NewConfigProvider creates a new configuration provider
+// NewConfigProvider creates a new configuration provider starting from the current directory.
 func NewConfigProvider() *ConfigProvider {
 	return &ConfigProvider{}
 }
 
-// LoadProjectConfig loads .project.yml configuration from the project root
-// Returns the configuration if found and valid, nil if not found, error if invalid
+// NewConfigProviderFrom creates a new configuration provider starting the .project.yml
+// search from dir, walking upward toward the filesystem root (the same way git searches).
+func NewConfigProviderFrom(dir string) *ConfigProvider {
+	return &ConfigProvider{dir: dir}
+}
+
+// LoadProjectConfig loads .project.yml by searching upward from the provider's directory.
+// Returns the configuration if found and valid, nil if not found, error if invalid.
 func (cp *ConfigProvider) LoadProjectConfig() (*ProjectConfig, error) {
-	// Look for .project.yml in current directory and parent directories
-	configPath, err := findProjectConfigFile()
+	configPath, err := findProjectConfigFile(cp.dir)
 	if err != nil {
 		return nil, err
 	}
@@ -92,30 +98,29 @@ func (cp *ConfigProvider) HasConfig() bool {
 	return cp.config != nil
 }
 
-// findProjectConfigFile searches for .project.yml in current directory and parent directories
-func findProjectConfigFile() (string, error) {
-	// Start from current directory
-	dir, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("failed to get current directory: %v", err)
+// findProjectConfigFile searches for .project.yml starting from startDir (empty = current
+// directory) and walking upward toward the filesystem root, the same way git searches.
+func findProjectConfigFile(startDir string) (string, error) {
+	dir := startDir
+	if dir == "" {
+		var err error
+		dir, err = os.Getwd()
+		if err != nil {
+			return "", fmt.Errorf("failed to get current directory: %v", err)
+		}
 	}
-
-	// Search up the directory tree for .project.yml
 	for {
 		configPath := filepath.Join(dir, ".project.yml")
 		if _, err := os.Stat(configPath); err == nil {
 			return configPath, nil
 		}
-
-		// Check if we've reached the root directory
 		parent := filepath.Dir(dir)
 		if parent == dir {
-			break // Reached root directory
+			break
 		}
 		dir = parent
 	}
-
-	return "", nil // No .project.yml found
+	return "", nil
 }
 
 // validateConfig validates the loaded configuration

@@ -203,7 +203,7 @@ func GetVersionType(versionStr string) (string, error) {
 	
 	if versionStr == "" {
 		// Get version from git if not provided
-		targetVersion, err = GetVersion()
+		targetVersion, err = GetVersion("")
 		if err != nil {
 			return "", fmt.Errorf("failed to get version from git: %v", err)
 		}
@@ -240,7 +240,7 @@ func GetBuildTypeFromVersion(versionStr string) (string, error) {
 	
 	if versionStr == "" {
 		// Get version from git if not provided
-		targetVersion, err = GetVersion()
+		targetVersion, err = GetVersion("")
 		if err != nil {
 			return "", fmt.Errorf("failed to get version from git: %v", err)
 		}

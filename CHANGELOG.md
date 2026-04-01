@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-04-01
+
+### Added
+- **GetProject / GetProjectFromGit**: New library functions to retrieve project name from `.project.yml` or git remote URL
+- **GetModule / GetModuleFromGit**: New library functions to retrieve primary module name from `.project.yml` or git remote URL
+- **GetModules**: New library function to retrieve all module names from `.project.yml` or git remote URL
+- **GetRelease**: New library function returning the release number (always `"1"`)
+- **GetFull**: New library function returning the full `project-version-release` identifier
+- **CheckGreatest**: New library function checking whether a version is the greatest tag reachable from the current branch
+- **NewConfigProviderFrom**: New `ConfigProvider` constructor accepting a starting directory for `.project.yml` search
+
+### Changed
+- **Breaking: `dir string` parameter added to all git API functions** — `GetVersion`, `GetVersionWithPrefix`, `GetRawTag`, `GetRawVersion`, `GetProject`, `GetModule`, `GetModules`, `GetFull`, `CheckGreatest` now accept a `dir string` argument; pass `""` for current directory behaviour
+- **`findProjectConfigFile` accepts `startDir string`** — empty string retains current-directory behaviour; enables searching from an explicit directory (e.g. a submodule path)
+- **`ConfigProvider` dir-aware search** — `.project.yml` is now found by walking upward from the configured directory (same strategy git uses), rather than always from `os.Getwd()`
+- **cmd delegates entirely to pkg** — all git helper logic (`runGitCommand`, `checkGitAvailable`, `checkGitRepo`, `checkGitTags`, remote URL parsing) removed from `cmd/version`; CLI now calls pkg library functions directly
+
 ## [1.5.0] - 2025-10-08
 
 ### Added

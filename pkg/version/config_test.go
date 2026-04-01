@@ -174,12 +174,12 @@ func TestFindProjectConfigFile(t *testing.T) {
 	}
 
 	// Test finding config from subdirectory
-	foundPath, err := findProjectConfigFile()
+	foundPath, err := findProjectConfigFile("")
 	if err != nil {
-		t.Fatalf("findProjectConfigFile() error = %v", err)
+		t.Fatalf("findProjectConfigFile error = %v", err)
 	}
 	if foundPath != configFile {
-		t.Errorf("findProjectConfigFile() = %v, want %v", foundPath, configFile)
+		t.Errorf("findProjectConfigFile = %v, want %v", foundPath, configFile)
 	}
 
 	// Test not finding config when none exists
@@ -187,12 +187,12 @@ func TestFindProjectConfigFile(t *testing.T) {
 		t.Fatalf("Failed to remove config file: %v", err)
 	}
 
-	foundPath, err = findProjectConfigFile()
+	foundPath, err = findProjectConfigFile("")
 	if err != nil {
-		t.Fatalf("findProjectConfigFile() error = %v", err)
+		t.Fatalf("findProjectConfigFile error = %v", err)
 	}
 	if foundPath != "" {
-		t.Errorf("findProjectConfigFile() = %v, want empty string", foundPath)
+		t.Errorf("findProjectConfigFile = %v, want empty string", foundPath)
 	}
 }
 
