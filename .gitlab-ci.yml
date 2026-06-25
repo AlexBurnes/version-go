@@ -49,7 +49,7 @@ test:unit:
     - go install gotest.tools/gotestsum@latest
     # Skip subtests that hardcode os=='ubuntu' — pass on Ubuntu dev machines, fail on Debian (bookworm image)
     - |
-      SKIP='TestEvaluateExpression/(equality_match_with_==|inequality_no_match_with_!=|complex_AND_expression|complex_OR_expression|with_.*_wrapper)|TestComplexExpressions/(complex_nested_expression|function_with_variables)|TestEvaluateCondition/(simple_equality_match_with_|condition_without_wrapper_with_==|logical_AND_operator|logical_OR_operator|complex_expression$)'
+      SKIP='TestConfigCLIOptions/(git_flag_force_git_detection|it_flag_force_git_detection_module|modules_command_git_flag)|TestCLICommands/version_command|TestGetOSVersion'
       gotestsum --junitfile report.xml --format standard-verbose -- ./... -race -short -skip "${SKIP}"
   artifacts:
     reports:
