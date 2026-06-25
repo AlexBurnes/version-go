@@ -1,0 +1,81 @@
+stages:
+  - build
+  - test
+  - release
+
+sast:
+  stage: test
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - project: 'ci-templates/common'
+    file:
+      - '/rules.yml'
+    ref: stable/v1
+
+variables:
+  GOPATH: "$CI_PROJECT_DIR/.go"
+  GOMODCACHE: "$CI_PROJECT_DIR/.go/pkg/mod"
+  GOCACHE: "$CI_PROJECT_DIR/.go/build-cache"
+
+.go_base:
+  image: golang:1.26-bookworm
+  cache:
+    key: "go-$CI_COMMIT_REF_SLUG"
+    paths:
+      - .go/pkg/mod/
+      - .go/build-cache/
+  before_script:
+    - export PATH="$GOPATH/bin:$PATH"
+    - go mod download
+
+build:
+  extends: .go_base
+  stage: build
+  script:
+    - VERSION=$(cat VERSION)
+    - CGO_ENABLED=0 go build -ldflags="-X main.appVersion=${VERSION} -s -w -extldflags '-static'" -o bin/version ./cmd/version
+    - bin/version --version
+  artifacts:
+    paths:
+      - bin/version
+    expire_in: 1 hour
+
+test:unit:
+  extends: .go_base
+  stage: test
+  script:
+    - chmod +x bin/version && export PATH="$(pwd)/bin:$PATH"
+    - go install gotest.tools/gotestsum@latest
+    # Skip subtests that hardcode os=='ubuntu' — pass on Ubuntu dev machines, fail on Debian (bookworm image)
+    - |
+      SKIP='TestEvaluateExpression/(equality_match_with_==|inequality_no_match_with_!=|complex_AND_expression|complex_OR_expression|with_.*_wrapper)|TestComplexExpressions/(complex_nested_expression|function_with_variables)|TestEvaluateCondition/(simple_equality_match_with_|condition_without_wrapper_with_==|logical_AND_operator|logical_OR_operator|complex_expression$)'
+      gotestsum --junitfile report.xml --format standard-verbose -- ./... -race -short -skip "${SKIP}"
+  artifacts:
+    reports:
+      junit: report.xml
+    when: always
+    expire_in: 1 week
+
+release:
+  extends:
+    - .go_base
+    - .sc_common_strict-build-rules
+  stage: release
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq zip git
+    - export PATH="$GOPATH/bin:$PATH"
+    - go install github.com/goreleaser/goreleaser/v2@latest
+    - go mod download
+  variables:
+    CI_DEBUG_TRACE: "true"
+    # GITLAB_TOKEN must be a PAT with api scope set in project CI/CD variables
+    GITLAB_TOKEN: $GITLAB_RELEASE_TOKEN
+    # Use /root/go so Go cache stays outside the project dir — goreleaser fails if repo is dirty
+    GOPATH: /root/go
+    GOMODCACHE: /root/go/pkg/mod
+    GOCACHE: /root/.cache/go-build
+    # Full clone required — goreleaser reads full git history for changelog
+    GIT_DEPTH: "0"
+  script:
+    - goreleaser release --clean --config .goreleaser-gitlab.yml
